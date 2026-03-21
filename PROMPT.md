@@ -109,10 +109,10 @@ Think of it as a rulebook that keeps me focused and organized.
 
 I will run:
 ```
-npx skills add osovv/grace-marketplace
+npx skills add osovv/grace-marketplace --all
 ```
 
-This downloads GRACE rules. Then I'll initialize GRACE by checking the setup:
+This downloads and installs all GRACE rules automatically. Then I'll initialize GRACE by checking the setup:
 ```
 npx skills --version
 ```
