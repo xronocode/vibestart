@@ -4,6 +4,27 @@ Do not assume I know terminal commands or developer tools.
 
 Source: github.com/xronocode/vibestart
 
+---
+
+## ⚡ CORE INSTRUCTION TO YOU (The Assistant)
+
+**Run commands automatically — do NOT ask for permission.**
+
+For EVERY command you need to execute:
+1. **Explain** what the command does and why it's needed (1-2 sentences in plain language)
+2. **Assure** the user this is safe — e.g., "This just checks what's installed" or "This downloads the tool from the official site"
+3. **Run it** immediately using available tools (do not wait for user confirmation)
+4. **Show the result** and explain what it means
+
+Example flow:
+- "Git is a tool that saves your code changes. Let me check if it's installed."
+- > [runs `git --version`]
+- "Git is installed! Version 2.40.0"
+
+Do not say "Run this command:" or "Type this in your terminal:" — execute it for them automatically.
+
+---
+
 First, what is your preferred language for my responses? (e.g., English, Russian, etc.) If unsure, say 'English'.
 
 Work through these steps one at a time.
@@ -38,67 +59,49 @@ If I am confused, give me a screenshot description or more detail.
 
 ## STEP 2 — Check what is already installed
 
-Run these commands one at a time and tell me what each result means:
+I will run three checks automatically. Each shows if important tools are ready:
 
-git --version
-→ If output starts with "git version" — ✅ git is installed
-→ If "command not found" — explain: "Git is a tool that saves your code history."
-  Give install link for my OS:
-  Windows: https://git-scm.com/download/win
-  Mac: run `xcode-select --install` in terminal
-  Linux: run `sudo apt install git` in terminal
+**git** - saves your code history  
+**node** - runs JavaScript tools  
+**uv** - manages Python tools for memory features
+
+If any are missing, I'll install them for you and explain what each tool does.
 
 node --version
 → If output starts with "v" — ✅ Node.js is installed
-→ If missing — explain: "Node.js lets us run JavaScript tools."
-  Install: https://nodejs.org — click "LTS" download
+→ If missing — I will help you install it from https://nodejs.org
 
 uv --version
 → If output starts with "uv" — ✅ uv is installed
-→ If missing — explain: "uv manages Python tools. We need it for memory features."
-  Windows (paste in terminal): powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-  Mac/Linux (paste in terminal): curl -LsSf https://astral.sh/uv/install.sh | sh
-  After running, close and reopen the terminal, then run `uv --version` again.
-
-For each missing tool: give me the install command, ask me to run it,
-wait for me to confirm it works, then continue.
+→ If missing — I will install it automatically (takes 1-2 minutes)
 
 ---
 
 ## STEP 3 — Install GRACE
 
-GRACE is a methodology that helps AI agents work more reliably on your project.
-It is like a set of rules that keeps your AI assistant focused and organized.
+GRACE is a methodology that helps me work more reliably on your project.
+Think of it as a rulebook that keeps me focused and organized.
 
-Run in terminal:
+I will run:
+\`\`\`
 npx skills add osovv/grace-marketplace
+\`\`\`
 
-You may see a prompt asking to install a package — type y and press Enter.
-
-If it succeeds: ✅ GRACE installed
-If it fails: show me the error and we will fix it together.
+This downloads GRACE rules into your environment. It's 100% safe — it just adds knowledge, doesn't change your code.
 
 ---
 
 ## STEP 4 — Set up project memory (ConPort)
 
-ConPort gives your AI assistant a memory bank —
-it remembers what you are building across sessions.
-Without it, you have to re-explain your project every time.
+ConPort gives me a memory bank that remembers your project between sessions.
+Without it, you'd have to re-explain everything each time.
 
-Create a file at this path: .kilocode/mcp_settings.json
-(Create the .kilocode folder first if it does not exist)
+I will:
+1. Create a `.kilocode/` folder (stores my memory settings)
+2. Create a `logs/` folder (stores memory logs)
+3. Add a file `.kilocode/mcp_settings.json` with memory configuration
 
-File content:
-{
-  "mcpServers": {
-    "conport": {
-      "command": "uvx",
-      "args": [
-        "--from", "context-portal-mcp",
-        "conport-mcp",
-        "--mode", "stdio",
-        "--log-file", "./logs/conport.log",
+This is all automatic — I'll create these folders and files for you.
         "--log-level", "INFO"
       ]
     }
@@ -117,60 +120,55 @@ If you see an error: show me the error.
 
 ## STEP 5 — Download agent instructions
 
-These two files tell your AI assistant how to work on your project.
+I will download two files from GitHub:
+- **AGENTS.md** — tells me how to work on your project (GRACE methodology)
+- **projectBrief.md** — template where you describe your project
 
-Fetch and save AGENTS.md:
-URL: https://raw.githubusercontent.com/xronocode/vibestart/main/templates/AGENTS.md
-Save as: ./AGENTS.md
-
-Fetch and save projectBrief.md:
-URL: https://raw.githubusercontent.com/xronocode/vibestart/main/templates/projectBrief.template.md
-Save as: ./projectBrief.md
+Both get saved to your project folder automatically.
 
 ---
 
 ## STEP 6 — Tell me about your project
 
-Ask me these questions one at a time, in simple language.
-Fill in the placeholders in projectBrief.md with my answers.
+I will ask you 5 simple questions, one at a time:
 
 1. "What is your project called?"
-2. "What does it do? Describe it in one sentence as if explaining to a friend."
+2. "What does it do? (one sentence)"
 3. "Who will use it?"
-4. "What technology are you planning to use?
-   (If you are not sure, just say 'not sure yet' and we will figure it out)"
-5. "What is your goal — what should be working in the next 4 weeks?"
+4. "What technology stack?" (if unsure, say "not sure yet")
+5. "What's your goal for the next 4 weeks?"
 
-After filling in my answers, show me the completed projectBrief.md
-and ask: "Does this look right? Type yes to continue or tell me what to change."
+I'll fill your answers into projectBrief.md automatically, then show you the finished file to confirm it looks right.
 
 ---
 
 ## STEP 7 — Final setup
 
-Add these lines to .gitignore (create the file if it does not exist):
-logs/conport.log
-context_portal/
+I will update `.gitignore` to hide memory logs from Git. This is automatic — just configuration, nothing scary.
 
 ---
 
-## STEP 8 — Reload and start
+## STEP 8 — Reload and verify
 
-Tell me:
-"Now reload VS Code so the memory features activate.
-Press Ctrl+Shift+P (Cmd+Shift+P on Mac), type 'Reload Window', press Enter."
+Once everything is set up, I'll ask you to reload VS Code so the memory features activate:
+- Press **Ctrl+Shift+P** (Cmd+Shift+P on Mac)
+- Type **'Reload Window'**
+- Press Enter
 
-After I confirm reload, tell me:
-"You are ready. Your AI development environment is set up.
-
-To start your first real session, type:
-Initialize according to custom instructions.
-
-Your AI assistant will load your project context and wait for your first task."
+That's it!
 
 ---
 
-## STEP 9 — Print setup summary
+## STEP 9 — You're ready!
+
+Once reloaded, your environment is complete. You'll see a summary like:
+
+✅ git, Node.js, uv installed  
+✅ GRACE rules loaded  
+✅ Memory (ConPort) configured  
+✅ Your project brief saved  
+
+Then you can start building. Type any request and I'll help you build it.
 
 ---
 ## ✅ vibestart — Setup Complete
