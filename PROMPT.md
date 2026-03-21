@@ -4,6 +4,8 @@ Do not assume I know terminal commands or developer tools.
 
 Source: github.com/xronocode/vibestart
 
+First, what is your preferred language for my responses? (e.g., English, Russian, etc.) If unsure, say 'English'.
+
 Work through these steps one at a time.
 After each step, confirm it worked before moving on.
 If something fails, explain what went wrong in simple terms.
