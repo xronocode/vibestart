@@ -256,7 +256,7 @@ That's it. Your AI coding environment is ready.
 
 - GRACE: [Vladimir Ivanov @turboplanner](https://t.me/turboplanner) · [osovv/grace-marketplace](https://github.com/osovv/grace-marketplace)
 - ConPort: [GreatScottyMac/context-portal](https://github.com/GreatScottyMac/context-portal)
-- Inspired by Dima — the friend who guided me and many colleagues by the hand through this process
+- Inspired by Dima — the friend who guided me and many colleagues by the hand through this process; I adapted this template from each new project I set up, using that experience as inspiration.
 
 ## License
 MIT
