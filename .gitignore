@@ -1,0 +1,5 @@
+logs/
+context_portal/
+*.log
+.DS_Store
+Thumbs.db
