@@ -193,6 +193,21 @@ Once everything is set up, I'll ask you to reload VS Code so the memory features
 Your AI development environment is ready!
 
 ---
+
+## STEP 10 — Clean up template files
+
+**\[Setup\] Removing unnecessary template folders...**
+
+To keep your project clean, remove folders that were cloned from the vibestart repo but are not needed for your project:
+
+```
+rm -rf docs/ logs/ templates/
+```
+
+(This command removes the documentation, logs, and template folders. On Windows PowerShell, it works the same way.)
+
+---
+
 ## ✅ vibestart — Setup Complete
 
 ### Installed
