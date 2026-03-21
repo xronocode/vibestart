@@ -8,11 +8,13 @@ Source: github.com/xronocode/vibestart
 
 ## ⚡ CORE INSTRUCTION TO YOU (The Assistant)
 
+### Command Execution (Automation)
+
 **Run commands automatically — do NOT ask for permission.**
 
 For EVERY command you need to execute:
 1. **Explain** what the command does and why it's needed (1-2 sentences in plain language)
-2. **Assure** the user this is safe — e.g., "This just checks what's installed" or "This downloads the tool from the official site"
+2. **Assure** the user this is safe — e.g., "This just checks what's installed" or "This downloads from the official site"
 3. **Run it** immediately using available tools (do not wait for user confirmation)
 4. **Show the result** and explain what it means
 
@@ -22,6 +24,29 @@ Example flow:
 - "Git is installed! Version 2.40.0"
 
 Do not say "Run this command:" or "Type this in your terminal:" — execute it for them automatically.
+
+### Tool Context Transparency
+
+**CRITICAL: Always show which tool you're using and why.**
+
+As you work, explicitly label what you're doing:
+
+- **`[System]`** — checking OS, paths, tools
+- **`[GRACE]`** — analyzing project structure, versioning, semantic markup
+- **`[GRACE-CODEGEN]`** — planning module architecture and contracts
+- **`[ConPort]`** — saving/loading project context and memory
+- **`[Setup]`** — configuring files and directories
+
+Example output:
+```
+[System] Checking installed tools...
+[System] ✅ git 2.40.0 found
+[System] ✅ Node.js v25 found
+[GRACE] Loading methodology rules...
+[ConPort] Initializing memory bank...
+```
+
+This transparency helps the user understand what's happening behind the scenes.
 
 ---
 
@@ -77,50 +102,46 @@ uv --version
 
 ---
 
-## STEP 3 — Install GRACE
+## STEP 3 — Install and Initialize GRACE
 
 GRACE is a methodology that helps me work more reliably on your project.
 Think of it as a rulebook that keeps me focused and organized.
 
 I will run:
-\`\`\`
+```
 npx skills add osovv/grace-marketplace
-\`\`\`
+```
 
-This downloads GRACE rules into your environment. It's 100% safe — it just adds knowledge, doesn't change your code.
+This downloads GRACE rules. Then I'll initialize GRACE by checking the setup:
+```
+npx skills --version
+```
+
+**\[GRACE\] GRACE methodology is now active.** All my work will follow GRACE principles: contracts before code, semantic markup for navigation, knowledge graphs, and verification plans.
 
 ---
 
-## STEP 4 — Set up project memory (ConPort)
+## STEP 4 — Set up and Initialize project memory (ConPort)
 
 ConPort gives me a memory bank that remembers your project between sessions.
 Without it, you'd have to re-explain everything each time.
 
 I will:
 1. Create a `.kilocode/` folder (stores my memory settings)
-2. Create a `logs/` folder (stores memory logs)
+2. Create a `logs/` folder (stores memory logs)  
 3. Add a file `.kilocode/mcp_settings.json` with memory configuration
-
-This is all automatic — I'll create these folders and files for you.
-        "--log-level", "INFO"
-      ]
-    }
-  }
-}
-
-Also create a logs/ folder.
-
-Verify ConPort works — run in terminal:
+4. **Initialize and verify ConPort is ready:**
+```
 uvx --from context-portal-mcp conport-mcp --help
+```
 
-If you see help text: ✅ ConPort ready
-If you see an error: show me the error.
+**\[ConPort\] Memory system initialized and ready.** Your project context will be saved between sessions.
 
 ---
 
 ## STEP 5 — Download agent instructions
 
-I will download two files from GitHub:
+I will download two files from GitHub using **\[System\]** tools:
 - **AGENTS.md** — tells me how to work on your project (GRACE methodology)
 - **projectBrief.md** — template where you describe your project
 
@@ -129,6 +150,8 @@ Both get saved to your project folder automatically.
 ---
 
 ## STEP 6 — Tell me about your project
+
+**\[GRACE\] Analyzing project context...**
 
 I will ask you 5 simple questions, one at a time:
 
@@ -144,31 +167,30 @@ I'll fill your answers into projectBrief.md automatically, then show you the fin
 
 ## STEP 7 — Final setup
 
-I will update `.gitignore` to hide memory logs from Git. This is automatic — just configuration, nothing scary.
+**\[Setup\] Configuring environment...**
+
+I will update `.gitignore` to hide ConPort logs from Git. This is automatic — just configuration.
 
 ---
 
 ## STEP 8 — Reload and verify
+
+**\[ConPort\] Activating memory features...**
 
 Once everything is set up, I'll ask you to reload VS Code so the memory features activate:
 - Press **Ctrl+Shift+P** (Cmd+Shift+P on Mac)
 - Type **'Reload Window'**
 - Press Enter
 
-That's it!
-
 ---
 
-## STEP 9 — You're ready!
+## STEP 9 — Setup complete
 
-Once reloaded, your environment is complete. You'll see a summary like:
+**\[GRACE\] Project rules loaded and active**  
+**\[ConPort\] Memory system ready**  
+**\[System\] Environment fully configured**
 
-✅ git, Node.js, uv installed  
-✅ GRACE rules loaded  
-✅ Memory (ConPort) configured  
-✅ Your project brief saved  
-
-Then you can start building. Type any request and I'll help you build it.
+Your AI development environment is ready!
 
 ---
 ## ✅ vibestart — Setup Complete
