@@ -8,14 +8,9 @@ That is fine.
 
 ---
 
-## How it works
+## The Setup Prompt
 
-1. Install **Kilo Code** in VS Code  
-   → [marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code)
-
-2. Open Kilo Code chat (`Ctrl+Shift+P` → "Kilo Code: Open Chat")
-
-3. Copy the following prompt and paste it into the chat:
+Copy the following prompt and paste it into the Kilo Code chat:
 
 ```markdown
 You are setting up my AI coding environment from scratch.
@@ -23,6 +18,8 @@ I am new to coding. Please be patient and explain each step clearly.
 Do not assume I know terminal commands or developer tools.
 
 Source: github.com/xronocode/vibestart
+
+First, what is your preferred language for my responses? (e.g., English, Russian, etc.) If unsure, say 'English'.
 
 Work through these steps one at a time.
 After each step, confirm it worked before moving on.
@@ -217,6 +214,17 @@ Initialize according to custom instructions.
 Welcome to vibe coding. 🚀
 ---
 ```
+
+---
+
+## How it works
+
+1. Install **Kilo Code** in VS Code  
+   → [marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code)
+
+2. Open Kilo Code chat (`Ctrl+Shift+P` → "Kilo Code: Open Chat")
+
+3. Copy the setup prompt above and paste it into the chat
 
 4. Answer your agent's questions about your project
 
