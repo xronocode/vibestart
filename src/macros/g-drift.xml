@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Macro VERSION="2.0.0" NAME="g-drift">
+  <description>Fix drift between code and documentation</description>
+  <trigger>After long work without GRACE, before commit</trigger>
+  <sequence>
+    <step-1 skill="grace-status">Show drift</step-1>
+    <step-2 skill="grace-refresh">Synchronize</step-2>
+    <step-3 skill="grace-verification">Check tests</step-3>
+  </sequence>
+  <usage>Run macro g-drift</usage>
+</Macro>

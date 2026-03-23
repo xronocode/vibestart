@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Decisions VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>$PROJECT_NAME</name>
+    <version>$PROJECT_VERSION</version>
+  </ProjectInfo>
+
+  <Decisions>
+    <!-- Decisions use unique ID-based tags:
+         <D-001 DATE="YYYY-MM-DD" STATUS="proposed | approved | rejected | superseded">
+           <summary>Decision summary in one sentence</summary>
+           <context>
+             <problem>What problem needed to be solved</problem>
+             <constraints>What constraints existed</constraints>
+           </context>
+           <options>
+             <option-1 name="Option 1">
+               <description>Description of option</description>
+               <pros>Advantages</pros>
+               <cons>Disadvantages</cons>
+               <score>8/10</score>
+             </option-1>
+             <option-2 name="Option 2">
+               <description>Description of option</description>
+               <pros>Advantages</pros>
+               <cons>Disadvantages</cons>
+               <score>6/10</score>
+             </option-2>
+           </options>
+           <decision>
+             <chosen>Option 1</chosen>
+             <rationale>Why this option was chosen</rationale>
+           </decision>
+           <impacts>
+             <module>M-XXX</module>
+             <module>M-YYY</module>
+           </impacts>
+           <consequences>
+             <positive>Positive consequences</positive>
+             <negative>Negative consequences or trade-offs</negative>
+           </consequences>
+           <links>
+             <ref doc="requirements.xml" id="UC-XXX" />
+             <ref doc="development-plan.xml" id="M-XXX" />
+             <ref doc="technology.xml" id="TD-XXX" />
+           </links>
+           <review>
+             <date>YYYY-MM-DD</date>
+             <outcome>still-valid | needs-review | superseded</outcome>
+             <notes>Any review notes</notes>
+           </review>
+         </D-001>
+    -->
+  </Decisions>
+
+  <Categories>
+    <category name="architecture">Architectural decisions</category>
+    <category name="technology">Technology choices</category>
+    <category name="process">Process and methodology decisions</category>
+    <category name="security">Security-related decisions</category>
+    <category name="performance">Performance decisions</category>
+  </Categories>
+
+  <Statistics>
+    <total>0</total>
+    <by-status>
+      <proposed>0</proposed>
+      <approved>0</approved>
+      <rejected>0</rejected>
+      <superseded>0</superseded>
+    </by-status>
+    <last-updated>$DATE</last-updated>
+  </Statistics>
+  
+</Decisions>

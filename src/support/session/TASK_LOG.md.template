@@ -1,0 +1,50 @@
+# TASK_LOG.md Template
+
+This file tracks tasks and progress for vibestart managed projects.
+
+## Format
+
+```markdown
+# Task Log
+
+## Project: [project name]
+
+---
+
+## Tasks
+
+### [ ] TASK-001: [Task title]
+- **Module**: M-XXX
+- **Priority**: HIGH | MEDIUM | LOW
+- **Status**: PENDING
+- **Description**: [What needs to be done]
+- **Notes**: [Additional context]
+
+### [ ] TASK-002: [Task title]
+- **Module**: M-XXX
+- **Priority**: MEDIUM
+- **Status**: PENDING
+- **Description**: [What needs to  done]
+- **Notes**: [Additional context]
+
+---
+
+## Completed
+
+### [x] TASK-001: [Task title]
+- **Completed**: YYYY-MM-DD HH:MM
+- **Notes**: [Completion notes]
+
+---
+
+## Blocked
+
+### [!] TASK-003: [Task title]
+- **Module**: M-XXX
+- **Status**: BLOCKED
+- **Blocker**: [What is blocking]
+- **Notes**: [Resolution needed]
+
+---
+
+<!-- End of tasks -->

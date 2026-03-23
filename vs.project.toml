@@ -1,0 +1,183 @@
+# vibestart Project Configuration
+# Master configuration for AI developer tooling
+
+[project]
+name = "vibestart"
+version = "0.1.0"
+annotation = "From zero to vibe coding in one paste"
+
+# Keywords for context activation
+keywords = [
+  "vibe coding",
+  "ai agent",
+  "kilo code",
+  "developer tools",
+  "onboarding",
+  "grace",
+  "conport",
+  "beginner-friendly"
+]
+
+# NOTE: Technology stack is defined in docs/technology.xml (GRACE)
+# This file only configures AI tooling and methodologies
+
+# ============================================================================
+# FEATURES - What methodologies/tools are enabled
+# ============================================================================
+
+[features]
+# GRACE Framework - contract-driven development with knowledge graphs
+grace = true
+
+# Session Continuity - SESSION_LOG.md + TASK_LOG.md
+session_log = true
+
+# ConPort MCP - long-term memory (requires uv + MCP setup)
+conport = false
+
+# Design-first collaboration - plan before code
+design_first = true
+
+# Batch mode - autonomous task execution
+batch_mode = true
+
+# Time tracking - log agent sessions
+time_tracking = false
+
+# ============================================================================
+# GRACE CONFIGURATION
+# ============================================================================
+
+[grace]
+# Semantic markup style: "js" | "ts" | "py" | "generic"
+markup_style = "ts"
+
+# Log format for traceability
+log_format = "[Module][function][BLOCK_NAME] message"
+
+# Required log fields
+log_required_fields = ["correlationId"]
+
+# Verification-first: require tests before implementation
+verification_first = true
+
+# ============================================================================
+# SESSION MANAGEMENT
+# ============================================================================
+
+[session]
+# Diagnostic sequence at session start
+run_diagnostic = true
+
+# Tool context transparency prefixes
+tool_prefixes = [
+  "System",    # OS, paths, tools
+  "GRACE",     # docs/*.xml, /grace:* commands
+  "Setup",     # files and directories
+  "Code",      # source files
+  "Test",      # verification
+  "Git"        # version control
+]
+
+# Auto-update SESSION_LOG.md after each step
+auto_update_log = true
+
+# ============================================================================
+# RULES - Fragments and overrides
+# ============================================================================
+
+[rules]
+# Core fragments (from ai-standards, future)
+# fragments = ["core/architecture", "core/error-handling", "core/git-workflow"]
+
+# Stack-specific fragments
+# stack_fragments = ["stacks/typescript", "stacks/node"]
+
+# Project-specific rules (in project repo)
+local_overrides = [
+  "docs/ai/project-rules.md"
+]
+
+# Optional private rules (not committed, in .gitignore)
+optional_local_overrides = [
+  "docs/ai/private-rules.local.md"
+]
+
+# ============================================================================
+# TOOLS CONFIGURATION
+# ============================================================================
+
+# NOTE: Test commands reference stack from docs/technology.xml
+
+[tools.testing.mocking_policy]
+prefer = "fakes"  # "fakes" | "stubs" | "mocks"
+avoid = "broad monkey-patching"
+
+[tools.observability]
+logger = "console"
+redaction = "Never log secrets, credentials, or raw high-risk payloads"
+
+# ============================================================================
+# BATCH MODE
+# ============================================================================
+
+[batch]
+# Task file location
+task_file = "docs/BATCH_TASKS.md"
+
+# Limits - NEVER without explicit instruction
+forbidden_actions = [
+  "touch system prompts",
+  "deploy to production",
+  "modify .env files",
+  "delete files",
+  "run supabase migrations in production"
+]
+
+# ============================================================================
+# COMMIT POLICY
+# ============================================================================
+
+[git.commit_format]
+template = """grace(M-XXX): short description in imperative mood
+
+Phase N, Step N
+Module: ModuleName (src/path/to/file.ts)
+Contract: one-line purpose from development-plan.xml"""
+
+# ============================================================================
+# PHASE GATES
+# ============================================================================
+
+[gates]
+# Require founder sign-off before phase completion
+require_sign_off = true
+
+# Gate checklist
+checklist = [
+  "All modules in phase have STATUS=done",
+  "Verification tests pass",
+  "Performance targets met",
+  "Founder sign-off received"
+]
+
+# ============================================================================
+# CRITICAL POLICIES
+# ============================================================================
+
+[policies]
+# Never touch system prompts
+system_prompts = "PLACEHOLDER_ONLY"
+
+# Never log secrets
+secrets = [
+  "ANTHROPIC_API_KEY",
+  "STRIPE_SECRET_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY"
+]
+
+# RLS must stay enabled
+rls = "ALWAYS_ON"
+
+# Server-side only for LLM calls
+llm_calls = "SERVER_SIDE_ONLY"

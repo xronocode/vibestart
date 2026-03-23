@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VerificationPlan VERSION="2.0.0">
+  
+  <ProjectInfo>
+    <name>$PROJECT_NAME</name>
+    <version>$PROJECT_VERSION</version>
+  </ProjectInfo>
+
+  <Strategy>
+    <approach>Test pyramid: unit → integration → e2e</approach>
+    <mocking-policy>prefer fakes over mocks</mocking-policy>
+    <coverage-target>80%</coverage-target>
+  </Strategy>
+
+  <ModuleChecks>
+    <!-- Module verification entries use unique ID-based tags:
+         <V-M-XXX MODULE="M-XXX">
+           <contract>
+             <purpose>Verify module behavior matches contract</purpose>
+           </contract>
+           <strategy>
+             <approach>unit | integration | e2e</approach>
+             <mocking>fakes | stubs | mocks | none</mocking>
+           </strategy>
+           <test-files>
+             <file>path/to/module.test.ts</file>
+           </test-files>
+           <scenarios>
+             <scenario-1>Happy path description</scenario-1>
+             <scenario-2>Error case description</scenario-2>
+             <scenario-3>Edge case description</scenario-3>
+           </scenarios>
+           <traces>
+             <trace-1>Expected log marker or trace</trace-1>
+           </traces>
+           <commands>
+             <test-command>npm test -- path/to/module.test.ts</test-command>
+           </commands>
+           <critical-blocks>
+             <block>BLOCK_NAME</block>
+           </critical-blocks>
+         </V-M-XXX>
+    -->
+  </ModuleChecks>
+
+  <PhaseGates>
+    <!-- Phase gates use unique ID-based tags:
+         <Phase-Gate-N>
+           <name>Phase N Name</name>
+           <criteria>
+             <criterion-1>All modules in phase have STATUS="done"</criterion-1>
+             <criterion-2>All verification tests pass</criterion-2>
+             <criterion-3>Performance targets met</criterion-3>
+           </criteria>
+           <commands>
+             <verify-command>npm test</verify-command>
+             <lint-command>npm run lint</lint-command>
+           </commands>
+           <sign-off required="true | false" />
+         </Phase-Gate-N>
+    -->
+  </PhaseGates>
+
+  <TraceRequirements>
+    <!-- Log marker requirements:
+         <trace-req module="M-XXX">
+           <marker>[ModuleName][function][BLOCK_NAME]</marker>
+           <required-fields>correlationId, userId</required-fields>
+           <assertion>What tests should verify in logs</assertion>
+         </trace-req>
+    -->
+  </TraceRequirements>
+
+  <Health>
+    <last-updated>$DATE</last-updated>
+    <coverage>
+      <modules-covered>N/N</modules-covered>
+      <phase-gates-defined>N/N</phase-gates-defined>
+    </coverage>
+  </Health>
+  
+</VerificationPlan>

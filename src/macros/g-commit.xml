@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Macro VERSION="2.0.0" NAME="g-commit">
+  <description>Safe commit with checks</description>
+  <trigger>Before each commit</trigger>
+  <sequence>
+    <step-1 skill="grace-status">Check health</step-1>
+    <step-2 skill="grace-reviewer">Code review</step-2>
+    <step-3 skill="grace-verification">Run tests</step-3>
+    <step-4>git commit</step-4>
+    <step-5 skill="grace-refresh">Update session log</step-5>
+  </sequence>
+  <usage>Run macro g-commit</usage>
+</Macro>

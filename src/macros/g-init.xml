@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Macro VERSION="2.0.0" NAME="g-init">
+  <description>Full GRACE project initialization</description>
+  <trigger>New project or full reset</trigger>
+  <sequence>
+    <step-1 skill="grace-init">Bootstrap GRACE structure</step-1>
+    <step-2 skill="grace-plan">Design modules</step-2>
+    <step-3 skill="grace-verification">Define tests</step-3>
+  </sequence>
+  <usage>Run macro g-init</usage>
+</Macro>

@@ -1,0 +1,53 @@
+# SESSION_LOG.md Template
+
+This file tracks agent sessions activity for vibestart-managed projects.
+
+## Format
+
+```markdown
+# Session Log
+
+## Session: [YYYY-MM-DD HH:MM:SS]
+
+### Diagnostic
+- Framework: vibestart v2.0.0
+- Project: [project name]
+- Agent: [agent name]
+- Position: Phase X | Step Y | Module M-XXX
+
+### Activity
+
+#### Actions Taken
+1. [HH:MM] - [action description]
+   - Context: [SKILL/STANDARD/TOOL]
+   - Result: [outcome]
+2. ...
+
+#### Files Modified
+- `path/to/file.ts` - [description]
+- ...
+
+#### Decisions
+- [decision summary]
+- Rationale: [why]
+
+### Status
+- [x] DONE: [completed items]
+- [ ] IN PROGRESS: [current items]
+- [!] BLOCKED: [blockers]
+
+### Next Steps
+1. [next action]
+2. [next action]
+
+---
+
+## Session End
+
+**Duration**: [X minutes]
+**Tokens Used**: [input: X output: Y total: Z]
+**Outcome**: [summary]
+
+---
+
+<!-- End of session -->

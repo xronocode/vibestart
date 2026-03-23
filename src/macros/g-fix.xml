@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Macro VERSION="2.0.0" NAME="g-fix">
+  <description>Fix bug with tracing</description>
+  <trigger>Bug report or failing test</trigger>
+  <sequence>
+    <step-1 skill="grace-fix">Find and fix</step-1>
+    <step-2 skill="grace-verification">Strengthen tests</step-2>
+    <step-3 skill="grace-refresh">Update graph</step-3>
+  </sequence>
+  <usage>Run macro g-fix</usage>
+</Macro>

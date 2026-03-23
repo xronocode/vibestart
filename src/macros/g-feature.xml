@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Macro VERSION="2.0.0" NAME="g-feature">
+  <description>Add new feature with full cycle</description>
+  <trigger>New feature or new UseCase</trigger>
+  <sequence>
+    <step-1>Update docs/requirements.xml (new UseCase)</step-1>
+    <step-2 skill="grace-plan">Recalculate modules</step-2>
+    <step-3 skill="grace-verification">Add tests</step-3>
+    <step-4 skill="grace-execute">Implement</step-4>
+    <step-5 skill="grace-reviewer">Review</step-5>
+  </sequence>
+  <usage>Run macro g-feature for [feature name]</usage>
+</Macro>

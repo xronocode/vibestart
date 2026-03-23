@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Technology VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>$PROJECT_NAME</name>
+    <version>$PROJECT_VERSION</version>
+  </ProjectInfo>
+
+  <Stack>
+    <language>$LANGUAGE</language>
+    <runtime>$RUNTIME</runtime>
+    <framework>$FRAMEWORK</framework>
+    <version>
+      <language>$LANGUAGE_VERSION</language>
+      <runtime>$RUNTIME_VERSION</runtime>
+      <framework>$FRAMEWORK_VERSION</framework>
+    </version>
+  </Stack>
+
+  <Dependencies>
+    <!-- Core dependencies:
+         <dep name="..." version="..." purpose="..." />
+    -->
+    <production>
+      <dep name="$DEP_1" version="$DEP_1_VERSION" purpose="$DEP_1_PURPOSE" />
+    </production>
+    <development>
+      <dep name="$DEV_DEP_1" version="$DEV_DEP_1_VERSION" purpose="$DEV_DEP_1_PURPOSE" />
+    </development>
+  </Dependencies>
+
+  <Testing>
+    <framework>$TESTING_FRAMEWORK</framework>
+    <runner>$TEST_RUNNER</runner>
+    <assertion-style>$ASSERTION_STYLE</assertion-style>
+    <mocking-policy>prefer fakes over mocks</mocking-policy>
+    <coverage-tool>$COVERAGE_TOOL</coverage-tool>
+    <commands>
+      <test>npm test</test>
+      <test-watch>npm test -- --watch</test-watch>
+      <coverage>npm run test:coverage</coverage>
+    </commands>
+  </Testing>
+
+  <Observability>
+    <logger>$LOGGER</logger>
+    <format>structured JSON</format>
+    <required-fields>correlationId, userId, module, durationMs</required-fields>
+    <redaction>
+      <never-log>secrets, credentials, API keys, tokens</never-log>
+    </redaction>
+  </Observability>
+
+  <Tooling>
+    <linter>$LINTER</linter>
+    <formatter>$FORMATTER</formatter>
+    <type-checker>$TYPE_CHECKER</type-checker>
+    <commands>
+      <lint>npm run lint</lint>
+      <format>npm run format</format>
+      <typecheck>npm run typecheck</typecheck>
+    </commands>
+  </Tooling>
+
+  <Infrastructure>
+    <database>$DATABASE</database>
+    <cache>$CACHE</cache>
+    <queue>$QUEUE</queue>
+    <storage>$STORAGE</storage>
+  </Infrastructure>
+
+  <Decisions>
+    <!-- Technology decisions:
+         <decision id="TD-001">
+           <choice>Selected technology</choice>
+           <rationale>Why this was chosen</rationale>
+           <alternatives>
+             <alt name="..." rejected="true" reason="..." />
+           </alternatives>
+         </decision>
+    -->
+  </Decisions>
+  
+</Technology>

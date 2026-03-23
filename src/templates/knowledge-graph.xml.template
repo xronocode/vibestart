@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph VERSION="2.0.0">
+  
+  <ProjectInfo>
+    <name>$PROJECT_NAME</name>
+    <version>$PROJECT_VERSION</version>
+  </ProjectInfo>
+
+  <Nodes>
+    <!-- Module nodes use unique ID-based tags:
+         <M-XXX>
+           <name>ModuleName</name>
+           <type>UTILITY | CORE_LOGIC | DATA_LAYER | DOMAIN | ENTRY_POINT | UI_COMPONENT | INTEGRATION</type>
+           <layer>N</layer>
+           <description>Brief description</description>
+           <source>path/to/module.ts</source>
+           <exports>
+             <export-functionName PURPOSE="..." />
+           </exports>
+         </M-XXX>
+    -->
+  </Nodes>
+
+  <Edges>
+    <!-- Dependencies between modules:
+         <edge from="M-XXX" to="M-YYY" type="depends" />
+         <edge from="M-XXX" to="M-YYY" type="calls" />
+         <edge from="M-XXX" to="M-YYY" type="implements" />
+    -->
+  </Edges>
+
+  <CrossLinks>
+    <!-- Links to other GRACE artifacts:
+         <CrossLink from="M-XXX" to="UC-001" doc="requirements.xml" />
+         <CrossLink from="M-XXX" to="V-M-XXX" doc="verification-plan.xml" />
+         <CrossLink from="M-XXX" to="D-001" doc="decisions.xml" />
+    -->
+  </CrossLinks>
+
+  <Layers>
+    <!-- Layer summary:
+         <layer-0 count="N" modules="M-001, M-002, ..." />
+         <layer-1 count="N" modules="M-010, M-011, ..." />
+    -->
+  </Layers>
+
+  <Health>
+    <last-updated>$DATE</last-updated>
+    <integrity-check>
+      <orphaned-nodes>0</orphaned-nodes>
+      <missing-dependencies>0</missing-dependencies>
+      <circular-dependencies>0</circular-dependencies>
+    </integrity-check>
+  </Health>
+  
+</KnowledgeGraph>

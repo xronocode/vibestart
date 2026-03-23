@@ -1,0 +1,138 @@
+<?xml version="1.0.0" encoding="UTF-8"?>
+<Standard VERSION="1.0.0" NAME="Agent Transparency">
+  
+  <purpose>
+    Every agent action MUST declare its execution context.
+    No action may exist outside of a defined skill, standard, framework, or tool.
+  </purpose>
+  
+  <principle>
+    Transparency enables:
+    - Traceability: know why agent did X
+    - Auditability: verify agent followed rules
+    - Learning: user understands agent behavior
+    - Debugging: identify which layer caused issue
+  </principle>
+  
+  <categories>
+    
+    <category name="SKILL" prefix="[SKILL:name]">
+      <description>Executing a defined skill from skills/ directory</description>
+      <examples>
+        <example>vs-init</example>
+        <example>grace-init, grace-plan, grace-execute, grace-status, grace-refresh</example>
+      </examples>
+      <format>[SKILL:name] action description</format>
+    </category>
+    
+    <category name="STANDARD" prefix="[STANDARD:name]">
+      <description>Following a rule from standards/ directory</description>
+      <examples>
+        <example>grace — contract-driven development</example>
+        <example>architecture — layer dependencies</example>
+        <example>error-handling — logging rules</example>
+        <example>git-workflow — commit format</example>
+      </examples>
+      <format>[STANDARD:name] action description</format>
+    </category>
+    
+    <category name="FRAMEWORK" prefix="[FRAMEWORK:name]">
+      <description>Operating within framework scope</description>
+      <examples>
+        <example>vibestart — meta-level framework operations</example>
+      </examples>
+      <format>[FRAMEWORK:name] action description</format>
+    </category>
+    
+    <category name="TOOL" prefix="[TOOL:name]">
+      <description>Using external tool or MCP server</description>
+      <examples>
+        <example>git — version control</example>
+        <example>npm/pip — package manager</example>
+        <example>docker — containerization</example>
+        <example>mcp:conport — MCP server</example>
+        <example>mcp:filesystem — MCP server</example>
+      </examples>
+      <format>[TOOL:name] action description</format>
+    </category>
+    
+    <category name="SYSTEM" prefix="[SYSTEM]">
+      <description>Environment and infrastructure checks</description>
+      <examples>
+        <example>OS detection, path validation, tool availability</example>
+      </examples>
+      <format>[SYSTEM] action description</format>
+    </category>
+    
+  </categories>
+  
+  <rules>
+    
+    <rule id="AT-001" severity="MANDATORY">
+      <text>Before ANY action. agent MUST announce context</text>
+      <example>
+        [SKILL:vs-init] Reading vs.project.toml...
+        [STANDARD:grace] Updating MODULE_CONTRACT in M-001...
+        [TOOL:git] Committing changes...
+      </example>
+      <violation>Action without context prefix is a protocol violation</violation>
+    </rule>
+    
+    <rule id="AT-002" severity="MANDATORY">
+      <text>Every action MUST belong to exactly ONE category</text>
+      <valid>
+        [SKILL:grace-status] Checking project health...
+        [STANDARD:architecture] Validating layer dependencies...
+      </valid>
+      <invalid>
+        [SKILL:grace-status][STANDARD:grace] Checking...  <!-- multiple contexts -->
+        Checking project health...                      <!-- no context -->
+      </invalid>
+    </rule>
+    
+    <rule id="AT-003" severity="MANDATORY">
+      <text>After completing action. report status</text>
+      <format>
+        ✅ Done: [what was completed]
+        ⏳ Next: [what comes next]
+        🔴 Blocked: [blocker] → [resolution needed]
+      </format>
+    </rule>
+    
+    <rule id="AT-004" severity="RECOMMENDED">
+      <text>For complex operations. chain context with action</text>
+      <example>
+        [SKILL:vs-init] Step 3/5: Creating docs/ directory...
+          └─→ [STANDARD:grace] Using development-plan.xml.template
+          └─→ [TOOL:filesystem] Writing file
+      </example>
+    </rule>
+    
+    <rule id="AT-005" severity="MANDATORY">
+      <text>When using MCP tools. prefix with mcp:</text>
+      <example>
+        [TOOL:mcp:conport] get_active_context → loading session...
+        [TOOL:mcp:filesystem] read_file → loading config...
+      </example>
+    </rule>
+    
+  </rules>
+  
+  <quick-reference>
+    
+    <action-type>
+      <action what="Read/write docs/*.xml" context="[STANDARD:grace]" />
+      <action what="Run /vs-* command" context="[SKILL:vs-*]" />
+      <action what="Run /grace:* command" context="[SKILL:grace-*]" />
+      <action what="Write source code" context="[STANDARD:grace] or [SKILL:*]" />
+      <action what="Run tests" context="[STANDARD:verification] or [SKILL:*]" />
+      <action what="Git operations" context="[TOOL:git]" />
+      <action what="ConPort operations" context="[TOOL:mcp:conport]" />
+      <action what="Package manager" context="[TOOL:npm] or [TOOL:uv]" />
+      <action what="Environment check" context="[SYSTEM]" />
+      <action what="Framework meta" context="[FRAMEWORK:vibestart]" />
+    </action-type>
+    
+  </quick-reference>
+  
+</Standard>

@@ -1,0 +1,59 @@
+# vibestart Framework Configuration
+# Version 2.0.0
+
+[framework]
+name = "vibestart"
+version = "2.0.0"
+description = "AI development toolkit manager - standards, templates, and skills"
+repository = "https://github.com/xronocode/vibestart"
+license = "MIT"
+
+[compatibility]
+# Supported agents with priority
+agents = [
+  { name = "kilocode", priority = "P1", skills_path = ".kilocode/skills" },
+  { name = "cursor", priority = "P1", skills_path = ".cursor/skills" },
+  { name = "claude", priority = "P2", skills_path = ".claude/skills" },
+  { name = "windsurf", priority = "P3", skills_path = ".windsurf/skills" },
+  { name = "aider", priority = "P3", skills_path = ".aider/skills" }
+]
+
+[features]
+# Optional features
+conport = { enabled = false, description = "Long-term memory via MCP" }
+session_log = { enabled = true, description = "Session tracking via MD files" }
+batch_mode = { enabled = true, description = "Autonomous task execution" }
+
+[standards]
+# Available standards
+grace = { version = "2.0.0", description = "Contract-driven development" }
+architecture = { version = "1.0.0", description = "Layer dependencies and boundaries" }
+error_handling = { version = "1.0.0", description = "Logging and error management" }
+git_workflow = { version = "1.0.0", description = "Commit format and branching" }
+agent_transparency = { version = "1.0.0", description = "Action context protocol" }
+compatibility = { version = "1.0.0", description = "Skill conflict detection" }
+
+[templates]
+# XML templates for project artifacts
+development_plan = "templates/development-plan.xml.template"
+requirements = "templates/requirements.xml.template"
+knowledge_graph = "templates/knowledge-graph.xml.template"
+verification_plan = "templates/verification-plan.xml.template"
+technology = "templates/technology.xml.template"
+decisions = "templates/decisions.xml.template"
+
+[skills]
+# Management skills
+vs_init = { version = "2.1.0", description = "Smart initialization with conflict detection and integrated AGENTS.md rendering" }
+
+# GRACE skills (enhanced)
+grace_init = { version = "2.1.0", source = "vibestart" }
+grace_plan = { version = "2.1.0", source = "vibestart" }
+grace_execute = { version = "2.1.0", source = "vibestart" }
+grace_verification = { version = "2.1.0", source = "vibestart" }
+grace_reviewer = { version = "2.1.0", source = "vibestart" }
+grace_refresh = { version = "2.1.0", source = "vibestart" }
+grace_fix = { version = "2.1.0", source = "vibestart" }
+grace_status = { version = "2.1.0", source = "vibestart" }
+grace_ask = { version = "2.1.0", source = "vibestart" }
+grace_explainer = { version = "2.1.0", source = "vibestart" }

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "conport": {
+      "command": "uvx",
+      "args": ["--from", "context-portal-mcp", "conport-mcp"],
+      "env": {}
+    }
+  }
+}

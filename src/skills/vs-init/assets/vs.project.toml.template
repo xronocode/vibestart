@@ -1,0 +1,82 @@
+# vs.project.toml Template
+<!-- Template: assets/vs.project.toml.template -->
+
+[project]
+name = "$PROJECT_NAME"
+version = "$PROJECT_VERSION"
+annotation = "$PROJECT_ANNOTATION"
+keywords = [$PROJECT_KEYWORDS]
+
+[features]
+grace = true
+session_log = true
+conport = false
+batch_mode = true
+design_first = true
+
+[grace]
+markup_style = "ts"  # "ts" | "py" | "generic"
+log_format = "[Module][function][BLOCK_NAME] message"
+verification_first = true
+
+[session]
+run_diagnostic = true
+auto_update_log = true
+
+[stack]
+language = "$LANGUAGE"
+runtime = "$RUNTIME"
+framework = "$FRAMEWORK"
+testing = "$TESTING"
+
+[rules]
+# Project-specific rules (in project repo)
+local_overrides = [
+  "docs/ai/project-rules.md"
+]
+
+# Optional private rules (not committed, in .gitignore)
+optional_local_overrides = [
+  "docs/ai/private-rules.local.md"
+]
+
+[tools.testing.mocking_policy]
+prefer = "fakes"  # "fakes" | "stubs" | "mocks"
+avoid = "broad monkey-patching"
+
+[tools.observability]
+logger = "console"
+redaction = "Never log secrets, credentials, or raw high-risk payloads"
+
+[batch]
+task_file = "docs/BATCH_TASKS.md"
+forbidden_actions = [
+  "touch system prompts",
+  "deploy to production",
+  "modify .env files",
+  "delete files"
+]
+
+[git.commit_format]
+template = """grace(M-XXX): short description inPhase N, Step N
+Module: ModuleName (src/path/to/file.ts)
+Contract: one-line purpose from development-plan.xml"""
+
+[gates]
+require_sign_off = true
+checklist = [
+  "All modules in phase have STATUS=done",
+  "Verification tests pass",
+  "Performance targets met",
+  "Founder sign-off received"
+]
+
+[policies]
+system_prompts = "PLACEHOLDER_ONLY"
+secrets = [
+  "ANTHROPIC_API_KEY",
+  "STRIPE_SECRET_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY"
+]
+rls = "ALWAYS_ON"
+llm_calls = "SERVER_SIDE_ONLY"

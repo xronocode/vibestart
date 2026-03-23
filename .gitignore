@@ -3,3 +3,9 @@ context_portal/
 *.log
 .DS_Store
 Thumbs.db
+
+# ConPort data (keep settings, ignore data)
+context.db
+
+# Private local rules
+docs/ai/private-rules.local.md
