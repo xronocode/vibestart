@@ -9,73 +9,101 @@
 
 ## 🤖 For AI Agents
 
-**You found this repository. Here's what to do:**
+You found this repository. Execute these steps in order:
 
-### 1. Clone to user's project
-```
-git clone https://github.com/xronocode/vibestart.git ~/.vibestart/framework
-```
+### Step 1: Install the Skill
 
-Or copy `src/` folder to `~/.vibestart/framework/`.
+Copy the skill to your agent's skills directory:
 
-### 2. Install the skill
 ```
-Copy src/skills/vs-init/ to agent's skills directory:
-- Kilo Code: ~/.kilocode/skills/vs-init/
-- Cursor: ~/.cursor/skills/vs-init/
-- Claude Code: ~/.claude/skills/vs-init/
+cp -r src/skills/vs-init ~/.kilocode/skills/vs-init/
 ```
 
-### 3. Run initialization
+Or for Cursor:
+```
+cp -r src/skills/vs-init ~/.cursor/skills/vs-init/
+```
+
+### Step 2: Run Initialization
+
 ```
 /vs-init
 ```
 
 This single command will:
-- ✅ Check framework integrity (standards, templates, fragments)
-- ✅ Detect conflicts with existing tools
+- ✅ Check framework integrity (7 checks)
+- ✅ Detect and resolve conflicts (6 types)
 - ✅ Create `vs.project.toml` configuration
 - ✅ Generate `AGENTS.md` from fragments
 - ✅ Create `docs/*.xml` templates
-- ✅ Set up session management
 
-### 4. Verify
+### Step 3: Verify Setup
+
 ```
 /grace-status
 ```
 
----
-
-## 💡 What is vibestart?
-
-**vibestart** is an AI development toolkit that gives your agent:
-- **Methodology** — GRACE framework for contract-driven development
-- **Structure** — Knowledge graphs, verification plans, semantic markup
-- **Continuity** — Session management so AI remembers context
-- **Transparency** — Every action is traceable and labeled
-
-**One command (`/vs-init`) replaces hours of manual setup.**
+Check that everything is configured correctly.
 
 ---
 
-## 🆚 Why vibestart?
+## 💡 Why vibestart?
 
-| | vibestart | Manual setup |
-|---|-----------|--------------|
-| **Setup time** | 1 command | Hours |
-| **Conflict handling** | Auto-detected | Manual debugging |
-| **AGENTS.md** | Generated from fragments | Write from scratch |
-| **Migration** | From GRACE, ai-standards | Start over |
-| **Updates** | Re-run `/vs-init` | Manual sync |
+### The Problem
+
+You're new to AI-assisted development. You have:
+- ❌ No idea how to structure AI instructions
+- ❌ No methodology for AI to follow
+- ❌ No way to track decisions across sessions
+- ❌ No standards for code quality
+
+### The Solution
+
+vibestart gives you:
+- ✅ **One-command setup** — `/vs-init` does everything
+- ✅ **GRACE methodology** — contract-driven development with knowledge graphs
+- ✅ **Session continuity** — AI remembers what it did yesterday
+- ✅ **Agent transparency** — every action is traceable
+- ✅ **Conflict detection** — handles existing tools gracefully
 
 ---
 
-## 📦 What gets created
+## 🆚 vibestart vs Alternatives
+
+| Feature | vibestart | GRACE marketplace | ai-standards | Manual setup |
+|---------|-----------|-------------------|--------------|--------------|
+| **One-command init** | ✅ `/vs-init` | ❌ Multiple steps | ❌ Manual copy | ❌ Hours of work |
+| **Conflict detection** | ✅ 6 types | ❌ None | ❌ None | ❌ None |
+| **AGENTS.md generation** | ✅ Auto from fragments | ❌ Manual | ❌ Manual | ❌ Manual |
+| **Migration support** | ✅ v1.0, grace-marketplace | ❌ None | ❌ None | ❌ None |
+| **Session management** | ✅ Built-in | ❌ Separate setup | ❌ None | ❌ None |
+| **Agent transparency** | ✅ Protocol built-in | ⚠️ Optional | ❌ None | ❌ None |
+| **Template system** | ✅ 6 XML templates | ❌ None | ❌ None | ❌ None |
+| **Macro workflows** | ✅ 5 GRACE macros | ⚠️ Basic | ❌ None | ❌ None |
+
+### What vibestart Adds
+
+**On top of GRACE marketplace:**
+- Automated initialization with conflict detection
+- AGENTS.md generation from modular fragments
+- Session management (SESSION_LOG.md + TASK_LOG.md)
+- Agent transparency protocol
+- Migration from v1.0 and grace-marketplace
+
+**On top of ai-standards:**
+- Full GRACE methodology implementation
+- Knowledge graphs for project navigation
+- Verification plans for testing strategy
+- Macro-based workflows
+
+---
+
+## 📦 What Gets Created
 
 ```
 your-project/
+├── AGENTS.md              # AI instructions (auto-generated)
 ├── vs.project.toml        # Master configuration
-├── AGENTS.md              # Agent instructions (generated)
 └── docs/
     ├── development-plan.xml   # Module definitions
     ├── requirements.xml       # Product requirements
@@ -90,17 +118,17 @@ your-project/
 
 ## 🎯 Available Commands
 
-### Management
+### Management (1 command)
 
-| Command | Description |
-|---------|-------------|
-| `/vs-init` | Initialize project, detect conflicts, generate AGENTS.md |
+| Command | What it does |
+|---------|--------------|
+| `/vs-init` | **All-in-one**: Initialize + Detect conflicts + Generate AGENTS.md + Create templates |
 
-### GRACE Workflow
+### GRACE Workflow (10 commands)
 
 | Command | When to use |
 |---------|-------------|
-| `/grace-init` | Bootstrap GRACE structure |
+| `/grace-init` | Start new GRACE project |
 | `/grace-plan` | Design modules and contracts |
 | `/grace-execute` | Implement modules |
 | `/grace-verification` | Define test strategy |
@@ -115,44 +143,57 @@ your-project/
 
 ## 🌐 Supported Agents
 
-| Agent | Status |
-|-------|--------|
-| **Kilo Code** | ✅ Full support |
-| **Cursor** | ✅ Full support |
-| **Claude Code** | ✅ Basic support |
+| Agent | Status | Notes |
+|-------|--------|-------|
+| **Kilo Code** | ✅ Full | Primary target, all features tested |
+| **Cursor** | ✅ Full | All features work |
+| **Claude Code** | ✅ Basic | Core functionality works |
+| **Windsurf** | ⏳ Partial | On request |
+| **Aider** | ⏳ Partial | On request |
 
 ---
 
 ## 📚 Documentation
 
-- [docs/ru.md](docs/ru.md) — Инструкция на русском
-- [docs/why.md](docs/why.md) — Why GRACE + ConPort
-- [src/README.md](src/README.md) — Framework internals
-- [src/CHANGELOG.md](src/CHANGELOG.md) — Version history
+| Document | Description |
+|----------|-------------|
+| [docs/ru.md](docs/ru.md) | Инструкция на русском |
+| [docs/why.md](docs/why.md) | Why GRACE + ConPort |
+| [docs/grace-macros.md](docs/grace-macros.md) | GRACE macros reference |
+| [src/README.md](src/README.md) | Framework internals (Russian) |
+| [src/CHANGELOG.md](src/CHANGELOG.md) | Version history |
 
 ---
 
-## 🤝 Credits
+## 🤝 Credits & Origins
 
 ### Authors
 - **Dima** — [github.com/dmkononenko](https://github.com/dmkononenko)
 - **Sergei** — [github.com/aka-NameRec](https://github.com/aka-NameRec)
 
 ### Built On
-- [GRACE marketplace](https://github.com/osovv/grace-marketplace) — Contract-driven development
-- [ConPort](https://github.com/GreatScottyMac/context-portal) — Long-term memory for AI
-- [ai-standards](https://github.com/aka-NameRec/ai-standards) — Centralized AI configuration
+- **[GRACE marketplace](https://github.com/osovv/grace-marketplace)** — Contract-driven development methodology by [Vladimir Ivanov](https://t.me/turboplanner)
+- **[ConPort](https://github.com/GreatScottyMac/context-portal)** — Long-term memory for AI
+- **[ai-standards](https://github.com/aka-NameRec/ai-standards)** — Centralized AI configuration
+
+### What We Added
+- ✅ Automated initialization with `/vs-init`
+- ✅ Conflict detection (6 types)
+- ✅ AGENTS.md generation from fragments
+- ✅ Session management built-in
+- ✅ Migration from other tools
+- ✅ Agent transparency protocol
 
 ---
 
 ## 📄 License
 
-MIT
+MIT — use freely for any purpose.
 
 ---
 
 ## 🔗 Links
 
-- **Repository:** https://github.com/xronocode/vibestart
+- **GitHub:** https://github.com/xronocode/vibestart
 - **Releases:** https://github.com/xronocode/vibestart/releases
 - **Issues:** https://github.com/xronocode/vibestart/issues
