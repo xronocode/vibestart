@@ -9,89 +9,123 @@
 
 ## 🤖 For AI Agents
 
-**You found this repository. Here's what to do:**
+You found this repository. The user wants to use vibestart in their project.
 
-### Step 1: Clone Framework
+### What is vibestart?
 
-Clone this repository to the framework location:
+vibestart is a **skill** for AI agents that provides:
+- GRACE methodology (contract-driven development)
+- Knowledge graphs for project navigation
+- Session management (AI remembers context)
+- Agent transparency (every action is traceable)
 
-```bash
-git clone https://github.com/xronocode/vibestart.git ~/.vibestart/framework
+### How to Install
+
+**Option 1: Copy to project (Recommended)**
+
+Copy `src/skills/vs-init/` folder to your agent's skills directory in the **current project**:
+
+| Agent | Skills Directory |
+|-------|-----------------|
+| Kilo Code | `.kilocode/skills/vs-init/` |
+| Cursor | `.cursor/skills/vs-init/` |
+| Claude Code | `.claude/skills/vs-init/` |
+
+Example for Kilo Code:
+```
+# Create skills directory if not exists
+mkdir -p .kilocode/skills
+
+# Copy the skill
+cp -r src/skills/vs-init .kilocode/skills/
 ```
 
-Or copy the `src/` folder manually to `~/.vibestart/framework/`.
+**Option 2: Global installation**
 
-### Step 2: Install vs-init Skill
+Copy to user-level skills directory:
 
-Copy the skill to your agent's skills directory:
+| OS | Path |
+|----|------|
+| Windows | `%USERPROFILE%\.kilocode\skills\vs-init\` |
+| macOS/Linux | `~/.kilocode/skills/vs-init/` |
 
-**Kilo Code:**
-```bash
-cp -r ~/.vibestart/framework/src/skills/vs-init ~/.kilocode/skills/vs-init
-```
+### How to Use
 
-**Cursor:**
-```bash
-cp -r ~/.vibestart/framework/src/skills/vs-init ~/.cursor/skills/vs-init
-```
-
-**Claude Code:**
-```bash
-cp -r ~/.vibestart/framework/src/skills/vs-init ~/.claude/skills/vs-init
-```
-
-### Step 3: Run Initialization
-
-In your project directory, run:
+After copying the skill, run in your project:
 
 ```
 /vs-init
 ```
 
-**What `/vs-init` does:**
-- Checks framework integrity (standards, templates, fragments)
-- Detects and resolves conflicts with existing tools
-- Creates `vs.project.toml` (project configuration)
-- Generates `AGENTS.md` (agent instructions)
-- Creates `docs/*.xml` templates (GRACE artifacts)
+This single command will:
+1. Check framework integrity
+2. Detect and resolve conflicts
+3. Create `vs.project.toml` (project configuration)
+4. Generate `AGENTS.md` (agent instructions)
+5. Create `docs/*.xml` templates (GRACE artifacts)
 
-### Step 4: Verify
+### Verify
 
 ```
 /grace-status
 ```
 
-Check that everything is configured correctly.
+---
+
+## 💡 Why vibestart?
+
+### The Problem
+
+You're new to AI-assisted development. You have:
+- ❌ No idea how to structure AI instructions
+- ❌ No methodology for AI to follow
+- ❌ No way to track decisions across sessions
+- ❌ No standards for code quality
+
+### The Solution
+
+vibestart gives you:
+- ✅ **One-command setup** — `/vs-init` does everything
+- ✅ **GRACE methodology** — contract-driven development with knowledge graphs
+- ✅ **Session continuity** — AI remembers what it did yesterday
+- ✅ **Agent transparency** — every action is traceable
+- ✅ **Conflict detection** — handles existing tools gracefully
 
 ---
 
-## 💡 What is vibestart?
+## 🆚 vibestart vs Alternatives
 
-**vibestart** is an AI development framework that gives your agent:
+| Feature | vibestart | GRACE marketplace | ai-standards | Manual setup |
+|---------|-----------|-------------------|--------------|--------------|
+| **One-command init** | ✅ `/vs-init` | ❌ Multiple steps | ❌ Manual copy | ❌ Hours of work |
+| **Conflict detection** | ✅ 6 types | ❌ None | ❌ None | ❌ None |
+| **AGENTS.md generation** | ✅ Auto from fragments | ❌ Manual | ❌ Manual | ❌ Manual |
+| **Migration support** | ✅ v1.0, grace-marketplace | ❌ None | ❌ None | ❌ None |
+| **Session management** | ✅ Built-in | ❌ Separate setup | ❌ None | ❌ None |
+| **Agent transparency** | ✅ Protocol built-in | ⚠️ Optional | ❌ None | ❌ None |
+| **Template system** | ✅ 6 XML templates | ❌ None | ❌ None | ❌ None |
+| **Macro workflows** | ✅ 5 GRACE macros | ⚠️ Basic | ❌ None | ❌ None |
 
-| What | Description |
-|------|-------------|
-| **Methodology** | GRACE — contract-driven development with knowledge graphs |
-| **Structure** | Knowledge graphs, verification plans. semantic markup |
-| **Continuity** | Session management — AI remembers context between sessions |
-| **Transparency** | Every action is traceable and labeled |
-| **Automation** | One command (`/vs-init`) replaces hours of manual setup |
+### What vibestart Adds
 
----
+**On top of GRACE marketplace:**
+- Automated initialization with conflict detection
+- AGENTS.md generation from modular fragments
+- Session management (SESSION_LOG.md + TASK_LOG.md)
+- Agent transparency protocol
+- Migration from v1.0 and grace-marketplace
 
-## 🆚 Why vibestart?
-
-| | vibestart | Manual setup |
-|---|-----------|--------------|
-| **Setup time** | 1 command | Hours |
-| **Conflict handling** | Auto-detected (6 types) | Manual debugging |
-| **AGENTS.md** | Generated from fragments | Write from scratch |
-| **Migration** | From GRACE. ai-standards | Start over |
-| **Updates** | Re-run `/vs-init` | Manual sync |
+**On top of ai-standards:**
+- Full GRACE methodology implementation
+- Knowledge graphs for project navigation
+- Verification plans for testing strategy
+- Macro-based workflows
 
 ---
 
 ## 📦 What Gets Created
+
+After running `/vs-init`:
 
 ```
 your-project/
@@ -115,7 +149,7 @@ your-project/
 
 | Command | Description |
 |---------|-------------|
-| `/vs-init` | Initialize project. detect conflicts. generate AGENTS.md |
+| `/vs-init` | Initialize project, detect conflicts, generate AGENTS.md |
 
 ### GRACE Workflow
 
@@ -136,13 +170,13 @@ your-project/
 
 ## 🌐 Supported Agents
 
-| Agent | Status | Notes |
-|-------|--------|-------|
-| **Kilo Code** | ✅ Full | Primary target. all features tested |
-| **Cursor** | ✅ Full | All features work |
-| **Claude Code** | ✅ Basic | Core functionality works |
-| **Windsurf** | ⏳ Partial | On request |
-| **Aider** | ⏳ Partial | On request |
+| Agent | Status | Skills Directory |
+|-------|--------|-----------------|
+| **Kilo Code** | ✅ Full | `.kilocode/skills/` |
+| **Cursor** | ✅ Full | `.cursor/skills/` |
+| **Claude Code** | ✅ Basic | `.claude/skills/` |
+| **Windsurf** | ⏳ Partial | `.windsurf/skills/` |
+| **Aider** | ⏳ Partial | `.aider/skills/` |
 
 ---
 
