@@ -9,65 +9,106 @@
 
 ## 🤖 For AI Agents
 
-You found this repository. The user wants to use vibestart in their project.
+You found this repository. The user wants to set up vibestart in their project.
 
 ### What is vibestart?
 
-vibestart is a **skill** for AI agents that provides:
-- GRACE methodology (contract-driven development)
-- Knowledge graphs for project navigation
-- Session management (AI remembers context)
-- Agent transparency (every action is traceable)
+vibestart is a **framework** for AI-assisted development that includes:
+- **GRACE methodology** — contract-driven development with knowledge graphs
+- **Skills** — AI agent instructions (vs-init, grace-*)
+- **Standards** — development rules (architecture, error-handling, git-workflow)
+- **Templates** — XML templates for project artifacts
+- **Fragments** — modular components for AGENTS.md generation
 
-### How to Install
+### What You Need To Do
 
-**Option 1: Copy to project (Recommended)**
+**Follow these steps in order:**
 
-Copy `src/skills/vs-init/` folder to your agent's skills directory in the **current project**:
+---
 
-| Agent | Skills Directory |
-|-------|-----------------|
-| Kilo Code | `.kilocode/skills/vs-init/` |
-| Cursor | `.cursor/skills/vs-init/` |
-| Claude Code | `.claude/skills/vs-init/` |
+## Step 1: Clone vibestart into the project
 
-Example for Kilo Code:
-```
-# Create skills directory if not exists
-mkdir -p .kilocode/skills
+Clone this repository into a subfolder of the user's project:
 
-# Copy the skill
-cp -r src/skills/vs-init .kilocode/skills/
+```bash
+# In the user's project directory, create .vibestart folder and clone there
+git clone https://github.com/xronocode/vibestart.git .vibestart
 ```
 
-**Option 2: Global installation**
+**What this does:**
+- Creates `.vibestart/` folder in the user's project
+- Downloads the complete vibestart framework
+- The framework includes: skills, standards, templates, fragments
 
-Copy to user-level skills directory:
+**Result:** You now have `.vibestart/src/skills/vs-init/` in the project.
 
-| OS | Path |
-|----|------|
-| Windows | `%USERPROFILE%\.kilocode\skills\vs-init\` |
-| macOS/Linux | `~/.kilocode/skills/vs-init/` |
+---
 
-### How to Use
+## Step 2: Read the vs-init skill
 
-After copying the skill, run in your project:
-
-```
-/vs-init
-```
-
-This single command will:
-1. Check framework integrity
-2. Detect and resolve conflicts
-3. Create `vs.project.toml` (project configuration)
-4. Generate `AGENTS.md` (agent instructions)
-5. Create `docs/*.xml` templates (GRACE artifacts)
-
-### Verify
+The vs-init skill contains all initialization instructions. Read it now:
 
 ```
-/grace-status
+.vibestart/src/skills/vs-init/SKILL.md
+```
+
+**This skill will tell you:**
+- How to check framework integrity
+- How to detect and resolve conflicts
+- How to create project configuration
+- How to generate AGENTS.md
+- How to create GRACE artifacts
+
+---
+
+## Step 3: Follow vs-init instructions
+
+Open and read `.vibestart/src/skills/vs-init/SKILL.md`, then follow its instructions.
+
+The skill will guide you through:
+1. Framework integrity check (7 checks)
+2. Conflict detection (6 types)
+3. Conflict resolution
+4. AGENTS.md generation
+5. GRACE artifacts creation
+
+---
+
+## Quick Reference
+
+| What | Where |
+|------|-------|
+| **Framework** | `.vibestart/` |
+| **Skills** | `.vibestart/src/skills/` |
+| **Standards** | `.vibestart/src/standards/` |
+| **Templates** | `.vibestart/src/templates/` |
+| **Fragments** | `.vibestart/src/fragments/` |
+| **vs-init skill** | `.vibestart/src/skills/vs-init/SKILL.md` |
+
+---
+
+## What Gets Created
+
+After following vs-init instructions:
+
+```
+user-project/
+├── .vibestart/              # Framework (you just cloned this)
+│   └── src/
+│       ├── skills/
+│       ├── standards/
+│       ├── templates/
+│       └── fragments/
+├── vs.project.toml          # Project configuration (you will create)
+├── AGENTS.md                # Agent instructions (you will generate)
+└── docs/                    # GRACE artifacts (you will create)
+    ├── development-plan.xml
+    ├── requirements.xml
+    ├── knowledge-graph.xml
+    ├── verification-plan.xml
+    ├── technology.xml
+    ├── SESSION_LOG.md
+    └── TASK_LOG.md
 ```
 
 ---
@@ -76,7 +117,7 @@ This single command will:
 
 ### The Problem
 
-You're new to AI-assisted development. You have:
+The user is new to AI-assisted development. They have:
 - ❌ No idea how to structure AI instructions
 - ❌ No methodology for AI to follow
 - ❌ No way to track decisions across sessions
@@ -84,8 +125,8 @@ You're new to AI-assisted development. You have:
 
 ### The Solution
 
-vibestart gives you:
-- ✅ **One-command setup** — `/vs-init` does everything
+vibestart provides:
+- ✅ **One-command setup** — vs-init does everything
 - ✅ **GRACE methodology** — contract-driven development with knowledge graphs
 - ✅ **Session continuity** — AI remembers what it did yesterday
 - ✅ **Agent transparency** — every action is traceable
@@ -97,7 +138,7 @@ vibestart gives you:
 
 | Feature | vibestart | GRACE marketplace | ai-standards | Manual setup |
 |---------|-----------|-------------------|--------------|--------------|
-| **One-command init** | ✅ `/vs-init` | ❌ Multiple steps | ❌ Manual copy | ❌ Hours of work |
+| **One-command init** | ✅ vs-init | ❌ Multiple steps | ❌ Manual copy | ❌ Hours of work |
 | **Conflict detection** | ✅ 6 types | ❌ None | ❌ None | ❌ None |
 | **AGENTS.md generation** | ✅ Auto from fragments | ❌ Manual | ❌ Manual | ❌ Manual |
 | **Migration support** | ✅ v1.0, grace-marketplace | ❌ None | ❌ None | ❌ None |
@@ -106,77 +147,17 @@ vibestart gives you:
 | **Template system** | ✅ 6 XML templates | ❌ None | ❌ None | ❌ None |
 | **Macro workflows** | ✅ 5 GRACE macros | ⚠️ Basic | ❌ None | ❌ None |
 
-### What vibestart Adds
-
-**On top of GRACE marketplace:**
-- Automated initialization with conflict detection
-- AGENTS.md generation from modular fragments
-- Session management (SESSION_LOG.md + TASK_LOG.md)
-- Agent transparency protocol
-- Migration from v1.0 and grace-marketplace
-
-**On top of ai-standards:**
-- Full GRACE methodology implementation
-- Knowledge graphs for project navigation
-- Verification plans for testing strategy
-- Macro-based workflows
-
----
-
-## 📦 What Gets Created
-
-After running `/vs-init`:
-
-```
-your-project/
-├── vs.project.toml        # Master configuration
-├── AGENTS.md              # Agent instructions (generated)
-└── docs/
-    ├── development-plan.xml   # Module definitions
-    ├── requirements.xml       # Product requirements
-    ├── knowledge-graph.xml    # Project navigation
-    ├── verification-plan.xml  # Test strategy
-    ├── technology.xml         # Stack decisions
-    ├── SESSION_LOG.md         # Session tracking
-    └── TASK_LOG.md            # Task checklist
-```
-
----
-
-## 🎯 Available Commands
-
-### Management
-
-| Command | Description |
-|---------|-------------|
-| `/vs-init` | Initialize project, detect conflicts, generate AGENTS.md |
-
-### GRACE Workflow
-
-| Command | When to use |
-|---------|-------------|
-| `/grace-init` | Bootstrap GRACE structure |
-| `/grace-plan` | Design modules and contracts |
-| `/grace-execute` | Implement modules |
-| `/grace-verification` | Define test strategy |
-| `/grace-reviewer` | Review code before commit |
-| `/grace-refresh` | Sync code ↔ docs after changes |
-| `/grace-status` | Check project health |
-| `/grace-fix` | Debug with GRACE navigation |
-| `/grace-ask` | Ask questions about project |
-| `/grace-explainer` | Learn GRACE methodology |
-
 ---
 
 ## 🌐 Supported Agents
 
-| Agent | Status | Skills Directory |
-|-------|--------|-----------------|
-| **Kilo Code** | ✅ Full | `.kilocode/skills/` |
-| **Cursor** | ✅ Full | `.cursor/skills/` |
-| **Claude Code** | ✅ Basic | `.claude/skills/` |
-| **Windsurf** | ⏳ Partial | `.windsurf/skills/` |
-| **Aider** | ⏳ Partial | `.aider/skills/` |
+| Agent | Status | Notes |
+|-------|--------|-------|
+| **Kilo Code** | ✅ Full | Primary target, all features tested |
+| **Cursor** | ✅ Full | All features work |
+| **Claude Code** | ✅ Basic | Core functionality works |
+| **Windsurf** | ⏳ Partial | On request |
+| **Aider** | ⏳ Partial | On request |
 
 ---
 
