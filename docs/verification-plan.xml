@@ -524,6 +524,108 @@
       <verification-level>phase</verification-level>
       <safe-for-autonomous>true</safe-for-autonomous>
     </V-M-GRACEVERIFY>
+
+    <V-M-GRACESETUP MODULE="M-GRACESETUP">
+      <contract>
+        <purpose>Verify grace-setup-subagents creates valid subagent presets</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification, file-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>check: agents/ directory contains shell presets</file>
+        <file>check: references/roles/ contains role definitions</file>
+        <file>Manual: Test generated agent files are valid YAML/MD</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Shell detection: correctly identifies target shell</scenario-1>
+        <scenario-2>Agent file example found and parsed</scenario-2>
+        <scenario-3>Role prompts loaded from references/roles/</scenario-3>
+        <scenario-4>4 default subagents created: module-implementer, contract-reviewer, verification-reviewer, fixer</scenario-4>
+        <scenario-5>Generated files follow shell-specific format</scenario-5>
+        <scenario-6>Report generated with detected shell, target directory, and created files</scenario-6>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-setup-subagents] Step 1: Detecting current shell...</trace-1>
+        <trace-2>[SKILL:grace-setup-subagents] Step 2: Finding agent file example...</trace-2>
+        <trace-3>[SKILL:grace-setup-subagents] Step 3: Choosing scope and target directory...</trace-3>
+        <trace-4>[SKILL:grace-setup-subagents] Step 4: Reading role prompts from references/roles/...</trace-4>
+        <trace-5>[SKILL:grace-setup-subagents] Step 5: Rendering shell-specific agent files...</trace-5>
+        <trace-6>[SKILL:grace-setup-subagents] Step 6: Reporting created files...</trace-6>
+        <trace-7>[SKILL:grace-setup-subagents] ✓ Subagent presets created successfully</trace-7>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-setup-subagents in test project</test-command>
+        <trace-validation>Verify all 6 step markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>DETECT_SHELL</block>
+        <block>FIND_EXAMPLE</block>
+        <block>READ_ROLES</block>
+        <block>RENDER_AGENTS</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>false</safe-for-autonomous>
+      <requires-human-oversight>
+        <reason>Shell detection may need user confirmation if ambiguous</reason>
+        <reason>Scope choice (project-local vs global) needs user input</reason>
+      </requires-human-oversight>
+    </V-M-GRACESETUP>
+
+    <V-M-GRACEMULTIEXEC MODULE="M-GRACEMULTIEXEC">
+      <contract>
+        <purpose>Verify grace-multiagent-execute runs parallel waves correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification, integration-checks</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test with sample development-plan.xml</file>
+        <file>Manual: Verify safety profiles work (conservative, balanced, aggressive)</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Prerequisites checked: development-plan.xml, knowledge-graph.xml, verification-plan.xml exist</scenario-1>
+        <scenario-2>Execution waves built with parallel-safe grouping</scenario-2>
+        <scenario-3>Safety profile selected: safe, balanced, or fast</scenario-3>
+        <scenario-4>Execution packets prepared for each module</scenario-4>
+        <scenario-5>Ownership assigned: controller, workers, reviewers</scenario-5>
+        <scenario-6>Fresh workers dispatched per wave</scenario-6>
+        <scenario-7>Scoped reviews run after each worker</scenario-7>
+        <scenario-8>Controller integration with batch graph sync</scenario-8>
+        <scenario-9>Verification run at worker, wave, and phase levels</scenario-9>
+        <scenario-10>Wave report generated with modules, approvals, sync status</scenario-10>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-multiagent-execute] Step 1: Building execution waves...</trace-1>
+        <trace-2>[SKILL:grace-multiagent-execute] Step 2: Assigning ownership...</trace-2>
+        <trace-3>[SKILL:grace-multiagent-execute] Step 3: Dispatching wave N workers...</trace-3>
+        <trace-4>[SKILL:grace-multiagent-execute] Step 4: Running scoped reviews...</trace-4>
+        <trace-5>[SKILL:grace-multiagent-execute] Step 5: Controller integration and batch sync...</trace-5>
+        <trace-6>[SKILL:grace-multiagent-execute] Step 6: Verifying by level...</trace-6>
+        <trace-7>[SKILL:grace-multiagent-execute] Step 7: Controller shared-artifact commits...</trace-7>
+        <trace-8>[SKILL:grace-multiagent-execute] === WAVE COMPLETE ===</trace-8>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-multiagent-execute with test plan</test-command>
+        <trace-validation>Verify wave execution markers and completion reports appear</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>BUILD_WAVES</block>
+        <block>ASSIGN_OWNERSHIP</block>
+        <block>DISPATCH_WORKERS</block>
+        <block>SCOPED_REVIEW</block>
+        <block>CONTROLLER_SYNC</block>
+        <block>VERIFY_BY_LEVEL</block>
+      </critical-blocks>
+      <verification-level>phase</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEMULTIEXEC>
   </ModuleChecks>
 
   <PhaseGates>
@@ -659,12 +761,14 @@
       <module>M-FRAGMENTS</module>
       <module>M-GRACEEXEC</module>
       <module>M-GRACEVERIFY</module>
+      <module>M-GRACEMULTIEXEC</module>
     </safe-modules>
     
     <requires-oversight-modules>
       <module reason="conflict resolution needs user decision">M-VSINIT</module>
       <module reason="project info gathering needs user input">M-GRACEINIT</module>
       <module reason="architecture approval needs user confirmation">M-GRACEPLAN</module>
+      <module reason="shell detection and scope choice may need user confirmation">M-GRACESETUP</module>
     </requires-oversight-modules>
     
     <justification>
@@ -684,14 +788,14 @@
   <Health>
     <last-updated>2026-03-24</last-updated>
     <coverage>
-      <modules-covered>9/15</modules-covered>
+      <modules-covered>11/16</modules-covered>
       <phase-gates-defined>4/4</phase-gates-defined>
       <deterministic-checks>4</deterministic-checks>
-      <trace-based-checks>5</trace-based-checks>
+      <trace-based-checks>7</trace-based-checks>
     </coverage>
     <verification-readiness>
-      <autonomous-ready>6 modules</autonomous-ready>
-      <requires-oversight>3 modules</requires-oversight>
+      <autonomous-ready>7 modules</autonomous-ready>
+      <requires-oversight>4 modules</requires-oversight>
     </verification-readiness>
   </Health>
   

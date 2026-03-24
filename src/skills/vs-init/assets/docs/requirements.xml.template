@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template: assets/docs/requirements.xml.template -->
+<Requirements VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>$PROJECT_NAME</name>
+    <version>$PROJECT_VERSION</version>
+    <annotation>$PROJECT_ANNOTATION</annotation>
+  </ProjectInfo>
+
+  <UseCases>
+    <!-- Use cases use unique ID-based tags:
+         <UC-001>
+           <title>Use case title</title>
+           <actor>Who initiates</actor>
+           <precondition>What must be true before</precondition>
+           <flow>
+             <step-1>First step</step-1>
+             <step-2>Second step</step-2>
+             <step-3>Third step</step-3>
+           </flow>
+           <postcondition>What is true after</postcondition>
+           <priority>P0 | P1 | P2 | P3</priority>
+           <status>planned | in-progress | done</status>
+         </UC-001>
+    -->
+  </UseCases>
+
+  <Decisions>
+    <!-- Decisions use unique ID-based tags:
+         <D-001 DATE="YYYY-MM-DD" STATUS="proposed | approved | rejected">
+           <summary>Decision summary</summary>
+           <rationale>Why this decision was made</rationale>
+           <alternatives>
+             <alt name="..." rejected="true | false" reason="..." />
+           </alternatives>
+           <impacts>
+             <module>M-XXX</module>
+           </impacts>
+           <links>
+             <ref doc="requirements.xml" id="UC-XXX" />
+             <ref doc="development-plan.xml" id="M-XXX" />
+           </links>
+         </D-001>
+    -->
+  </Decisions>
+
+  <Constraints>
+    <technical>
+      <constraint-1>$TECHNICAL_CONSTRAINT_1</constraint-1>
+      <constraint-2>$TECHNICAL_CONSTRAINT_2</constraint-2>
+    </technical>
+    <business>
+      <constraint-1>$BUSINESS_CONSTRAINT_1</constraint-1>
+      <constraint-2>$BUSINESS_CONSTRAINT_2</constraint-2>
+    </business>
+    <regulatory>
+      <constraint-1>$REGULATORY_CONSTRAINT_1</constraint-1>
+    </regulatory>
+  </Constraints>
+
+  <Glossary>
+    <!-- Define domain-specific terms:
+         <term name="...">Definition</term>
+    -->
+  </Glossary>
+  
+</Requirements>

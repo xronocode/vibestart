@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Standard VERSION="1.0.0" NAME="GRACE Methodology">
+  
+  <purpose>
+    GRACE (Guided Rapid Architecture with Contract-First Execution) provides
+    structure, contracts, verification, and traceability for AI-assisted development.
+  </purpose>
+  
+  <principles>
+    <principle name="contract-first">Every module has a contract before implementation</principle>
+    <principle name="semantic-markup">Code is annotated with semantic blocks</principle>
+    <principle name="layered-architecture">Modules are organized in dependency layers</principle>
+    <principle name="knowledge-graph">Modules and relationships form a navigable graph</principle>
+  </principles>
+  
+  <artifacts>
+    <artifact name="requirements.xml" purpose="What to build" required="true" />
+    <artifact name="technology.xml" purpose="How to build" required="true" />
+    <artifact name="development-plan.xml" purpose="Module structure" required="true" />
+    <artifact name="knowledge-graph.xml" purpose="Relationships" required="true" />
+    <artifact name="verification-plan.xml" purpose="Test strategy" required="true" />
+    <artifact name="decisions.xml" purpose="Architectural decisions" required="false" />
+  </artifacts>
+  
+  <layers>
+    <layer number="0" types="UTILITY,DATA_LAYER" dependencies="none" />
+    <layer number="1" types="CORE_LOGIC,DOMAIN" dependencies="layer-0" />
+    <layer number="2" types="INTEGRATION" dependencies="layer-0,layer-1" />
+    <layer number="3" types="ENTRY_POINT,UI_COMPONENT" dependencies="layer-0,layer-1,layer-2" />
+  </layers>
+  
+  <rules>
+    
+    <rule id="GR-001" severity="MANDATORY">
+      <text>Define contract before implementation</text>
+      <steps>
+        <step>Define module in development-plan.xml</step>
+        <step>Specify contract (purpose, input, output, errors)</step>
+        <step>Add to knowledge graph</step>
+        <step>Define verification strategy</step>
+      </steps>
+    </rule>
+    
+    <rule id="GR-002" severity="MANDATORY">
+      <text>Use semantic blocks in all functions</text>
+      <block-types>
+        <type pattern="BLOCK_VALIDATE_*">Input validation</type>
+        <type pattern="BLOCK_PROCESS_*">Processing logic</type>
+        <type pattern="BLOCK_DB_*">Database operations</type>
+        <type pattern="BLOCK_RETURN">Return statements</type>
+        <type pattern="BLOCK_ERROR_*">Error handling</type>
+      </block-types>
+    </rule>
+    
+    <rule id="GR-003" severity="MANDATORY">
+      <text>Respect layer dependencies</text>
+      <valid-dependencies>
+        <layer from="0" to="none" />
+        <layer from="1" to="0" />
+        <layer from="2" to="0,1" />
+        <layer from="3" to="0,1,2" />
+      </valid-dependencies>
+      <violation>Layer violation: higher layers cannot depend on lower layers</violation>
+    </rule>
+    
+    <rule id="GR-004" severity="MANDATORY">
+      <text>Maintain knowledge graph synchronization</text>
+      <requirements>
+        <requirement>Add new modules as nodes</requirement>
+        <requirement>Record dependencies as edges</requirement>
+        <requirement>Update on refactoring</requirement>
+        <requirement>Remove deleted modules</requirement>
+      </requirements>
+    </rule>
+    
+    <rule id="GR-005" severity="MANDATORY">
+      <text>Log with semantic block context</text>
+      <format>[Module][function][BLOCK_NAME] message</format>
+    </rule>
+    
+  </rules>
+  
+  <workflow>
+    <step order="1" action="define-requirements" artifact="requirements.xml" />
+    <step order="2" action="design-modules" skill="grace-plan" />
+    <step order="3" action="define-tests" skill="grace-verification" />
+    <step order="4" action="implement" skill="grace-execute" />
+    <step order="5" action="review" skill="grace-reviewer" />
+    <step order="6" action="sync-artifacts" skill="grace-refresh" />
+  </workflow>
+  
+</Standard>

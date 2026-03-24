@@ -165,27 +165,44 @@
       </exports>
     </M-GRACEASK>
 
-    <M-GRACEEXPLAIN>
-      <name>grace-explainer</name>
+    <M-STACKFRAGMENTS>
+      <name>StackFragments</name>
       <type>UTILITY</type>
-      <layer>1</layer>
-      <description>GRACE methodology reference</description>
-      <source>src/skills/grace/grace-explainer/SKILL.md</source>
+      <layer>0</layer>
+      <description>Stack-specific coding conventions and patterns</description>
+      <source>src/fragments/stacks/</source>
       <exports>
-        <export-explainMethodology PURPOSE="Describe GRACE principles" />
+        <export-loadStackFragment PURPOSE="Load stack-specific fragment" />
+        <export-assembleStackFragments PURPOSE="Combine stack fragments" />
       </exports>
-    </M-GRACEEXPLAIN>
+    </M-STACKFRAGMENTS>
 
-    <M-GRACEREVIEWER>
-      <name>grace-reviewer</name>
+    <M-GRACESETUP>
+      <name>grace-setup-subagents</name>
       <type>UTILITY</type>
       <layer>1</layer>
-      <description>Code review with GRACE context</description>
-      <source>src/skills/grace/grace-reviewer/SKILL.md</source>
+      <description>Create GRACE subagent presets for agent shells</description>
+      <source>src/skills/grace/grace-setup-subagents/SKILL.md</source>
       <exports>
-        <export-reviewCode PURPOSE="Check code against contracts" />
+        <export-createWorkerPreset PURPOSE="Create worker agent preset" />
+        <export-createReviewerPreset PURPOSE="Create reviewer agent preset" />
+        <export-createCoordinatorPreset PURPOSE="Create coordinator preset" />
       </exports>
-    </M-GRACEREVIEWER>
+    </M-GRACESETUP>
+
+    <M-GRACEMULTIEXEC>
+      <name>grace-multiagent-execute</name>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Execute GRACE plan with parallel agents</description>
+      <source>src/skills/grace/grace-multiagent-execute/SKILL.md</source>
+      <exports>
+        <export-analyzeDependencies PURPOSE="Calculate wave execution order" />
+        <executeWave PURPOSE="Execute modules in parallel" />
+        <batchSync PURPOSE="Synchronize artifacts after wave" />
+        <runReview PURPOSE="Run scoped reviews" />
+      </exports>
+    </M-GRACEMULTIEXEC>
   </Nodes>
 
   <Edges>
@@ -221,6 +238,15 @@
     
     <edge from="M-GRACEREVIEWER" to="M-GRACEPLAN" type="depends" />
     <edge from="M-GRACEREVIEWER" to="M-STANDARDS" type="depends" />
+    
+    <!-- grace-setup-subagents dependencies -->
+    <edge from="M-GRACESETUP" to="M-TEMPLATES" type="depends" />
+    
+    <!-- grace-multiagent-execute dependencies -->
+    <edge from="M-GRACEMULTIEXEC" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEMULTIEXEC" to="M-GRACESETUP" type="depends" />
+    <edge from="M-GRACEMULTIEXEC" to="M-GRACEVERIFY" type="depends" />
+    <edge from="M-GRACEMULTIEXEC" to="M-GRACEEXEC" type="extends" />
   </Edges>
 
   <CrossLinks>
@@ -232,11 +258,13 @@
     <CrossLink from="M-VSINIT" to="V-M-VSINIT" doc="verification-plan.xml" />
     <CrossLink from="M-GRACEINIT" to="V-M-GRACEINIT" doc="verification-plan.xml" />
     <CrossLink from="M-GRACEPLAN" to="V-M-GRACEPLAN" doc="verification-plan.xml" />
+    <CrossLink from="M-GRACESETUP" to="V-M-GRACESETUP" doc="verification-plan.xml" />
+    <CrossLink from="M-GRACEMULTIEXEC" to="V-M-GRACEMULTIEXEC" doc="verification-plan.xml" />
   </CrossLinks>
 
   <Layers>
-    <layer-0 count="4" modules="M-CONFIG, M-STANDARDS, M-TEMPLATES, M-FRAGMENTS" />
-    <layer-1 count="11" modules="M-VSINIT, M-GRACEINIT, M-GRACEPLAN, M-GRACEEXEC, M-GRACEVERIFY, M-GRACEREFRESH, M-GRACESTATUS, M-GRACEFIX, M-GRACEASK, M-GRACEEXPLAIN, M-GRACEREVIEWER" />
+    <layer-0 count="5" modules="M-CONFIG, M-STANDARDS, M-TEMPLATES, M-FRAGMENTS, M-STACKFRAGMENTS" />
+    <layer-1 count="11" modules="M-VSINIT, M-GRACEINIT, M-GRACEPLAN, M-GRACEEXEC, M-GRACEVERIFY, M-GRACEREFRESH, M-GRACESTATUS, M-GRACEFIX, M-GRACEASK, M-GRACESETUP, M-GRACEMULTIEXEC" />
   </Layers>
 
   <Health>

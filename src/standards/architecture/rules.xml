@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Standard VERSION="1.0.0" NAME="Architecture">
+  
+  <purpose>
+    Defines module types, layer dependencies, and architectural constraints
+    for maintainable code.
+  </purpose>
+  
+  <layers>
+    <layer number="0" name="Foundation">
+      <types>
+        <type name="UTILITY">Pure functions, no state</type>
+        <type name="DATA_LAYER">Data persistence</type>
+      </types>
+      <dependencies>none</dependencies>
+    </layer>
+    <layer number="1" name="Core">
+      <types>
+        <type name="CORE_LOGIC">Business rules</type>
+        <type name="DOMAIN">Domain models</type>
+      </types>
+      <dependencies>layer-0</dependencies>
+    </layer>
+    <layer number="2" name="Integration">
+      <types>
+        <type name="INTEGRATION">External services</type>
+      </types>
+      <dependencies>layer-0,layer-1</dependencies>
+    </layer>
+    <layer number="3" name="Interface">
+      <types>
+        <type name="ENTRY_POINT">API routes, CLI</type>
+        <type name="UI_COMPONENT">User interface</type>
+      </types>
+      <dependencies>layer-0,layer-1,layer-2</dependencies>
+    </layer>
+  </layers>
+  
+  <rules>
+    
+    <rule id="AR-001" severity="MANDATORY">
+      <text>Respect layer boundaries</text>
+      <valid>
+        <dependency from="1" to="0" />
+        <dependency from="2" to="0,1" />
+        <dependency from="3" to="0,1,2" />
+      </valid>
+      <invalid>
+        <dependency from="0" to="1" />
+        <dependency from="1" to="2" />
+      </invalid>
+    </rule>
+    
+    <rule id="AR-002" severity="MANDATORY">
+      <text>No circular dependencies</text>
+      <violation>Modules must not form circular dependency chains</violation>
+    </rule>
+    
+    <rule id="AR-003" severity="RECOMMENDED">
+      <text>Single responsibility per module</text>
+      <guideline>Each module should have one clear purpose</guideline>
+    </rule>
+    
+    <rule id="AR-004" severity="RECOMMENDED">
+      <text>Interface segregation</text>
+      <guideline>Prefer small, focused interfaces over large ones</guideline>
+    </rule>
+    
+  </rules>
+  
+  <patterns>
+    <pattern name="Repository">For data access abstraction</pattern>
+    <pattern name="Service">For business logic encapsulation</pattern>
+    <pattern name="Factory">For complex object creation</pattern>
+  </patterns>
+  
+  <anti-patterns>
+    <anti-pattern name="God Object">Module does too much - split into focused modules</anti-pattern>
+    <anti-pattern name="Spaghetti Code">Unclear flow - use layered architecture</anti-pattern>
+    <anti-pattern name="Copy-Paste">Duplication - extract to shared module</anti-pattern>
+    <anti-pattern name="Hardcoded Values">Inflexible - use configuration</anti-pattern>
+  </anti-patterns>
+  
+  <directory-structure>
+    <directory path="src/config">Configuration (Layer 0)</directory>
+    <directory path="src/database">Data layer (Layer 0)</directory>
+    <directory path="src/modules">Feature modules (Layer 1)</directory>
+    <directory path="src/integrations">External services (Layer 2)</directory>
+    <directory path="src/routes">API routes (Layer 3)</directory>
+  </directory-structure>
+  
+  <module-structure>
+    <file path="index.ts">Public exports</file>
+    <file path="contract.ts">Interface/types</file>
+    <file path="impl.ts">Implementation</file>
+    <file path="errors.ts">Error definitions</file>
+    <file path="*.test.ts">Tests</file>
+  </module-structure>
+  
+</Standard>

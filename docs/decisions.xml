@@ -146,6 +146,59 @@
         <notes>GRACE artifacts created successfully, templates validated</notes>
       </review>
     </D-003>
+
+    <D-004 DATE="2026-03-24" STATUS="approved">
+      <summary>Adopt template-embedded approach for vs-init</summary>
+      <context>
+        <problem>Original vs-init used git clone to fetch templates from external repository, creating dependencies on network access, git installation, and leaving partial state on clone failures. The 911-line specification with 6 phases and 18+ decision points was over-engineered for AI execution.</problem>
+        <constraints>Must work reliably for AI execution, support offline operation, reduce complexity</constraints>
+      </context>
+      <options>
+        <option-1 name="template-embedded">
+          <description>Embed all templates directly in the skill's assets/ directory</description>
+          <pros>Eliminates external dependency, enables offline operation, simpler error handling, more reliable AI execution</pros>
+          <cons>Requires migration of existing template files, documentation updates</cons>
+          <score>9/10</score>
+        </option-1>
+        <option-2 name="git-clone">
+          <description>Keep existing git clone approach with external framework</description>
+          <pros>Centralized template management, automatic updates via git pull</pros>
+          <cons>Network dependency, git installation required, complex error handling, partial state on failures</cons>
+          <score>4/10</score>
+        </option-2>
+        <option-3 name="hybrid">
+          <description>Default to embedded templates, optionally sync from git</description>
+          <pros>Best of both worlds, optional updates</pros>
+          <cons>Increased complexity, two code paths to maintain</cons>
+          <score>6/10</score>
+        </option-3>
+      </options>
+      <decision>
+        <chosen>template-embedded</chosen>
+        <rationale>Eliminates external framework dependency, enables offline operation, makes vs-init more reliable for AI execution, follows grace-marketplace pattern (48-line spec vs 911-line), reduces maintenance burden, simpler error handling</rationale>
+      </decision>
+      <impacts>
+        <module>M-VSINIT</module>
+      </impacts>
+      <consequences>
+        <positive>Simpler vs-init (911 to 197 lines, 78% reduction), more reliable AI execution, offline support, faster initialization</positive>
+        <negative>Requires migration of existing template files, documentation updates, verification scripts need updates</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-001" />
+        <ref doc="requirements.xml" id="UC-004" />
+        <ref doc="requirements.xml" id="UC-005" />
+        <ref doc="decisions.xml" id="D-001" />
+        <ref doc="decisions.xml" id="D-002" />
+        <ref doc="development-plan.xml" id="M-VSINIT" />
+        <ref doc="knowledge-graph.xml" id="M-VSINIT" />
+      </links>
+      <review>
+        <date>2026-03-24</date>
+        <outcome>implemented</outcome>
+        <notes>vs-init SKILL.md reduced from 911 to 197 lines, 8 template files created in assets/ directory, framework clone workflow eliminated</notes>
+      </review>
+    </D-004>
   </Decisions>
 
   <Categories>
@@ -156,10 +209,10 @@
   </Categories>
 
   <Statistics>
-    <total>3</total>
+    <total>4</total>
     <by-status>
       <proposed>0</proposed>
-      <approved>3</approved>
+      <approved>4</approved>
       <rejected>0</rejected>
       <superseded>0</superseded>
     </by-status>

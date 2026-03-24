@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Standard VERSION="1.0.0" NAME="Error Handling">
+  
+  <purpose>
+    Defines error types, logging conventions, error propagation patterns,
+    and recovery strategies for reliable applications.
+  </purpose>
+  
+  <error-types>
+    <type name="AppError" base="Error">
+      <field name="code" type="string" />
+      <field name="statusCode" type="number" default="500" />
+      <field name="details" type="object" optional="true" />
+    </type>
+    <type name="ValidationError" extends="AppError" statusCode="400" />
+    <type name="NotFoundError" extends="AppError" statusCode="404" />
+    <type name="AuthorizationError" extends="AppError" statusCode="401" />
+  </error-types>
+  
+  <error-codes>
+    <category prefix="VAL_" name="Validation">
+      <code>VAL_INVALID_INPUT</code>
+      <code>VAL_MISSING_FIELD</code>
+      <code>VAL_INVALID_FORMAT</code>
+    </category>
+    <category prefix="AUTH_" name="Authentication">
+      <code>AUTH_INVALID_TOKEN</code>
+      <code>AUTH_EXPIRED</code>
+      <code>AUTH_INVALID_CREDENTIALS</code>
+    </category>
+    <category prefix="AUTHZ_" name="Authorization">
+      <code>AUTHZ_FORBIDDEN</code>
+      <code>AUTHZ_INSUFFICIENT</code>
+    </category>
+    <category prefix="DB_" name="Database">
+      <code>DB_CONNECTION</code>
+      <code>DB_QUERY_FAILED</code>
+      <code>DB_CONSTRAINT</code>
+    </category>
+    <category prefix="EXT_" name="External">
+      <code>EXT_API_ERROR</code>
+      <code>EXT_TIMEOUT</code>
+      <code>EXT_CIRCUIT_OPEN</code>
+    </category>
+    <category prefix="INT_" name="Internal">
+      <code>INT_CONFIG</code>
+      <code>INT_UNEXPECTED</code>
+    </category>
+  </error-codes>
+  
+  <rules>
+    
+    <rule id="EH-001" severity="MANDATORY">
+      <text>Use structured error codes</text>
+      <format>CATEGORY_SPECIFIC (e.g., VAL_INVALID_INPUT)</format>
+    </rule>
+    
+    <rule id="EH-002" severity="MANDATORY">
+      <text>Log errors with context</text>
+      <required-fields>
+        <field>errorCode</field>
+        <field>semantic block</field>
+        <field>correlationId</field>
+      </required-fields>
+      <format>[Module][function][BLOCK_ERROR] message</format>
+    </rule>
+    
+    <rule id="EH-003" severity="MANDATORY">
+      <text>Never log secrets</text>
+      <redact>
+        <field>passwords</field>
+        <field>tokens</field>
+        <field>api keys</field>
+        <field>personal data</field>
+      </redact>
+    </rule>
+    
+    <rule id="EH-004" severity="MANDATORY">
+      <text>Propagate errors with context</text>
+      <guideline>When re-throwing, preserve original error information</guideline>
+    </rule>
+    
+    <rule id="EH-005" severity="MANDATORY">
+      <text>Handle errors at boundaries</text>
+      <guideline>Catch and transform errors at module boundaries (Layer 3)</guideline>
+    </rule>
+    
+  </rules>
+  
+  <recovery-strategies>
+    <strategy name="Retry">
+      <use-case>Transient errors (network, timeout)</use-case>
+      <pattern>Exponential backoff</pattern>
+    </strategy>
+    <strategy name="Circuit Breaker">
+      <use-case>External service failures</use-case>
+      <pattern>Open after threshold failures</pattern>
+    </strategy>
+    <strategy name="Fallback">
+      <use-case>Non-critical failures</use-case>
+      <pattern>Return cached or default value</pattern>
+    </strategy>
+  </recovery-strategies>
+  
+  <status-code-mapping>
+    <mapping code="VAL_*" status="400" />
+    <mapping code="AUTH_*" status="401" />
+    <mapping code="AUTHZ_*" status="403" />
+    <mapping code="NOT_FOUND" status="404" />
+    <mapping code="CONFLICT" status="409" />
+    <mapping code="INT_*" status="500" />
+    <mapping code="EXT_*" status="502" />
+  </status-code-mapping>
+  
+</Standard>

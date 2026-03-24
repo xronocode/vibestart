@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Standard VERSION="1.0.0" NAME="Git Workflow">
+  
+  <purpose>
+    Defines commit format, branching strategy, pull request process,
+    and code review guidelines for consistent version control.
+  </purpose>
+  
+  <commit-format>
+    <pattern>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</pattern>
+    <types>
+      <type name="feat">New feature</type>
+      <type name="fix">Bug fix</type>
+      <type name="docs">Documentation</type>
+      <type name="style">Formatting</type>
+      <type name="refactor">Code refactoring</type>
+      <type name="test">Adding tests</type>
+      <type name="chore">Maintenance</type>
+    </types>
+    <grace-format>
+      <pattern>grace(M-XXX): short description</pattern>
+      <body>
+        Phase N, Step N
+        Module: ModuleName (src/path/to/file.ts)
+        Contract: one-line purpose
+      </body>
+    </grace-format>
+  </commit-format>
+  
+  <branching>
+    <strategy>Feature branches from main</strategy>
+    <naming>
+      <pattern type="feature">feature/M-XXX-desc</pattern>
+      <pattern type="bugfix">bugfix/desc</pattern>
+      <pattern type="refactor">refactor/desc</pattern>
+      <pattern type="docs">docs/desc</pattern>
+    </naming>
+  </branching>
+  
+  <rules>
+    
+    <rule id="GW-001" severity="MANDATORY">
+      <text>Use conventional commits</text>
+      <format>type(scope): description</format>
+    </rule>
+    
+    <rule id="GW-002" severity="MANDATORY">
+      <text>Use feature branches</text>
+      <guideline>Create branch from main for each feature/fix</guideline>
+    </rule>
+    
+    <rule id="GW-003" severity="RECOMMENDED">
+      <text>Keep branches short-lived</text>
+      <guideline>Merge within 2-3 days</guideline>
+    </rule>
+    
+    <rule id="GW-004" severity="MANDATORY">
+      <text>Complete PR checklist before creating</text>
+      <checklist>
+        <item>All tests pass</item>
+        <item>No TypeScript/lint errors</item>
+        <item>Code follows GRACE standards</item>
+        <item>Semantic blocks present</item>
+        <item>Documentation updated</item>
+        <item>Commit messages follow format</item>
+      </checklist>
+    </rule>
+    
+    <rule id="GW-005" severity="MANDATORY">
+      <text>Require review before merge</text>
+      <requirements>
+        <requirement>At least one approval</requirement>
+        <requirement>Check GRACE compliance</requirement>
+        <requirement>Run /grace-reviewer</requirement>
+      </requirements>
+    </rule>
+    
+    <rule id="GW-006" severity="RECOMMENDED">
+      <text>Squash and merge</text>
+      <guideline>Squash feature branch commits, delete after merge</guideline>
+    </rule>
+    
+  </rules>
+  
+  <pre-commit>
+    <step order="1">Run /grace-status</step>
+    <step order="2">Run /grace-reviewer --module=M-XXX</step>
+    <step order="3">Run tests</step>
+    <step order="4">Commit with conventional format</step>
+    <step order="5">Run /grace-refresh</step>
+  </pre-commit>
+  
+  <anti-patterns>
+    <anti-pattern name="Commit secrets">Use environment variables</anti-pattern>
+    <anti-pattern name="Large commits">Break into smaller commits</anti-pattern>
+    <anti-pattern name="Unclear messages">Use conventional commits</anti-pattern>
+    <anti-pattern name="Direct main commits">Use feature branches</anti-pattern>
+    <anti-pattern name="Long-lived branches">Merge within 2-3 days</anti-pattern>
+  </anti-patterns>
+  
+</Standard>
