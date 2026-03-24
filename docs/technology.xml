@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Technology VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>vibestart</name>
+    <version>2.1.0</version>
+  </ProjectInfo>
+
+  <Stack>
+    <language>Markdown</language>
+    <runtime>N/A</runtime>
+    <framework>GRACE</framework>
+    <version>
+      <language>N/A</language>
+      <runtime>N/A</runtime>
+      <framework>2.0.0</framework>
+    </version>
+  </Stack>
+
+  <Dependencies>
+    <production>
+      <dep name="markdown" version="any" purpose="Skill definitions, documentation, fragments" />
+      <dep name="xml" version="any" purpose="Templates, standards rules, GRACE artifacts" />
+      <dep name="toml" version="any" purpose="Framework and project configuration" />
+    </production>
+    <development>
+      <dep name="git" version="any" purpose="Version control, cloning framework" />
+      <dep name="vscode" version="any" purpose="Primary editor with AI agent extensions" />
+    </development>
+  </Dependencies>
+
+  <Testing>
+    <framework>Manual Review</framework>
+    <runner>N/A</runner>
+    <assertion-style>Visual inspection, XML validation</assertion-style>
+    <mocking-policy>N/A</mocking-policy>
+    <coverage-tool>N/A</coverage-tool>
+    <commands>
+      <test>Manual: Review skill files for completeness</test>
+      <test-watch>N/A</test-watch>
+      <coverage>N/A</coverage>
+    </commands>
+  </Testing>
+
+  <Observability>
+    <logger>Agent Transparency Protocol</logger>
+    <format>Structured prefixes: [SKILL:name], [STANDARD:name], [TOOL:name], [SYSTEM]</format>
+    <required-fields>skill-name, standard-name, action, result</required-fields>
+    <redaction>
+      <never-log>User credentials, API keys, private project details</never-log>
+    </redaction>
+  </Observability>
+
+  <Tooling>
+    <linter>markdownlint</linter>
+    <formatter>Prettier</formatter>
+    <type-checker>N/A</type-checker>
+    <commands>
+      <lint>markdownlint **/*.md</lint>
+      <format>prettier --write **/*.md</format>
+      <typecheck>N/A</typecheck>
+    </commands>
+  </Tooling>
+
+  <Infrastructure>
+    <database>N/A</database>
+    <cache>N/A</cache>
+    <queue>N/A</queue>
+    <storage>File system (markdown, XML, TOML files)</storage>
+  </Infrastructure>
+
+  <Decisions>
+    <decision id="TD-001">
+      <choice>Markdown + XML + TOML only</choice>
+      <rationale>No runtime required, works with any AI agent, easy to read and edit</rationale>
+      <alternatives>
+        <alt name="typescript-implementation" rejected="true" reason="Adds complexity, requires build step, limits portability" />
+        <alt name="json-config" rejected="true" reason="Less readable than TOML, no comments support" />
+      </alternatives>
+    </decision>
+    <decision id="TD-002">
+      <choice>Agent Transparency Protocol</choice>
+      <rationale>Provides structured logging for AI agent actions without runtime</rationale>
+      <alternatives>
+        <alt name="traditional-logging" rejected="true" reason="Requires runtime, not suitable for markdown-based framework" />
+        <alt name="no-observability" rejected="true" reason="Users can't understand what agent is doing" />
+      </alternatives>
+    </decision>
+    <decision id="TD-003">
+      <choice>Fragment-based AGENTS.md generation</choice>
+      <rationale>Modular, feature-aware, easy to customize per project</rationale>
+      <alternatives>
+        <alt name="static-AGENTS.md" rejected="true" reason="Can't adapt to different feature combinations" />
+        <alt name="template-only" rejected="true" reason="Less flexible than fragment assembly" />
+      </alternatives>
+    </decision>
+  </Decisions>
+  
+</Technology>

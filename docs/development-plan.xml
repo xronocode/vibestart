@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DevelopmentPlan VERSION="2.0.0">
+  
+  <ArchitectureNotes>
+    <objective>Provide AI development toolkit that simplifies GRACE framework adoption for developers new to AI-assisted coding</objective>
+    <non-goal>Replace GRACE marketplace, compete with ai-standards, provide runtime execution engine</non-goal>
+    <dogfooding>vibestart uses GRACE methodology for its own development to validate templates and provide real-world example</dogfooding>
+    <risk-1>Windows path handling breaks agent file discovery</risk-1>
+    <risk-2>Fragment assembly produces invalid AGENTS.md for edge cases</risk-2>
+    <risk-3>Conflict resolution loses user customizations</risk-3>
+  </ArchitectureNotes>
+
+  <Modules>
+    <!-- Layer 0: Foundation -->
+    <M-CONFIG NAME="Configuration" TYPE="UTILITY" LAYER="0" ORDER="1" STATUS="done">
+      <contract>
+        <purpose>Load and validate framework and project configuration</purpose>
+        <inputs>
+          <param name="configPath" type="string" />
+        </inputs>
+        <outputs>
+          <param name="config" type="object" />
+        </outputs>
+        <errors>
+          <error code="CONFIG_NOT_FOUND" />
+          <error code="CONFIG_INVALID" />
+        </errors>
+      </contract>
+      <interface>
+        <export-loadFrameworkConfig PURPOSE="Load src/framework.toml" />
+        <export-loadProjectConfig PURPOSE="Load vs.project.toml" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/framework.toml</source>
+        <tests>Manual validation</tests>
+      </target>
+      <observability>
+        <log-prefix>[CONFIG]</log-prefix>
+        <critical-block>LOAD_CONFIG</critical-block>
+      </observability>
+      <verification-ref>V-M-CONFIG</verification-ref>
+      <notes>
+        <note-1>Pure TOML, no runtime dependencies</note-1>
+      </notes>
+    </M-CONFIG>
+
+    <M-STANDARDS NAME="Standards" TYPE="UTILITY" LAYER="0" ORDER="2" STATUS="done">
+      <contract>
+        <purpose>Provide development rules and conventions</purpose>
+        <inputs>
+          <param name="standardName" type="string" />
+        </inputs>
+        <outputs>
+          <param name="rules" type="xml" />
+        </outputs>
+        <errors>
+          <error code="STANDARD_NOT_FOUND" />
+        </errors>
+      </contract>
+      <interface>
+        <export-loadStandard PURPOSE="Load standard rules.xml" />
+        <export-listStandards PURPOSE="List available standards" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/standards/*/</source>
+        <tests>Manual review</tests>
+      </target>
+      <observability>
+        <log-prefix>[STANDARD:name]</log-prefix>
+      </observability>
+      <verification-ref>V-M-STANDARDS</verification-ref>
+      <notes>
+        <note-1>6 standards: grace, architecture, error-handling, git-workflow, agent-transparency, compatibility</note-1>
+      </notes>
+    </M-STANDARDS>
+
+    <M-TEMPLATES NAME="Templates" TYPE="UTILITY" LAYER="0" ORDER="3" STATUS="done">
+      <contract>
+        <purpose>Provide XML templates for GRACE artifacts</purpose>
+        <inputs>
+          <param name="templateName" type="string" />
+          <param name="values" type="object" />
+        </inputs>
+        <outputs>
+          <param name="filledTemplate" type="xml" />
+        </outputs>
+        <errors>
+          <error code="TEMPLATE_NOT_FOUND" />
+          <error code="PLACEHOLDER_MISSING" />
+        </errors>
+      </contract>
+      <interface>
+        <export-loadTemplate PURPOSE="Load XML template" />
+        <export-fillTemplate PURPOSE="Replace $PLACEHOLDER with values" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/templates/*.xml.template</source>
+        <tests>Manual validation</tests>
+      </target>
+      <observability>
+        <log-prefix>[TEMPLATE]</log-prefix>
+      </observability>
+      <verification-ref>V-M-TEMPLATES</verification-ref>
+      <notes>
+        <note-1>6 templates: development-plan, requirements, knowledge-graph, verification-plan, technology, decisions</note-1>
+      </notes>
+    </M-TEMPLATES>
+
+    <M-FRAGMENTS NAME="Fragments" TYPE="UTILITY" LAYER="0" ORDER="4" STATUS="done">
+      <contract>
+        <purpose>Provide modular AGENTS.md components</purpose>
+        <inputs>
+          <param name="features" type="array" />
+          <param name="stack" type="array" />
+        </inputs>
+        <outputs>
+          <param name="assembledMarkdown" type="string" />
+        </outputs>
+        <errors>
+          <error code="FRAGMENT_NOT_FOUND" />
+        </errors>
+      </contract>
+      <interface>
+        <export-loadFragment PURPOSE="Load markdown fragment" />
+        <export-assembleFragments PURPOSE="Combine fragments based on config" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/fragments/*/*.md</source>
+        <tests>Visual inspection of generated AGENTS.md</tests>
+      </target>
+      <observability>
+        <log-prefix>[FRAGMENT]</log-prefix>
+      </observability>
+      <verification-ref>V-M-FRAGMENTS</verification-ref>
+      <notes>
+        <note-1>Core fragments always loaded, feature/stack fragments conditional</note-1>
+      </notes>
+    </M-FRAGMENTS>
+
+    <!-- Layer 1: Core Skills -->
+    <M-VSINIT NAME="vs-init" TYPE="ENTRY_POINT" LAYER="1" ORDER="1" STATUS="done">
+      <contract>
+        <purpose>Initialize vibestart in user project with conflict detection and AGENTS.md generation</purpose>
+        <inputs>
+          <param name="projectPath" type="string" />
+        </inputs>
+        <outputs>
+          <param name="initialized" type="boolean" />
+          <param name="conflicts" type="array" />
+          <param name="createdFiles" type="array" />
+        </outputs>
+        <errors>
+          <error code="FRAMEWORK_NOT_FOUND" />
+          <error code="CONFLICT_RESOLUTION_FAILED" />
+          <error code="PERMISSION_DENIED" />
+        </errors>
+      </contract>
+      <interface>
+        <export-initialize PURPOSE="Run full initialization workflow" />
+        <export-detectConflicts PURPOSE="Find 6 types of conflicts" />
+        <export-resolveConflicts PURPOSE="Apply resolution strategies" />
+        <export-renderAgentsMd PURPOSE="Generate AGENTS.md from fragments" />
+      </interface>
+      <depends>M-CONFIG, M-STANDARDS, M-TEMPLATES, M-FRAGMENTS</depends>
+      <target>
+        <source>src/skills/vs-init/SKILL.md</source>
+        <tests>Manual testing in clean project</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:vs-init]</log-prefix>
+        <critical-block>CONFLICT_RESOLUTION, AGENTS_GENERATION</critical-block>
+      </observability>
+      <verification-ref>V-M-VSINIT</verification-ref>
+      <notes>
+        <note-1>6 conflict types: skills, AGENTS.md, config, GRACE artifacts, session logs, gitignore</note-1>
+        <note-2>3 resolution strategies: vibestart-override, keep-original, merge-manual</note-2>
+      </notes>
+    </M-VSINIT>
+
+    <M-GRACEINIT NAME="grace-init" TYPE="ENTRY_POINT" LAYER="1" ORDER="2" STATUS="done">
+      <contract>
+        <purpose>Bootstrap GRACE framework structure for new project</purpose>
+        <inputs>
+          <param name="projectInfo" type="object" />
+        </inputs>
+        <outputs>
+          <param name="createdFiles" type="array" />
+        </outputs>
+        <errors>
+          <error code="TEMPLATE_MISSING" />
+          <error code="INVALID_INPUT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-bootstrap PURPOSE="Create GRACE artifact structure" />
+        <export-gatherInfo PURPOSE="Collect project information" />
+      </interface>
+      <depends>M-TEMPLATES, M-CONFIG</depends>
+      <target>
+        <source>src/skills/grace/grace-init/SKILL.md</source>
+        <tests>Manual testing with new project</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-init]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEINIT</verification-ref>
+      <notes>
+        <note-1>Creates 6 XML files and AGENTS.md from templates</note-1>
+      </notes>
+    </M-GRACEINIT>
+
+    <M-GRACEPLAN NAME="grace-plan" TYPE="CORE_LOGIC" LAYER="1" ORDER="3" STATUS="planned">
+      <contract>
+        <purpose>Design module architecture with contracts</purpose>
+        <inputs>
+          <param name="requirements" type="xml" />
+        </inputs>
+        <outputs>
+          <param name="modules" type="xml" />
+          <param name="dataFlows" type="xml" />
+        </outputs>
+        <errors>
+          <error code="REQUIREMENTS_INCOMPLETE" />
+          <error code="CIRCULAR_DEPENDENCY" />
+        </errors>
+      </contract>
+      <interface>
+        <export-designModules PURPOSE="Propose module breakdown" />
+        <export-defineContracts PURPOSE="Create MODULE_CONTRACT for each" />
+        <export-planVerification PURPOSE="Assign V-M-xxx verification refs" />
+      </interface>
+      <depends>M-GRACEINIT, M-TEMPLATES</depends>
+      <target>
+        <source>src/skills/grace/grace-plan/SKILL.md</source>
+        <tests>Manual review with sample requirements</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-plan]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEPLAN</verification-ref>
+      <notes>
+        <note-1>Module types: ENTRY_POINT, CORE_LOGIC, DATA_LAYER, UI_COMPONENT, UTILITY, INTEGRATION</note-1>
+      </notes>
+    </M-GRACEPLAN>
+
+    <M-GRACEEXEC NAME="grace-execute" TYPE="CORE_LOGIC" LAYER="1" ORDER="4" STATUS="planned">
+      <contract>
+        <purpose>Implement modules step by step following development plan</purpose>
+        <inputs>
+          <param name="developmentPlan" type="xml" />
+        </inputs>
+        <outputs>
+          <param name="implementedModules" type="array" />
+        </outputs>
+        <errors>
+          <error code="PLAN_INCOMPLETE" />
+          <error code="DEPENDENCY_NOT_MET" />
+        </errors>
+      </contract>
+      <interface>
+        <export-executePhase PURPOSE="Run implementation phase" />
+        <export-executeStep PURPOSE="Implement single module" />
+      </interface>
+      <depends>M-GRACEPLAN, M-STANDARDS</depends>
+      <target>
+        <source>src/skills/grace/grace-execute/SKILL.md</source>
+        <tests>Manual testing with sample project</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-execute]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEEXEC</verification-ref>
+      <notes>
+        <note-1>Follows layer order, respects dependencies</note-1>
+      </notes>
+    </M-GRACEEXEC>
+
+    <M-GRACEVERIFY NAME="grace-verification" TYPE="CORE_LOGIC" LAYER="1" ORDER="5" STATUS="planned">
+      <contract>
+        <purpose>Define test strategy and verification surfaces</purpose>
+        <inputs>
+          <param name="developmentPlan" type="xml" />
+        </inputs>
+        <outputs>
+          <param name="verificationPlan" type="xml" />
+        </outputs>
+        <errors>
+          <error code="NO_MODULES_DEFINED" />
+        </errors>
+      </contract>
+      <interface>
+        <export-defineTests PURPOSE="Create test specifications" />
+        <export-defineTraces PURPOSE="Define log marker requirements" />
+      </interface>
+      <depends>M-GRACEPLAN, M-TEMPLATES</depends>
+      <target>
+        <source>src/skills/grace/grace-verification/SKILL.md</source>
+        <tests>Manual review</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-verification]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEVERIFY</verification-ref>
+      <notes>
+        <note-1>Defines V-M-xxx entries for each module</note-1>
+      </notes>
+    </M-GRACEVERIFY>
+
+    <M-GRACEREFRESH NAME="grace-refresh" TYPE="UTILITY" LAYER="1" ORDER="6" STATUS="planned">
+      <contract>
+        <purpose>Synchronize code with documentation after changes</purpose>
+        <inputs>
+          <param name="changedFiles" type="array" />
+        </inputs>
+        <outputs>
+          <param name="updatedArtifacts" type="array" />
+        </outputs>
+        <errors>
+          <error code="SYNC_CONFLICT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-syncArtifacts PURPOSE="Update GRACE artifacts" />
+      </interface>
+      <depends>M-GRACEPLAN, M-GRACEEXEC</depends>
+      <target>
+        <source>src/skills/grace/grace-refresh/SKILL.md</source>
+        <tests>Manual testing</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-refresh]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEREFRESH</verification-ref>
+      <notes>
+        <note-1>Targeted vs full refresh modes</note-1>
+      </notes>
+    </M-GRACEREFRESH>
+
+    <M-GRACESTATUS NAME="grace-status" TYPE="UTILITY" LAYER="1" ORDER="7" STATUS="planned">
+      <contract>
+        <purpose>Check GRACE project health</purpose>
+        <inputs>
+          <param name="projectPath" type="string" />
+        </inputs>
+        <outputs>
+          <param name="healthReport" type="object" />
+        </outputs>
+        <errors>
+          <error code="NOT_A_GRACE_PROJECT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-checkHealth PURPOSE="Verify GRACE artifacts integrity" />
+      </interface>
+      <depends>M-CONFIG, M-GRACEINIT</depends>
+      <target>
+        <source>src/skills/grace/grace-status/SKILL.md</source>
+        <tests>Manual testing</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-status]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACESTATUS</verification-ref>
+      <notes>
+        <note-1>Checks: artifacts exist, versions match, no orphaned nodes</note-1>
+      </notes>
+    </M-GRACESTATUS>
+
+    <M-GRACEFIX NAME="grace-fix" TYPE="CORE_LOGIC" LAYER="1" ORDER="8" STATUS="planned">
+      <contract>
+        <purpose>Debug with GRACE navigation</purpose>
+        <inputs>
+          <param name="error" type="object" />
+        </inputs>
+        <outputs>
+          <param name="diagnosis" type="object" />
+          <param name="suggestedFix" type="string" />
+        </outputs>
+        <errors>
+          <error code="ERROR_NOT_FOUND" />
+        </errors>
+      </contract>
+      <interface>
+        <export-navigateToError PURPOSE="Find error source in knowledge graph" />
+        <export-suggestFix PURPOSE="Propose fix based on contracts" />
+      </interface>
+      <depends>M-GRACEPLAN, M-GRACESTATUS</depends>
+      <target>
+        <source>src/skills/grace/grace-fix/SKILL.md</source>
+        <tests>Manual testing</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-fix]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEFIX</verification-ref>
+      <notes>
+        <note-1>Uses knowledge graph to trace error to module</note-1>
+      </notes>
+    </M-GRACEFIX>
+
+    <M-GRACEASK NAME="grace-ask" TYPE="UTILITY" LAYER="1" ORDER="9" STATUS="planned">
+      <contract>
+        <purpose>Answer questions about project using GRACE context</purpose>
+        <inputs>
+          <param name="question" type="string" />
+        </inputs>
+        <outputs>
+          <param name="answer" type="string" />
+        </outputs>
+        <errors>
+          <error code="CONTEXT_NOT_FOUND" />
+        </errors>
+      </contract>
+      <interface>
+        <export-answerQuestion PURPOSE="Query knowledge graph" />
+      </interface>
+      <depends>M-GRACEINIT</depends>
+      <target>
+        <source>src/skills/grace/grace-ask/SKILL.md</source>
+        <tests>Manual testing</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-ask]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEASK</verification-ref>
+      <notes>
+        <note-1>Uses all GRACE artifacts for context</note-1>
+      </notes>
+    </M-GRACEASK>
+
+    <M-GRACEEXPLAIN NAME="grace-explainer" TYPE="UTILITY" LAYER="1" ORDER="10" STATUS="planned">
+      <contract>
+        <purpose>Provide GRACE methodology reference</purpose>
+        <inputs>
+          <param name="topic" type="string" />
+        </inputs>
+        <outputs>
+          <param name="explanation" type="string" />
+        </outputs>
+        <errors>
+          <error code="TOPIC_NOT_FOUND" />
+        </errors>
+      </contract>
+      <interface>
+        <export-explainMethodology PURPOSE="Describe GRACE principles" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/skills/grace/grace-explainer/SKILL.md</source>
+        <tests>Manual review</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-explainer]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEEXPLAIN</verification-ref>
+      <notes>
+        <note-1>Reference for new users learning GRACE</note-1>
+      </notes>
+    </M-GRACEEXPLAIN>
+
+    <M-GRACEREVIEWER NAME="grace-reviewer" TYPE="UTILITY" LAYER="1" ORDER="11" STATUS="planned">
+      <contract>
+        <purpose>Code review with GRACE context</purpose>
+        <inputs>
+          <param name="codeChanges" type="object" />
+        </inputs>
+        <outputs>
+          <param name="reviewResult" type="object" />
+        </outputs>
+        <errors>
+          <error code="NO_CONTRACT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-reviewCode PURPOSE="Check code against contracts" />
+      </interface>
+      <depends>M-GRACEPLAN, M-STANDARDS</depends>
+      <target>
+        <source>src/skills/grace/grace-reviewer/SKILL.md</source>
+        <tests>Manual testing</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-reviewer]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACEREVIEWER</verification-ref>
+      <notes>
+        <note-1>Checks contract compliance, standards adherence</note-1>
+      </notes>
+    </M-GRACEREVIEWER>
+  </Modules>
+
+  <DataFlow>
+    <DF-001 NAME="Framework Initialization" TRIGGER="User runs /vs-init">
+      <step-1>Load framework.toml configuration</step-1>
+      <step-2>Check framework integrity (7 checks)</step-2>
+      <step-3>Detect conflicts (6 types)</step-3>
+      <step-4>Resolve conflicts with user approval</step-4>
+      <step-5>Load fragments based on features</step-5>
+      <step-6>Assemble and write AGENTS.md</step-6>
+      <step-7>Create vs.project.toml</step-7>
+      <evidence>[SKILL:vs-init] logs, created files list</evidence>
+    </DF-001>
+
+    <DF-002 NAME="GRACE Bootstrap" TRIGGER="User runs /grace-init">
+      <step-1>Gather project information</step-1>
+      <step-2>Load XML templates</step-2>
+      <step-3>Fill templates with project values</step-3>
+      <step-4>Write docs/*.xml files</step-4>
+      <step-5>Create AGENTS.md</step-5>
+      <evidence>[SKILL:grace-init] logs, created files list</evidence>
+    </DF-002>
+
+    <DF-003 NAME="Module Planning" TRIGGER="User runs /grace-plan">
+      <step-1>Read requirements.xml</step-1>
+      <step-2>Propose module breakdown</step-2>
+      <step-3>Define MODULE_CONTRACT for each</step-3>
+      <step-4>Assign V-M-xxx verification refs</step-4>
+      <step-5>Update development-plan.xml</step-5>
+      <step-6>Update knowledge-graph.xml</step-6>
+      <evidence>[SKILL:grace-plan] logs, updated XML files</evidence>
+    </DF-003>
+  </DataFlow>
+
+  <ImplementationOrder>
+    <Phase-1 name="Foundation" status="done">
+      <goal>Core infrastructure for framework</goal>
+      <step-1 module="M-CONFIG" status="done" verification="V-M-CONFIG">Framework configuration</step-1>
+      <step-2 module="M-STANDARDS" status="done" verification="V-M-STANDARDS">Development standards</step-2>
+      <step-3 module="M-TEMPLATES" status="done" verification="V-M-TEMPLATES">XML templates</step-3>
+      <step-4 module="M-FRAGMENTS" status="done" verification="V-M-FRAGMENTS">AGENTS.md fragments</step-4>
+    </Phase-1>
+
+    <Phase-2 name="Core Skills" status="in-progress">
+      <goal>Essential skills for framework operation</goal>
+      <step-1 module="M-VSINIT" status="done" verification="V-M-VSINIT">Framework initialization</step-1>
+      <step-2 module="M-GRACEINIT" status="done" verification="V-M-GRACEINIT">GRACE bootstrap</step-2>
+      <step-3 module="M-GRACEPLAN" status="planned" verification="V-M-GRACEPLAN">Module planning</step-3>
+      <step-4 module="M-GRACEEXEC" status="planned" verification="V-M-GRACEEXEC">Module execution</step-4>
+      <step-5 module="M-GRACEVERIFY" status="planned" verification="V-M-GRACEVERIFY">Test strategy</step-5>
+    </Phase-2>
+
+    <Phase-3 name="Support Skills" status="pending">
+      <goal>Supporting skills for maintenance and debugging</goal>
+      <step-1 module="M-GRACEREFRESH" status="planned" verification="V-M-GRACEREFRESH">Code-docs sync</step-1>
+      <step-2 module="M-GRACESTATUS" status="planned" verification="V-M-GRACESTATUS">Health checks</step-2>
+      <step-3 module="M-GRACEFIX" status="planned" verification="V-M-GRACEFIX">Debug navigation</step-3>
+      <step-4 module="M-GRACEASK" status="planned" verification="V-M-GRACEASK">Project Q&A</step-4>
+      <step-5 module="M-GRACEREVIEWER" status="planned" verification="V-M-GRACEREVIEWER">Code review</step-5>
+    </Phase-3>
+
+    <Phase-4 name="Documentation" status="pending">
+      <goal>Complete documentation and examples</goal>
+      <step-1 module="M-GRACEEXPLAIN" status="planned" verification="V-M-GRACEEXPLAIN">Methodology reference</step-1>
+    </Phase-4>
+  </ImplementationOrder>
+
+  <ExecutionPolicy>
+    <default-profile>balanced</default-profile>
+    <controller-owns>docs/development-plan.xml, docs/knowledge-graph.xml, docs/verification-plan.xml</controller-owns>
+    <worker-owns>Only module source files and module-local tests inside the approved write scope.</worker-owns>
+  </ExecutionPolicy>
+  
+</DevelopmentPlan>

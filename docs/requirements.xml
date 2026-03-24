@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Requirements VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>vibestart</name>
+    <version>2.1.0</version>
+    <annotation>AI development toolkit manager - standards, templates, and skills for AI agents</annotation>
+  </ProjectInfo>
+
+  <UseCases>
+    <UC-001>
+      <title>Initialize vibestart in user project</title>
+      <actor>AI Agent (Kilo Code, Cursor, Claude Code)</actor>
+      <precondition>User has AI agent installed in VS Code</precondition>
+      <flow>
+        <step-1>Agent clones vibestart repository to .vibestart/ folder</step-1>
+        <step-2>Agent reads vs-init skill instructions</step-2>
+        <step-3>Agent runs /vs-init command</step-3>
+        <step-4>Framework checks integrity, detects conflicts</step-4>
+        <step-5>Framework creates vs.project.toml and AGENTS.md</step-5>
+        <step-6>Framework creates docs/*.xml templates</step-6>
+      </flow>
+      <postcondition>Project has complete GRACE framework structure</postcondition>
+      <priority>P0</priority>
+      <status>done</status>
+    </UC-001>
+
+    <UC-002>
+      <title>Initialize GRACE in user project</title>
+      <actor>Developer or AI Agent</actor>
+      <precondition>vibestart framework installed</precondition>
+      <flow>
+        <step-1>User runs /grace-init command</step-1>
+        <step-2>Skill gathers project information</step-2>
+        <step-3>Skill creates docs/*.xml from templates</step-3>
+        <step-4>Skill creates AGENTS.md with project rules</step-4>
+      </flow>
+      <postcondition>Project has GRACE artifacts ready for planning</postcondition>
+      <priority>P0</priority>
+      <status>done</status>
+    </UC-002>
+
+    <UC-003>
+      <title>Design module architecture</title>
+      <actor>Developer or AI Agent</actor>
+      <precondition>GRACE framework initialized</precondition>
+      <flow>
+        <step-1>User runs /grace-plan command</step-1>
+        <step-2>Skill analyzes requirements.xml</step-2>
+        <step-3>Skill proposes module breakdown</step-3>
+        <step-4>User approves architecture</step-4>
+        <step-5>Skill updates development-plan.xml and knowledge-graph.xml</step-5>
+      </flow>
+      <postcondition>Project has complete module architecture</postcondition>
+      <priority>P1</priority>
+      <status>planned</status>
+    </UC-003>
+
+    <UC-004>
+      <title>Detect and resolve conflicts</title>
+      <actor>AI Agent running vs-init</actor>
+      <precondition>Existing project with potential conflicts</precondition>
+      <flow>
+        <step-1>vs-init scans for skill conflicts</step-1>
+        <step-2>vs-init checks AGENTS.md conflicts</step-2>
+        <step-3>vs-init checks configuration conflicts</step-3>
+        <step-4>vs-init proposes resolution options</step-4>
+        <step-5>User selects resolution strategy</step-5>
+        <step-6>vs-init executes resolution with backups</step-6>
+      </flow>
+      <postcondition>All conflicts resolved, backups created</postcondition>
+      <priority>P1</priority>
+      <status>done</status>
+    </UC-004>
+
+    <UC-005>
+      <title>Generate AGENTS.md from fragments</title>
+      <actor>vs-init skill</actor>
+      <precondition>vs.project.toml exists with feature flags</precondition>
+      <flow>
+        <step-1>Load vs.project.toml configuration</step-1>
+        <step-2>Load core fragments (architecture, error-handling, git-workflow)</step-2>
+        <step-3>Load feature-specific fragments (grace, session_log, batch_mode)</step-3>
+        <step-4>Load stack-specific fragments (typescript, node, fastify)</step-4>
+        <step-5>Assemble and write AGENTS.md</step-5>
+      </flow>
+      <postcondition>AGENTS.md generated with correct feature set</postcondition>
+      <priority>P0</priority>
+      <status>done</status>
+    </UC-005>
+  </UseCases>
+
+  <Decisions>
+    <D-001 DATE="2026-03-23" STATUS="approved">
+      <summary>Remove vs-status, vs-refresh, vs-render commands</summary>
+      <rationale>These commands duplicate functionality available in GRACE skills (grace-status, grace-refresh) or can be integrated into vs-init (vs-render)</rationale>
+      <alternatives>
+        <alt name="keep-separate" rejected="true" reason="Increases maintenance burden and confuses users" />
+        <alt name="merge-all-into-vs-init" rejected="false" reason="Selected approach - simplifies command structure" />
+      </alternatives>
+      <impacts>
+        <module>M-VSINIT</module>
+      </impacts>
+      <links>
+        <ref doc="development-plan.xml" id="M-VSINIT" />
+      </links>
+    </D-001>
+
+    <D-002 DATE="2026-03-23" STATUS="approved">
+      <summary>Clone vibestart into .vibestart/ subfolder</summary>
+      <rationale>Keeps framework separate from user project, allows easy updates and cleanup</rationale>
+      <alternatives>
+        <alt name="clone-to-user-home" rejected="true" reason="Windows path issues, agent can't find files" />
+        <alt name="copy-to-project-root" rejected="true" reason="Pollutes user project with framework files" />
+      </alternatives>
+      <impacts>
+        <module>M-VSINIT</module>
+      </impacts>
+      <links>
+        <ref doc="requirements.xml" id="UC-001" />
+      </links>
+    </D-002>
+  </Decisions>
+
+  <Constraints>
+    <technical>
+      <constraint-1>Framework must work without runtime (pure markdown/XML)</constraint-1>
+      <constraint-2>Must support multiple AI agents (Kilo Code, Cursor, Claude Code)</constraint-2>
+      <constraint-3>Must handle Windows, macOS, Linux paths correctly</constraint-3>
+    </technical>
+    <business>
+      <constraint-1>Target audience: developers new to AI-assisted coding</constraint-1>
+      <constraint-2>Must be installable in one command/paste</constraint-2>
+    </business>
+    <regulatory>
+      <constraint-1>MIT license - must remain open source</constraint-1>
+    </regulatory>
+  </Constraints>
+
+  <Glossary>
+    <term name="vibestart">AI development toolkit framework providing standards, templates, and skills</term>
+    <term name="GRACE">Contract-driven development methodology with knowledge graphs</term>
+    <term name="skill">AI agent instruction file (SKILL.md) that defines a workflow</term>
+    <term name="standard">Development rule or convention (architecture, error-handling, etc.)</term>
+    <term name="fragment">Modular component used to generate AGENTS.md</term>
+    <term name="ConPort">Long-term memory system for AI agents via MCP</term>
+  </Glossary>
+  
+</Requirements>

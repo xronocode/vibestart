@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Decisions VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>vibestart</name>
+    <version>2.1.0</version>
+  </ProjectInfo>
+
+  <Decisions>
+    <D-001 DATE="2026-03-23" STATUS="approved">
+      <summary>Remove vs-status, vs-refresh, vs-render commands as redundant</summary>
+      <context>
+        <problem>Multiple vs-* commands duplicated GRACE functionality, confusing users</problem>
+        <constraints>Maintain backward compatibility for existing users</constraints>
+      </context>
+      <options>
+        <option-1 name="Keep all commands">
+          <description>Maintain vs-status, vs-refresh, vs-render alongside GRACE equivalents</description>
+          <pros>Backward compatible, no migration needed</pros>
+          <cons>Confusing for new users, maintenance burden</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Remove redundant commands">
+          <description>Remove vs-status, vs-refresh, vs-render; integrate vs-render into vs-init</description>
+          <pros>Simpler command structure, less maintenance, clearer for users</pros>
+          <cons>Requires migration guide for existing users</cons>
+          <score>9/10</score>
+        </option-2>
+        <option-3 name="Deprecate with warnings">
+          <description>Keep commands but show deprecation warnings</description>
+          <pros>Gradual migration path</pros>
+          <cons>Still confusing, delays the inevitable</cons>
+          <score>6/10</score>
+        </option-3>
+      </options>
+      <decision>
+        <chosen>Remove redundant commands</chosen>
+        <rationale>Simplifies user experience, reduces maintenance, vs-render functionality better integrated into vs-init</rationale>
+      </decision>
+      <impacts>
+        <module>M-VSINIT</module>
+      </impacts>
+      <consequences>
+        <positive>Simpler command structure (4 → 1 vs-* command), integrated AGENTS.md generation</positive>
+        <negative>Users need migration guide to use grace-status, grace-refresh instead</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="D-001" />
+        <ref doc="development-plan.xml" id="M-VSINIT" />
+      </links>
+      <review>
+        <date>2026-03-24</date>
+        <outcome>still-valid</outcome>
+        <notes>Migration successful, no user complaints</notes>
+      </review>
+    </D-001>
+
+    <D-002 DATE="2026-03-23" STATUS="approved">
+      <summary>Clone vibestart into .vibestart/ subfolder in user project</summary>
+      <context>
+        <problem>Previous approach used ~/.vibestart/framework which failed on Windows and confused agents about file locations</problem>
+        <constraints>Must work on Windows, macOS, Linux; agent must easily find framework files</constraints>
+      </context>
+      <options>
+        <option-1 name="Clone to user home directory">
+          <description>Clone to ~/.vibestart/framework globally</description>
+          <pros>Shared across projects, single installation</pros>
+          <cons>Windows path issues, agent can't find files from project context</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Clone to project subfolder">
+          <description>Clone to .vibestart/ inside user project</description>
+          <pros>Agent always finds files, works on all OS, easy cleanup</pros>
+          <cons>Duplicates framework per project, larger disk usage</cons>
+          <score>9/10</score>
+        </option-2>
+        <option-3 name="Copy to project root">
+          <description>Copy framework files directly to project root</description>
+          <pros>No subfolder needed</pros>
+          <cons>Pollutes user project, conflicts with existing files</cons>
+          <score>4/10</score>
+        </option-3>
+      </options>
+      <decision>
+        <chosen>Clone to project subfolder</chosen>
+        <rationale>Agent can reliably find files from project context, works on all OS, keeps framework separate from user code</rationale>
+      </decision>
+      <impacts>
+        <module>M-VSINIT</module>
+      </impacts>
+      <consequences>
+        <positive>Reliable cross-platform, agent always finds files, clean separation</positive>
+        <negative>Disk space usage per project, but acceptable for markdown files</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="D-002" />
+        <ref doc="development-plan.xml" id="M-VSINIT" />
+      </links>
+      <review>
+        <date>2026-03-24</date>
+        <outcome>still-valid</outcome>
+        <notes>Works correctly on Windows, agent finds files reliably</notes>
+      </review>
+    </D-002>
+
+    <D-003 DATE="2026-03-24" STATUS="approved">
+      <summary>Initialize GRACE for vibestart itself (dogfooding)</summary>
+      <context>
+        <problem>vibestart provides GRACE templates but doesn't use GRACE for its own development</problem>
+        <constraints>Must support development of Option B (vibestart as GRACE provider for other projects)</constraints>
+      </context>
+      <options>
+        <option-1 name="Skip GRACE for vibestart">
+          <description>vibestart is just a template repository, no GRACE needed</description>
+          <pros>Simpler, less overhead</pros>
+          <cons>Can't dogfood, can't validate templates work correctly</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Initialize GRACE for vibestart">
+          <description>Use GRACE methodology for vibestart development</description>
+          <pros>Dogfooding validates templates, provides development structure, knowledge graph helps navigation</pros>
+          <cons>Additional overhead for framework development</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Initialize GRACE for vibestart</chosen>
+        <rationale>Dogfooding validates templates work correctly, GRACE methodology helps organize framework development</rationale>
+      </decision>
+      <impacts>
+        <module>M-GRACEINIT</module>
+        <module>M-GRACEPLAN</module>
+        <module>M-GRACEVERIFY</module>
+      </impacts>
+      <consequences>
+        <positive>Validates templates, provides development structure, example for users</positive>
+        <negative>Additional overhead, but valuable for framework quality</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-003" />
+        <ref doc="development-plan.xml" id="M-GRACEINIT" />
+      </links>
+      <review>
+        <date>2026-03-24</date>
+        <outcome>still-valid</outcome>
+        <notes>GRACE artifacts created successfully, templates validated</notes>
+      </review>
+    </D-003>
+  </Decisions>
+
+  <Categories>
+    <category name="architecture">Architectural decisions</category>
+    <category name="technology">Technology choices</category>
+    <category name="process">Process and methodology decisions</category>
+    <category name="user-experience">User experience decisions</category>
+  </Categories>
+
+  <Statistics>
+    <total>3</total>
+    <by-status>
+      <proposed>0</proposed>
+      <approved>3</approved>
+      <rejected>0</rejected>
+      <superseded>0</superseded>
+    </by-status>
+    <last-updated>2026-03-24</last-updated>
+  </Statistics>
+  
+</Decisions>

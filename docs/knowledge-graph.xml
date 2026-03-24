@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph VERSION="2.0.0">
+  
+  <ProjectInfo>
+    <name>vibestart</name>
+    <version>2.1.0</version>
+  </ProjectInfo>
+
+  <Nodes>
+    <!-- Layer 0: Foundation (no dependencies) -->
+    <M-CONFIG>
+      <name>Configuration</name>
+      <type>UTILITY</type>
+      <layer>0</layer>
+      <description>Framework configuration (framework.toml, vs.project.toml)</description>
+      <source>src/framework.toml</source>
+      <exports>
+        <export-frameworkConfig PURPOSE="Load framework settings" />
+        <export-projectConfig PURPOSE="Load project settings" />
+      </exports>
+    </M-CONFIG>
+
+    <M-STANDARDS>
+      <name>Standards</name>
+      <type>UTILITY</type>
+      <layer>0</layer>
+      <description>Development rules (architecture, error-handling, git-workflow, agent-transparency, compatibility)</description>
+      <source>src/standards/</source>
+      <exports>
+        <export-loadStandard PURPOSE="Load standard rules" />
+        <export-validateStandard PURPOSE="Check standard compliance" />
+      </exports>
+    </M-STANDARDS>
+
+    <M-TEMPLATES>
+      <name>Templates</name>
+      <type>UTILITY</type>
+      <layer>0</layer>
+      <description>XML templates for GRACE artifacts</description>
+      <source>src/templates/</source>
+      <exports>
+        <export-loadTemplate PURPOSE="Load XML template" />
+        <export-fillTemplate PURPOSE="Replace placeholders with values" />
+      </exports>
+    </M-TEMPLATES>
+
+    <M-FRAGMENTS>
+      <name>Fragments</name>
+      <type>UTILITY</type>
+      <layer>0</layer>
+      <description>Modular AGENTS.md components</description>
+      <source>src/fragments/</source>
+      <exports>
+        <export-loadFragment PURPOSE="Load markdown fragment" />
+        <export-assembleFragments PURPOSE="Combine fragments into AGENTS.md" />
+      </exports>
+    </M-FRAGMENTS>
+
+    <!-- Layer 1: Core Skills (depend on foundation) -->
+    <M-VSINIT>
+      <name>vs-init</name>
+      <type>ENTRY_POINT</type>
+      <layer>1</layer>
+      <description>Initialize vibestart in user project with conflict detection</description>
+      <source>src/skills/vs-init/SKILL.md</source>
+      <exports>
+        <export-initialize PURPOSE="Run full initialization workflow" />
+        <export-detectConflicts PURPOSE="Find 6 types of conflicts" />
+        <export-resolveConflicts PURPOSE="Apply resolution strategies" />
+        <export-renderAgentsMd PURPOSE="Generate AGENTS.md from fragments" />
+      </exports>
+    </M-VSINIT>
+
+    <M-GRACEINIT>
+      <name>grace-init</name>
+      <type>ENTRY_POINT</type>
+      <layer>1</layer>
+      <description>Bootstrap GRACE framework structure</description>
+      <source>src/skills/grace/grace-init/SKILL.md</source>
+      <exports>
+        <export-bootstrap PURPOSE="Create GRACE artifact structure" />
+        <export-gatherInfo PURPOSE="Collect project information" />
+      </exports>
+    </M-GRACEINIT>
+
+    <M-GRACEPLAN>
+      <name>grace-plan</name>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Design module architecture with contracts</description>
+      <source>src/skills/grace/grace-plan/SKILL.md</source>
+      <exports>
+        <export-designModules PURPOSE="Propose module breakdown" />
+        <export-defineContracts PURPOSE="Create MODULE_CONTRACT for each module" />
+        <export-planVerification PURPOSE="Assign V-M-xxx verification refs" />
+      </exports>
+    </M-GRACEPLAN>
+
+    <M-GRACEEXEC>
+      <name>grace-execute</name>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Implement modules step by step</description>
+      <source>src/skills/grace/grace-execute/SKILL.md</source>
+      <exports>
+        <export-executePhase PURPOSE="Run implementation phase" />
+        <export-executeStep PURPOSE="Implement single module" />
+      </exports>
+    </M-GRACEEXEC>
+
+    <M-GRACEVERIFY>
+      <name>grace-verification</name>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Define test strategy and verification surfaces</description>
+      <source>src/skills/grace/grace-verification/SKILL.md</source>
+      <exports>
+        <export-defineTests PURPOSE="Create test specifications" />
+        <export-defineTraces PURPOSE="Define log marker requirements" />
+      </exports>
+    </M-GRACEVERIFY>
+
+    <M-GRACEREFRESH>
+      <name>grace-refresh</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Synchronize code with documentation</description>
+      <source>src/skills/grace/grace-refresh/SKILL.md</source>
+      <exports>
+        <export-syncArtifacts PURPOSE="Update GRACE artifacts after code changes" />
+      </exports>
+    </M-GRACEREFRESH>
+
+    <M-GRACESTATUS>
+      <name>grace-status</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Check GRACE project health</description>
+      <source>src/skills/grace/grace-status/SKILL.md</source>
+      <exports>
+        <export-checkHealth PURPOSE="Verify GRACE artifacts integrity" />
+      </exports>
+    </M-GRACESTATUS>
+
+    <M-GRACEFIX>
+      <name>grace-fix</name>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Debug with GRACE navigation</description>
+      <source>src/skills/grace/grace-fix/SKILL.md</source>
+      <exports>
+        <export-navigateToError PURPOSE="Find error source in knowledge graph" />
+        <export-suggestFix PURPOSE="Propose fix based on contracts" />
+      </exports>
+    </M-GRACEFIX>
+
+    <M-GRACEASK>
+      <name>grace-ask</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Answer questions about project</description>
+      <source>src/skills/grace/grace-ask/SKILL.md</source>
+      <exports>
+        <export-answerQuestion PURPOSE="Query knowledge graph for answers" />
+      </exports>
+    </M-GRACEASK>
+
+    <M-GRACEEXPLAIN>
+      <name>grace-explainer</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>GRACE methodology reference</description>
+      <source>src/skills/grace/grace-explainer/SKILL.md</source>
+      <exports>
+        <export-explainMethodology PURPOSE="Describe GRACE principles" />
+      </exports>
+    </M-GRACEEXPLAIN>
+
+    <M-GRACEREVIEWER>
+      <name>grace-reviewer</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Code review with GRACE context</description>
+      <source>src/skills/grace/grace-reviewer/SKILL.md</source>
+      <exports>
+        <export-reviewCode PURPOSE="Check code against contracts" />
+      </exports>
+    </M-GRACEREVIEWER>
+  </Nodes>
+
+  <Edges>
+    <!-- vs-init dependencies -->
+    <edge from="M-VSINIT" to="M-CONFIG" type="depends" />
+    <edge from="M-VSINIT" to="M-STANDARDS" type="depends" />
+    <edge from="M-VSINIT" to="M-TEMPLATES" type="depends" />
+    <edge from="M-VSINIT" to="M-FRAGMENTS" type="depends" />
+
+    <!-- GRACE skills dependencies -->
+    <edge from="M-GRACEINIT" to="M-TEMPLATES" type="depends" />
+    <edge from="M-GRACEINIT" to="M-CONFIG" type="depends" />
+    
+    <edge from="M-GRACEPLAN" to="M-GRACEINIT" type="depends" />
+    <edge from="M-GRACEPLAN" to="M-TEMPLATES" type="depends" />
+    
+    <edge from="M-GRACEEXEC" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEEXEC" to="M-STANDARDS" type="depends" />
+    
+    <edge from="M-GRACEVERIFY" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEVERIFY" to="M-TEMPLATES" type="depends" />
+    
+    <edge from="M-GRACEREFRESH" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEREFRESH" to="M-GRACEEXEC" type="depends" />
+    
+    <edge from="M-GRACESTATUS" to="M-CONFIG" type="depends" />
+    <edge from="M-GRACESTATUS" to="M-GRACEINIT" type="depends" />
+    
+    <edge from="M-GRACEFIX" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEFIX" to="M-GRACESTATUS" type="depends" />
+    
+    <edge from="M-GRACEASK" to="M-GRACEINIT" type="depends" />
+    
+    <edge from="M-GRACEREVIEWER" to="M-GRACEPLAN" type="depends" />
+    <edge from="M-GRACEREVIEWER" to="M-STANDARDS" type="depends" />
+  </Edges>
+
+  <CrossLinks>
+    <CrossLink from="M-VSINIT" to="UC-001" doc="requirements.xml" />
+    <CrossLink from="M-VSINIT" to="UC-004" doc="requirements.xml" />
+    <CrossLink from="M-VSINIT" to="UC-005" doc="requirements.xml" />
+    <CrossLink from="M-GRACEINIT" to="UC-002" doc="requirements.xml" />
+    <CrossLink from="M-GRACEPLAN" to="UC-003" doc="requirements.xml" />
+    <CrossLink from="M-VSINIT" to="V-M-VSINIT" doc="verification-plan.xml" />
+    <CrossLink from="M-GRACEINIT" to="V-M-GRACEINIT" doc="verification-plan.xml" />
+    <CrossLink from="M-GRACEPLAN" to="V-M-GRACEPLAN" doc="verification-plan.xml" />
+  </CrossLinks>
+
+  <Layers>
+    <layer-0 count="4" modules="M-CONFIG, M-STANDARDS, M-TEMPLATES, M-FRAGMENTS" />
+    <layer-1 count="11" modules="M-VSINIT, M-GRACEINIT, M-GRACEPLAN, M-GRACEEXEC, M-GRACEVERIFY, M-GRACEREFRESH, M-GRACESTATUS, M-GRACEFIX, M-GRACEASK, M-GRACEEXPLAIN, M-GRACEREVIEWER" />
+  </Layers>
+
+  <Health>
+    <last-updated>2026-03-24</last-updated>
+    <integrity-check>
+      <orphaned-nodes>0</orphaned-nodes>
+      <missing-dependencies>0</missing-dependencies>
+      <circular-dependencies>0</circular-dependencies>
+    </integrity-check>
+  </Health>
+  
+</KnowledgeGraph>

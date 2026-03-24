@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VerificationPlan VERSION="2.1.0">
+  
+  <ProjectInfo>
+    <name>vibestart</name>
+    <version>2.1.0</version>
+  </ProjectInfo>
+
+  <Strategy>
+    <approach>Deterministic-first with trace-based verification for execution paths</approach>
+    <mocking-policy>N/A (no runtime)</mocking-policy>
+    <coverage-target>100% of modules verified</coverage-target>
+    <evidence-hierarchy>
+      <level-1>Deterministic assertions (file existence, syntax validation)</level-1>
+      <level-2>Trace assertions (execution path verification)</level-2>
+      <level-3>Integration checks (cross-module compatibility)</level-3>
+    </evidence-hierarchy>
+  </Strategy>
+
+  <VerificationMatrix>
+    <!-- Layer 0: Foundation - Deterministic -->
+    <entry module="M-CONFIG" evidence-type="deterministic" safe-for-autonomous="true">
+      <contract>Load and validate configuration</contract>
+      <success-scenarios>
+        <scenario>Valid TOML syntax in framework.toml</scenario>
+        <scenario>All required fields present</scenario>
+        <scenario>Version numbers consistent across artifacts</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Missing framework.toml file</scenario>
+        <scenario>Invalid TOML syntax</scenario>
+        <scenario>Missing required fields</scenario>
+      </failure-scenarios>
+    </entry>
+    
+    <entry module="M-STANDARDS" evidence-type="deterministic" safe-for-autonomous="true">
+      <contract>Provide development rules and conventions</contract>
+      <success-scenarios>
+        <scenario>All 6 standards directories present</scenario>
+        <scenario>Valid XML in rules.xml files</scenario>
+        <scenario>SKILL.md exists for each standard</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Missing standards directories</scenario>
+        <scenario>Invalid XML syntax</scenario>
+        <scenario>Missing SKILL.md files</scenario>
+      </failure-scenarios>
+    </entry>
+    
+    <entry module="M-TEMPLATES" evidence-type="deterministic" safe-for-autonomous="true">
+      <contract>Provide XML templates for GRACE artifacts</contract>
+      <success-scenarios>
+        <scenario>All 6 template files present</scenario>
+        <scenario>Valid XML syntax in templates</scenario>
+        <scenario>$PLACEHOLDER variables present in templates</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Missing template files</scenario>
+        <scenario>Invalid XML syntax</scenario>
+        <scenario>Missing placeholder variables</scenario>
+      </failure-scenarios>
+    </entry>
+    
+    <entry module="M-FRAGMENTS" evidence-type="deterministic" safe-for-autonomous="true">
+      <contract>Provide modular AGENTS.md components</contract>
+      <success-scenarios>
+        <scenario>All core fragments present (4)</scenario>
+        <scenario>All process fragments present (3)</scenario>
+        <scenario>All knowledge fragments present (1)</scenario>
+        <scenario>Valid markdown syntax in fragments</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Missing fragment files</scenario>
+        <scenario>Invalid markdown syntax</scenario>
+      </failure-scenarios>
+    </entry>
+    
+    <!-- Layer 1: Core Skills - Trace-based -->
+    <entry module="M-VSINIT" evidence-type="trace-based" safe-for-autonomous="false">
+      <contract>Initialize vibestart in user project with conflict detection</contract>
+      <success-scenarios>
+        <scenario>Clean install completes all 6 phases</scenario>
+        <scenario>Conflicts detected and resolution options proposed</scenario>
+        <scenario>AGENTS.md generated with correct feature set</scenario>
+        <scenario>vs.project.toml created with valid structure</scenario>
+        <scenario>docs/*.xml created from templates</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Framework not found at expected path</scenario>
+        <scenario>Conflict resolution fails</scenario>
+        <scenario>Permission denied creating files</scenario>
+        <scenario>AGENTS.md generation fails</scenario>
+      </failure-scenarios>
+      <requires-human-oversight>
+        <reason>Conflict resolution needs user decision</reason>
+        <reason>Migration choices need user confirmation</reason>
+      </requires-human-oversight>
+    </entry>
+    
+    <entry module="M-GRACEINIT" evidence-type="trace-based" safe-for-autonomous="false">
+      <contract>Bootstrap GRACE framework structure for new project</contract>
+      <success-scenarios>
+        <scenario>Project information gathered successfully</scenario>
+        <scenario>docs/ directory created</scenario>
+        <scenario>6 XML files created from templates</scenario>
+        <scenario>AGENTS.md created with project rules</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>Template files missing</scenario>
+        <scenario>Invalid project information provided</scenario>
+        <scenario>File creation fails</scenario>
+      </failure-scenarios>
+      <requires-human-oversight>
+        <reason>Project information gathering needs user input</reason>
+      </requires-human-oversight>
+    </entry>
+    
+    <entry module="M-GRACEPLAN" evidence-type="trace-based" safe-for-autonomous="false">
+      <contract>Design module architecture with contracts</contract>
+      <success-scenarios>
+        <scenario>requirements.xml read and analyzed</scenario>
+        <scenario>Module breakdown proposed</scenario>
+        <scenario>MODULE_CONTRACT defined for each module</scenario>
+        <scenario>V-M-xxx verification refs assigned</scenario>
+        <scenario>development-plan.xml updated</scenario>
+        <scenario>knowledge-graph.xml updated</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>requirements.xml incomplete or missing</scenario>
+        <scenario>Circular dependencies detected</scenario>
+        <scenario>User rejects proposed architecture</scenario>
+      </failure-scenarios>
+      <requires-human-oversight>
+        <reason>Architecture approval needs user confirmation</reason>
+      </requires-human-oversight>
+    </entry>
+    
+    <entry module="M-GRACEEXEC" evidence-type="trace-based" safe-for-autonomous="true">
+      <contract>Implement modules step by step following development plan</contract>
+      <success-scenarios>
+        <scenario>Modules implemented in layer order</scenario>
+        <scenario>Dependencies respected</scenario>
+        <scenario>Source files created</scenario>
+        <scenario>Test files created</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>development-plan.xml incomplete</scenario>
+        <scenario>Dependency not met before implementation</scenario>
+        <scenario>File creation fails</scenario>
+      </failure-scenarios>
+    </entry>
+    
+    <entry module="M-GRACEVERIFY" evidence-type="trace-based" safe-for-autonomous="true">
+      <contract>Define test strategy and verification surfaces</contract>
+      <success-scenarios>
+        <scenario>V-M-xxx entries created for modules</scenario>
+        <scenario>Test scenarios defined</scenario>
+        <scenario>Trace requirements specified</scenario>
+        <scenario>verification-plan.xml updated</scenario>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario>No modules defined in development-plan.xml</scenario>
+        <scenario>Verification plan update fails</scenario>
+      </failure-scenarios>
+    </entry>
+  </VerificationMatrix>
+
+  <ModuleChecks>
+    <!-- Layer 0: Foundation - Deterministic Checks -->
+    <V-M-CONFIG MODULE="M-CONFIG">
+      <contract>
+        <purpose>Verify configuration loading and validation</purpose>
+      </contract>
+      <strategy>
+        <approach>deterministic</approach>
+        <mocking>none</mocking>
+        <evidence-type>file-existence, syntax-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: framework.toml exists</file>
+        <file>check: framework.toml valid TOML</file>
+        <file>check: all required fields present</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>File exists at src/framework.toml</scenario-1>
+        <scenario-2>Valid TOML syntax (parseable)</scenario-2>
+        <scenario-3>All required fields: name, version, description</scenario-3>
+        <scenario-4>Version matches CHANGELOG.md</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SYSTEM] Checking framework configuration...</trace-1>
+        <trace-2>[CONFIG] ✓ framework.toml found</trace-2>
+        <trace-3>[CONFIG] ✓ Valid TOML syntax</trace-3>
+        <trace-4>[CONFIG] ✓ All required fields present</trace-4>
+      </traces>
+      <commands>
+        <test-command>test -f src/framework.toml</test-command>
+        <validation-command>python -c "import toml; toml.load('src/framework.toml')"</validation-command>
+      </commands>
+      <critical-blocks>
+        <block>LOAD_CONFIG</block>
+        <block>VALIDATE_CONFIG</block>
+      </critical-blocks>
+      <verification-level>module</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-CONFIG>
+
+    <V-M-STANDARDS MODULE="M-STANDARDS">
+      <contract>
+        <purpose>Verify all standards exist and are valid</purpose>
+      </contract>
+      <strategy>
+        <approach>deterministic</approach>
+        <mocking>none</mocking>
+        <evidence-type>file-count, xml-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: 6 standards directories exist</file>
+        <file>check: rules.xml valid in each</file>
+        <file>check: SKILL.md exists in each</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>All 6 directories present: grace, architecture, error-handling, git-workflow, agent-transparency, compatibility</scenario-1>
+        <scenario-2>rules.xml exists and valid XML in each directory</scenario-2>
+        <scenario-3>SKILL.md exists in each directory</scenario-3>
+      </scenarios>
+      <traces>
+        <trace-1>[SYSTEM] Checking standards integrity...</trace-1>
+        <trace-2>[STANDARD] ✓ 6/6 standards present</trace-2>
+        <trace-3>[STANDARD] ✓ All rules.xml valid</trace-3>
+      </traces>
+      <commands>
+        <test-command>test $(ls -d src/standards/*/ | wc -l) -eq 6</test-command>
+        <validation-command>find src/standards -name "rules.xml" -exec xmllint --noout {} \;</validation-command>
+      </commands>
+      <critical-blocks>
+        <block>CHECK_STANDARDS</block>
+        <block>VALIDATE_STANDARDS</block>
+      </critical-blocks>
+      <verification-level>module</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-STANDARDS>
+
+    <V-M-TEMPLATES MODULE="M-TEMPLATES">
+      <contract>
+        <purpose>Verify all templates exist and have correct placeholders</purpose>
+      </contract>
+      <strategy>
+        <approach>deterministic</approach>
+        <mocking>none</mocking>
+        <evidence-type>file-count, xml-validation, pattern-match</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: 6 template files exist</file>
+        <file>check: valid XML syntax</file>
+        <file>check: $PLACEHOLDER variables present</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>All 6 templates present: development-plan, requirements, knowledge-graph, verification-plan, technology, decisions</scenario-1>
+        <scenario-2>Valid XML syntax in each template</scenario-2>
+        <scenario-3>$PLACEHOLDER variables present for substitution</scenario-3>
+      </scenarios>
+      <traces>
+        <trace-1>[SYSTEM] Checking templates integrity...</trace-1>
+        <trace-2>[TEMPLATE] ✓ 6/6 templates present</trace-2>
+        <trace-3>[TEMPLATE] ✓ All templates valid XML</trace-3>
+        <trace-4>[TEMPLATE] ✓ Placeholders present</trace-4>
+      </traces>
+      <commands>
+        <test-command>test $(ls src/templates/*.xml.template | wc -l) -eq 6</test-command>
+        <validation-command>grep -l '$' src/templates/*.xml.template | wc -l</validation-command>
+      </commands>
+      <critical-blocks>
+        <block>CHECK_TEMPLATES</block>
+        <block>VALIDATE_TEMPLATES</block>
+      </critical-blocks>
+      <verification-level>module</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-TEMPLATES>
+
+    <V-M-FRAGMENTS MODULE="M-FRAGMENTS">
+      <contract>
+        <purpose>Verify all fragments exist and assemble correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>deterministic</approach>
+        <mocking>none</mocking>
+        <evidence-type>file-count, markdown-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: core fragments present (4)</file>
+        <file>check: process fragments present (3)</file>
+        <file>check: knowledge fragments present (1)</file>
+        <file>check: valid markdown syntax</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Core fragments: architecture.md, error-handling.md, git-workflow.md, agent-transparency.md</scenario-1>
+        <scenario-2>Process fragments: design-first.md, batch-mode.md, session-management.md</scenario-2>
+        <scenario-3>Knowledge fragments: grace-activation.md</scenario-3>
+        <scenario-4>All fragments valid markdown</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SYSTEM] Checking fragments integrity...</trace-1>
+        <trace-2>[FRAGMENT] ✓ 8/8 fragments present</trace-2>
+        <trace-3>[FRAGMENT] ✓ All fragments valid markdown</trace-3>
+      </traces>
+      <commands>
+        <test-command>test $(find src/fragments -name "*.md" | wc -l) -eq 8</test-command>
+        <validation-command>find src/fragments -name "*.md" -exec markdownlint {} \;</validation-command>
+      </commands>
+      <critical-blocks>
+        <block>CHECK_FRAGMENTS</block>
+        <block>VALIDATE_FRAGMENTS</block>
+      </critical-blocks>
+      <verification-level>module</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-FRAGMENTS>
+
+    <!-- Layer 1: Core Skills - Trace-based Checks -->
+    <V-M-VSINIT MODULE="M-VSINIT">
+      <contract>
+        <purpose>Verify vs-init skill initializes project correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>Manual: Test in clean project directory</file>
+        <file>Manual: Test with existing project (conflicts)</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Clean install: all 6 phases complete</scenario-1>
+        <scenario-2>Conflict detection: 6 types detected</scenario-2>
+        <scenario-3>Conflict resolution: user selects strategy</scenario-3>
+        <scenario-4>AGENTS.md generation: correct feature set</scenario-4>
+        <scenario-5>vs.project.toml creation: valid structure</scenario-5>
+        <scenario-6>docs/*.xml creation: from templates</scenario-6>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:vs-init] Phase 1/6: Framework Integrity Check</trace-1>
+        <trace-2>[SKILL:vs-init] Phase 2/6: Conflict Detection</trace-2>
+        <trace-3>[SKILL:vs-init] Phase 3/6: Resolution Summary</trace-3>
+        <trace-4>[SKILL:vs-init] Phase 4/6: Execute Resolution</trace-4>
+        <trace-5>[SKILL:vs-init] Phase 5/6: Render AGENTS.md</trace-5>
+        <trace-6>[SKILL:vs-init] Phase 6/6: Project Integrity Verification</trace-6>
+        <trace-7>[SKILL:vs-init] ✅ Done: Project initialized successfully</trace-7>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /vs-init in test project</test-command>
+        <trace-validation>Verify all 6 phase markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>FRAMEWORK_CHECK</block>
+        <block>CONFLICT_DETECTION</block>
+        <block>CONFLICT_RESOLUTION</block>
+        <block>AGENTS_GENERATION</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>false</safe-for-autonomous>
+      <requires-human-oversight>
+        <reason>Conflict resolution needs user decision</reason>
+        <reason>Migration choices need user confirmation</reason>
+      </requires-human-oversight>
+    </V-M-VSINIT>
+
+    <V-M-GRACEINIT MODULE="M-GRACEINIT">
+      <contract>
+        <purpose>Verify grace-init creates GRACE structure</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>Manual: Test in new project</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Project info gathered: name, version, stack</scenario-1>
+        <scenario-2>docs/ directory created</scenario-2>
+        <scenario-3>6 XML files created from templates</scenario-3>
+        <scenario-4>AGENTS.md created with project rules</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-init] Gathering project information...</trace-1>
+        <trace-2>[SKILL:grace-init] Step 2/5: Creating docs/ directory...</trace-2>
+        <trace-3>[SKILL:grace-init] Step 3/5: Populating documents...</trace-3>
+        <trace-4>[SKILL:grace-init] Step 4/5: Creating AGENTS.md...</trace-4>
+        <trace-5>[SKILL:grace-init] Step 5/5: Summary</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-init in test project</test-command>
+        <trace-validation>Verify all 5 step markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>GATHER_INFO</block>
+        <block>CREATE_DOCS</block>
+        <block>FILL_TEMPLATES</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>false</safe-for-autonomous>
+      <requires-human-oversight>
+        <reason>Project information gathering needs user input</reason>
+      </requires-human-oversight>
+    </V-M-GRACEINIT>
+
+    <V-M-GRACEPLAN MODULE="M-GRACEPLAN">
+      <contract>
+        <purpose>Verify grace-plan designs modules correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>Manual: Test with sample requirements.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>requirements.xml read and analyzed</scenario-1>
+        <scenario-2>Module breakdown proposed</scenario-2>
+        <scenario-3>MODULE_CONTRACT defined for each module</scenario-3>
+        <scenario-4>V-M-xxx verification refs assigned</scenario-4>
+        <scenario-5>development-plan.xml updated</scenario-5>
+        <scenario-6>knowledge-graph.xml updated</scenario-6>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-plan] Phase 1: Analyze Requirements</trace-1>
+        <trace-2>[SKILL:grace-plan] Phase 2: Design Module Architecture</trace-2>
+        <trace-3>[SKILL:grace-plan] Phase 3: Design Verification Surfaces</trace-3>
+        <trace-4>[SKILL:grace-plan] Phase 4: Mental Walkthroughs</trace-4>
+        <trace-5>[SKILL:grace-plan] Phase 5: Generate Artifacts</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-plan with test requirements</test-command>
+        <trace-validation>Verify all 5 phase markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>ANALYZE_REQUIREMENTS</block>
+        <block>DESIGN_MODULES</block>
+        <block>DEFINE_CONTRACTS</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>false</safe-for-autonomous>
+      <requires-human-oversight>
+        <reason>Architecture approval needs user confirmation</reason>
+      </requires-human-oversight>
+    </V-M-GRACEPLAN>
+
+    <V-M-GRACEEXEC MODULE="M-GRACEEXEC">
+      <contract>
+        <purpose>Verify grace-execute implements modules correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>Manual: Test with sample development-plan.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>development-plan.xml read</scenario-1>
+        <scenario-2>Phases executed in order</scenario-2>
+        <scenario-3>Layer dependencies respected</scenario-3>
+        <scenario-4>Source files created</scenario-4>
+        <scenario-5>Test files created</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-execute] Loading development plan...</trace-1>
+        <trace-2>[SKILL:grace-execute] Executing Phase N: [phase name]</trace-2>
+        <trace-3>[SKILL:grace-execute] Step N: [module name]</trace-3>
+        <trace-4>[SKILL:grace-execute] ✓ Module implemented</trace-4>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-execute with test plan</test-command>
+        <trace-validation>Verify phase and step markers appear in order</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>LOAD_PLAN</block>
+        <block>EXECUTE_PHASE</block>
+        <block>IMPLEMENT_MODULE</block>
+      </critical-blocks>
+      <verification-level>phase</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEEXEC>
+
+    <V-M-GRACEVERIFY MODULE="M-GRACEVERIFY">
+      <contract>
+        <purpose>Verify grace-verification defines tests correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>Manual: Test with sample development-plan.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>development-plan.xml read</scenario-1>
+        <scenario-2>V-M-xxx entries created for modules</scenario-2>
+        <scenario-3>Test scenarios defined</scenario-3>
+        <scenario-4>Trace requirements specified</scenario-4>
+        <scenario-5>verification-plan.xml updated</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-verification] Loading development plan...</trace-1>
+        <trace-2>[SKILL:grace-verification] Creating V-M-xxx for [module]</trace-2>
+        <trace-3>[SKILL:grace-verification] Defining test scenarios...</trace-3>
+        <trace-4>[SKILL:grace-verification] ✓ Verification plan updated</trace-4>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-verification with test plan</test-command>
+        <trace-validation>Verify V-M-xxx creation markers appear</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>LOAD_PLAN</block>
+        <block>CREATE_VERIFICATION_ENTRIES</block>
+        <block>DEFINE_SCENARIOS</block>
+      </critical-blocks>
+      <verification-level>phase</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEVERIFY>
+  </ModuleChecks>
+
+  <PhaseGates>
+    <Phase-Gate-1>
+      <name>Foundation Complete</name>
+      <criteria>
+        <criterion-1>All Layer 0 modules have STATUS="done"</criterion-1>
+        <criterion-2>All deterministic verification tests pass</criterion-2>
+        <criterion-3>Framework can be cloned and initialized</criterion-3>
+      </criteria>
+      <commands>
+        <verify-command>test -f src/framework.toml &amp;& test -d src/standards &amp;& test -d src/templates &amp;& test -d src/fragments</verify-command>
+      </commands>
+      <sign-off required="false" />
+      <verification-level>phase</verification-level>
+    </Phase-Gate-1>
+
+    <Phase-Gate-2>
+      <name>Core Skills Complete</name>
+      <criteria>
+        <criterion-1>All Layer 1 core modules have STATUS="done"</criterion-1>
+        <criterion-2>vs-init and grace-init work correctly</criterion-2>
+        <criterion-3>grace-plan, grace-execute, grace-verification work correctly</criterion-3>
+        <criterion-4>All trace-based verification tests pass</criterion-4>
+      </criteria>
+      <commands>
+        <verify-command>Manual: Test all core skills in test project</verify-command>
+      </commands>
+      <sign-off required="true" />
+      <verification-level>phase</verification-level>
+    </Phase-Gate-2>
+
+    <Phase-Gate-3>
+      <name>Support Skills Complete</name>
+      <criteria>
+        <criterion-1>All support modules have STATUS="done"</criterion-1>
+        <criterion-2>grace-refresh, grace-status, grace-fix work correctly</criterion-2>
+        <criterion-3>grace-ask, grace-reviewer work correctly</criterion-3>
+      </criteria>
+      <commands>
+        <verify-command>Manual: Test all support skills</verify-command>
+      </commands>
+      <sign-off required="true" />
+      <verification-level>phase</verification-level>
+    </Phase-Gate-3>
+
+    <Phase-Gate-4>
+      <name>Documentation Complete</name>
+      <criteria>
+        <criterion-1>All documentation modules have STATUS="done"</criterion-1>
+        <criterion-2>grace-explainer provides complete reference</criterion-2>
+        <criterion-3>README.md is accurate and complete</criterion-3>
+      </criteria>
+      <commands>
+        <verify-command>Manual: Review all documentation</verify-command>
+      </commands>
+      <sign-off required="true" />
+      <verification-level>phase</verification-level>
+    </Phase-Gate-4>
+  </PhaseGates>
+
+  <TraceRequirements>
+    <global-policy>
+      <format>[COMPONENT][ACTION][BLOCK] message</format>
+      <required-fields>component, action, block, status</required-fields>
+      <redaction>Never log: credentials, API keys, secrets, private project details</redaction>
+    </global-policy>
+    
+    <trace-req module="M-VSINIT">
+      <marker>[SKILL:vs-init][Phase N][Step N]</marker>
+      <required-fields>phase, step, status</required-fields>
+      <assertion>All 6 phases complete successfully</assertion>
+      <forbidden-markers>[ERROR], [FAILED], [BLOCKED]</forbidden-markers>
+    </trace-req>
+    
+    <trace-req module="M-GRACEINIT">
+      <marker>[SKILL:grace-init][Step N]</marker>
+      <required-fields>step, status</required-fields>
+      <assertion>All 5 steps complete successfully</assertion>
+      <forbidden-markers>[ERROR], [FAILED], [BLOCKED]</forbidden-markers>
+    </trace-req>
+    
+    <trace-req module="M-GRACEPLAN">
+      <marker>[SKILL:grace-plan][Phase N][Module]</marker>
+      <required-fields>phase, module, status</required-fields>
+      <assertion>All 5 phases complete and artifacts updated</assertion>
+      <forbidden-markers>[ERROR], [FAILED], [CIRCULAR_DEPENDENCY]</forbidden-markers>
+    </trace-req>
+  </TraceRequirements>
+
+  <FailureTriage>
+    <protocol>
+      When verification fails, produce a failure packet with:
+      1. Contract/Scenario that failed
+      2. Expected evidence (what should have happened)
+      3. Observed evidence (what actually happened)
+      4. First divergent module/function/block
+      5. Suggested next action
+    </protocol>
+    
+    <packet-template>
+      FAILURE PACKET:
+      - Contract: [which contract or scenario failed]
+      - Expected: [what should have happened]
+      - Observed: [what actually happened]
+      - Divergent: [where did it go wrong]
+      - Next Action: [how to fix it]
+    </packet-template>
+    
+    <routing>
+      <route issue="deterministic-failure" action="fix-file-and-retry" />
+      <route issue="trace-failure" action="analyze-execution-path" />
+      <route issue="integration-failure" action="check-dependencies" />
+      <route issue="user-input-needed" action="request-user-decision" />
+    </routing>
+  </FailureTriage>
+
+  <AutonomousExecutionSafety>
+    <note>vibestart uses GRACE methodology for its own development (dogfooding). This validates templates work correctly and provides a real-world example for users.</note>
+    
+    <assessment-criteria>
+      <criterion>All verification checks are deterministic</criterion>
+      <criterion>No user input required during execution</criterion>
+      <criterion>Clear success/failure criteria defined</criterion>
+      <criterion>Trace requirements specified</criterion>
+      <criterion>Failure triage protocol defined</criterion>
+    </assessment-criteria>
+    
+    <safe-modules>
+      <module>M-CONFIG</module>
+      <module>M-STANDARDS</module>
+      <module>M-TEMPLATES</module>
+      <module>M-FRAGMENTS</module>
+      <module>M-GRACEEXEC</module>
+      <module>M-GRACEVERIFY</module>
+    </safe-modules>
+    
+    <requires-oversight-modules>
+      <module reason="conflict resolution needs user decision">M-VSINIT</module>
+      <module reason="project info gathering needs user input">M-GRACEINIT</module>
+      <module reason="architecture approval needs user confirmation">M-GRACEPLAN</module>
+    </requires-oversight-modules>
+    
+    <justification>
+      M-GRACEINIT and M-GRACEPLAN require human oversight because:
+      1. Project information (name, stack, features) must come from the user
+      2. Architecture decisions need user approval before implementation
+      3. This is by design - these are planning phases, not execution phases
+      
+      However, they are still part of vibestart because:
+      1. vibestart uses GRACE for its own development (dogfooding)
+      2. Validates templates and skills work correctly
+      3. Provides a real-world example for users
+      4. Framework evolves and needs architectural planning
+    </justification>
+  </AutonomousExecutionSafety>
+
+  <Health>
+    <last-updated>2026-03-24</last-updated>
+    <coverage>
+      <modules-covered>9/15</modules-covered>
+      <phase-gates-defined>4/4</phase-gates-defined>
+      <deterministic-checks>4</deterministic-checks>
+      <trace-based-checks>5</trace-based-checks>
+    </coverage>
+    <verification-readiness>
+      <autonomous-ready>6 modules</autonomous-ready>
+      <requires-oversight>3 modules</requires-oversight>
+    </verification-readiness>
+  </Health>
+  
+</VerificationPlan>

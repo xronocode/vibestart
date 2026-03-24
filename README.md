@@ -20,6 +20,8 @@ vibestart is a **framework** for AI-assisted development that includes:
 - **Templates** — XML templates for project artifacts
 - **Fragments** — modular components for AGENTS.md generation
 
+**Note:** vibestart uses GRACE methodology for its own development (dogfooding). This validates the templates work correctly and provides a real-world example for users.
+
 ### What You Need To Do
 
 **Follow these steps in order:**
