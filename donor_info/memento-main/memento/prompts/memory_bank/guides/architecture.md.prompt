@@ -1,0 +1,366 @@
+---
+file: architecture.md
+target_path: .memory_bank/guides/
+priority: 12
+dependencies: []
+conditional: null
+---
+
+# Generation Instructions for guides/architecture.md
+
+## Context
+
+You are generating the architecture guide - the **system design documentation** that explains how the project is structured and why.
+
+This file serves as:
+- **System overview** (high-level architecture)
+- **Component documentation** (what each part does)
+- **Integration patterns** (how components communicate)
+- **Design decisions** (why architecture is this way)
+
+**Audience**: Developers, architects, technical stakeholders
+**Tone**: Technical, explanatory, architectural
+**Length**: 250-350 lines (comprehensive but focused)
+
+**Content ownership:** This file owns system design, data flow, and architectural decisions. Technology inventory (frameworks, versions, libraries) belongs in [tech_stack.md](../tech_stack.md). Detailed directory structures belong in backend/frontend guides.
+
+## Input Data
+
+```json
+{
+  "project_name": "string",
+  "project_type": "web_app|api|mobile_app|cli|library",
+
+  "backend_framework": "string|null",
+  "frontend_framework": "string|null",
+  "database": "string|null",
+
+  "is_monorepo": true|false,
+  "backend_dir": "string",
+  "frontend_dir": "string|null",
+
+  "has_frontend": true|false,
+  "has_backend": true|false,
+  "has_database": true|false,
+
+  "api_style": "REST|GraphQL|gRPC|null",
+  "auth_method": "JWT|OAuth|Session|null",
+
+  "primary_language": "string"
+}
+```
+
+## Output Requirements
+
+### Structure
+
+Generate architecture.md with these sections:
+
+#### 1. Header
+```markdown
+# Architecture Guide - {Project Name}
+
+This document describes the system architecture of {Project Name}, including high-level design, component interactions, and key architectural decisions.
+```
+
+#### 2. System Overview
+
+**Architecture Style:**
+- Describe overall architecture (monolithic, microservices, layered, etc.)
+- Based on is_monorepo and project_type
+
+**High-Level Diagram** (ASCII art):
+```
+┌─────────────┐         ┌──────────────┐         ┌──────────────┐
+│   Client    │────────▶│   Backend    │────────▶│   Database   │
+└─────────────┘         └──────────────┘         └──────────────┘
+```
+
+Adapt based on has_frontend, has_backend, has_database
+
+**Key Characteristics:**
+- List 3-5 defining characteristics (e.g., "RESTful API", "Server-side rendering", "Event-driven", etc.)
+
+#### 3. Component Architecture
+
+> For the complete technology inventory (frameworks, versions, libraries), see [Tech Stack](../tech_stack.md).
+
+Break down into major components:
+
+**If has_frontend:**
+
+##### Frontend Architecture
+
+- **Framework**: {frontend_framework}
+- **Structure**: Component-based architecture
+- **Key Components**:
+  - Pages/Routes
+  - Reusable components
+  - State management
+  - API client
+- **Directory Structure**: Brief top-level overview only (see [Frontend Guide](./frontend.md) for detailed structure)
+
+**If has_backend:**
+
+##### Backend Architecture
+
+- **Framework**: {backend_framework}
+- **Pattern**: Layered architecture (Controller → Service → Repository)
+- **Layers**:
+  - **API Layer**: Request handling, validation
+  - **Service Layer**: Business logic
+  - **Data Layer**: Database access
+  - **Models**: Data structures
+
+- **Directory Structure**: Brief top-level overview only (see [Backend Guide](./backend.md) for detailed structure)
+
+**If has_database:**
+
+##### Database Architecture
+
+- **Database**: {database}
+- **Schema Design**: Normalized/Denormalized
+- **Key Tables**:
+  - Users
+  - [Domain entities based on project_type]
+  - Audit logs
+- **Relationships**: One-to-many, many-to-many
+- **Indexing Strategy**: Indexes on foreign keys and frequently queried fields
+
+#### 4. Data Flow
+
+**If web_app with frontend and backend:**
+
+##### Request/Response Flow
+
+```
+1. User interacts with UI ({frontend_framework})
+   ↓
+2. Frontend makes API request ({api_style})
+   ↓
+3. Backend receives request ({backend_framework})
+   ↓
+4. Backend validates & processes
+   ↓
+5. Backend queries database ({database})
+   ↓
+6. Backend returns response
+   ↓
+7. Frontend updates UI
+```
+
+**If API-only:**
+
+```
+1. Client sends request ({api_style})
+   ↓
+2. API Gateway/Load Balancer
+   ↓
+3. Backend processes request
+   ↓
+4. Database query/update
+   ↓
+5. Response returned
+```
+
+#### 5. API Design
+
+**If api_style:**
+
+##### {API Style} API
+
+**Endpoints:**
+- RESTful resources (if REST)
+- GraphQL schema (if GraphQL)
+- gRPC services (if gRPC)
+
+**Request/Response Format:**
+- JSON (typical for REST)
+- GraphQL queries/mutations
+- Protocol Buffers (gRPC)
+
+**Versioning:**
+- URL versioning: `/api/v1/`
+- Header versioning
+- No versioning (if single version)
+
+**See also**: [API Design Patterns](../patterns/api-design.md)
+
+#### 6. Authentication & Authorization
+
+**If auth_method:**
+
+##### {Auth Method} Authentication
+
+**Authentication Flow:**
+- How users log in
+- Token generation/validation
+- Session management
+
+**Authorization:**
+- Role-based access control (RBAC)
+- Permission system
+- Resource ownership
+
+**Security:**
+- Token storage
+- Refresh token rotation
+- CSRF protection
+
+#### 7. State Management
+
+**If has_frontend:**
+
+##### Frontend State
+
+- **Local State**: Component-level state
+- **Global State**: Application-level state
+- **Server State**: Cached API data
+- **Tool**: Redux/MobX/Context API/Vuex (based on frontend_framework)
+
+**If has_backend:**
+
+##### Backend State
+
+- Stateless API design
+- Session storage (if Session auth)
+- Cache layer (Redis/Memcached)
+
+#### 8. Communication Patterns
+
+**Client-Server:**
+- HTTP/HTTPS requests
+- WebSockets (if real-time features)
+- Server-Sent Events
+
+**Backend-Database:**
+- ORM (Django ORM, SQLAlchemy, Prisma)
+- Query patterns
+- Connection pooling
+
+**Microservices** (if applicable):
+- Service-to-service communication
+- Message queues
+- Event bus
+
+#### 9. Design Decisions
+
+**Table of Key Decisions:**
+
+| Decision | Rationale | Trade-offs |
+|----------|-----------|------------|
+| {Framework choice} | {Why chosen} | {What was sacrificed} |
+| Monorepo | Unified versioning, easier code sharing | More complex tooling |
+| {API style} | {Why REST/GraphQL/gRPC} | {Complexity vs simplicity} |
+
+(Populate with actual decisions based on detected stack)
+
+#### 10. Diagrams
+
+Include ASCII art diagrams:
+
+**Component Diagram:**
+```
+┌──────────────────────────────────────────┐
+│                Frontend                  │
+│  ┌────────┐  ┌────────┐  ┌────────┐    │
+│  │  View  │  │  State │  │ Router │    │
+│  └────────┘  └────────┘  └────────┘    │
+└──────────────────┬───────────────────────┘
+                   │ HTTP
+┌──────────────────▼───────────────────────┐
+│                Backend                   │
+│  ┌────────┐  ┌────────┐  ┌────────┐    │
+│  │   API  │→│Service │→│  Model │    │
+│  └────────┘  └────────┘  └────────┘    │
+└──────────────────┬───────────────────────┘
+                   │ SQL
+┌──────────────────▼───────────────────────┐
+│               Database                   │
+└──────────────────────────────────────────┘
+```
+
+**Deployment Diagram** (if applicable)
+
+#### 11. References
+
+Links to:
+- [Tech Stack](../tech_stack.md)
+- [Backend Guide](./backend.md) (if has_backend)
+- [Frontend Guide](./frontend.md) (if has_frontend)
+- [API Design Patterns](../patterns/api-design.md) (if api_style)
+- Framework documentation
+
+### Conditional Logic
+
+**If has_frontend:**
+Include Frontend Architecture section with framework-specific details
+
+**If has_backend:**
+Include Backend Architecture with framework-specific patterns
+
+**If has_database:**
+Include Database Architecture section
+
+**If is_monorepo:**
+- Explain monorepo advantages
+- Show directory structure for both backend and frontend
+- Discuss code sharing strategies
+
+**If api_style:**
+Include API Design section with style-specific patterns
+
+**If auth_method:**
+Include Authentication & Authorization section
+
+### Style Guidelines
+
+1. **Technical depth**: Explain not just "what" but "why"
+2. **Visual aids**: Use ASCII diagrams liberally
+3. **Concrete examples**: Reference actual project code
+4. **Decision context**: Explain architectural decisions with rationale
+5. **Focused**: Cover system design only — no speculative sections (performance, security, deployment)
+6. **Professional**: Technical but accessible
+
+### Quality Checklist
+
+- [ ] System overview describes overall architecture
+- [ ] Diagrams are clear and accurate
+- [ ] Component architecture matches detected stack
+- [ ] Data flow shows actual request/response cycle
+- [ ] API design reflects api_style
+- [ ] Authentication section matches auth_method
+- [ ] Conditional sections included/excluded correctly
+- [ ] Design decisions table has 3+ entries
+- [ ] No technology inventory (belongs in tech_stack.md)
+- [ ] No speculative sections (error handling, performance, scalability, security, deployment, future)
+- [ ] Directory structures are brief (link to backend/frontend guides for details)
+- [ ] References link to valid guides
+- [ ] No {{PLACEHOLDERS}} remain
+- [ ] ASCII diagrams are properly formatted
+- [ ] 250-350 lines
+- [ ] Technical but accessible tone
+
+## Common Mistakes to Avoid
+
+1. ❌ Generic architecture that could apply to any project
+2. ❌ Missing diagrams or unclear diagrams
+3. ❌ Not explaining design decisions
+4. ❌ Wrong framework patterns (Django patterns for FastAPI)
+5. ❌ Frontend sections when has_frontend is false
+6. ❌ Too abstract (not grounded in actual project)
+7. ❌ Including technology inventory (belongs in tech_stack.md)
+8. ❌ Including speculative sections (performance targets, security best practices, deployment flows)
+9. ❌ Detailed directory structures (link to backend/frontend guides instead)
+10. ❌ Broken links to other guides
+
+## Validation
+
+- [ ] Describes actual project architecture (not generic)
+- [ ] Diagrams show accurate data flow
+- [ ] Component sections match tech stack
+- [ ] Design decisions explained with rationale
+- [ ] All links valid
+- [ ] 250-350 lines
+- [ ] No placeholders
+- [ ] Grammar perfect

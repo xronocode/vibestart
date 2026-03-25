@@ -1,0 +1,257 @@
+---
+file: tech_stack.md
+target_path: .memory_bank/
+priority: 4
+dependencies: []
+conditional: null
+---
+
+# Generation Instructions for tech_stack.md
+
+## Context
+
+You are generating the technical stack documentation - a factual reference for all technologies, tools, and infrastructure used in the project.
+
+This file serves as:
+- **Technology inventory** (complete list of tech with versions)
+- **Configuration reference** (commands, paths, structure)
+- **Quick lookup** for AI agents and developers
+
+**Audience**: AI agents (primary), developers
+**Tone**: Dry, factual, no explanations
+**Target Length**: 120-180 lines (concise reference)
+
+**Content ownership:** This file owns the technology inventory (frameworks, libraries, versions, commands). System design and architecture belong in [architecture.md](guides/architecture.md). Detailed directory structures belong in backend/frontend guides.
+
+## Input Data
+
+```json
+{
+  "project_name": "string",
+  "project_type": "web_app|api|mobile_app|cli|library",
+
+  "backend_framework": "string|null",
+  "backend_framework_version": "string|null",
+  "backend_dir": "string",
+  "backend_test_framework": "string|null",
+
+  "frontend_framework": "string|null",
+  "frontend_framework_version": "string|null",
+  "frontend_dir": "string|null",
+  "frontend_test_framework": "string|null",
+
+  "database": "string|null",
+  "database_version": "string|null",
+
+  "is_monorepo": true|false,
+  "primary_language": "string",
+  "package_manager": "string|null",
+
+  "has_database": true|false,
+  "has_frontend": true|false,
+  "has_backend": true|false,
+
+  "api_style": "REST|GraphQL|gRPC|null",
+  "auth_method": "JWT|OAuth|Session|null",
+  "build_tool": "string|null",
+  "deployment_platform": "string|null",
+
+  "generation_date": "YYYY-MM-DD"
+}
+```
+
+## Output Requirements
+
+### Structure
+
+Generate tech_stack.md with these sections:
+
+#### 1. Header
+```markdown
+# Technical Stack - {Project Name}
+
+**Last Updated**: {generation_date}
+**Status**: Current
+
+This document describes the complete technical stack for {Project Name}.
+```
+
+#### 2. Overview
+
+Brief summary paragraph:
+- Project type (web_app, api, etc.)
+- Primary technologies (framework names)
+- Architecture type (monorepo vs single-project)
+
+#### 3. Backend (if has_backend)
+
+**Framework:**
+- Name and version
+- **Key Libraries**: List 5-8 framework-specific libraries (see Conditional Logic for examples)
+- **Structure**: Top-level directory tree only (3 levels max; detailed structures belong in [backend guide](./guides/backend.md))
+
+**Database** (if has_database):
+- Name and version
+- Schema management approach (migrations tool)
+- Key commands (migrate, generate, etc.)
+
+**Testing** (if backend_test_framework):
+- Framework name
+- Test structure (unit/integration/e2e paths)
+- Coverage target
+- 2-3 key testing libraries
+
+**API** (if api_style):
+- Style (REST/GraphQL/gRPC)
+- Authentication method
+- Versioning strategy (URL, header, etc.)
+- Documentation approach
+
+#### 4. Frontend (if has_frontend)
+
+**Framework:**
+- Name and version
+- **Key Libraries**: 5-8 libraries
+- **Structure**: Top-level directory tree only (3 levels max; detailed structures belong in [frontend guide](./guides/frontend.md))
+
+**State Management:**
+- Approach (Redux/MobX/Context/etc.)
+
+**Styling:**
+- Approach (Tailwind/CSS Modules/Styled Components)
+- Design system reference
+
+**Build Tool:**
+- Tool name
+- Key optimizations (code splitting, tree shaking)
+
+**Testing** (if frontend_test_framework):
+- Framework
+- E2E tool
+
+#### 5. Infrastructure (MINIMAL)
+
+**Only include if deployment_platform is detected.** Keep to 3-5 lines max.
+
+- Deployment platform (if deployment_platform provided)
+- CI/CD tool (if detected)
+
+**DO NOT include:** environments, deployment flows, monitoring, logging — these are speculative unless detected in project config.
+
+#### 6. Development Tools
+
+**Version Control:**
+- Platform (GitHub/GitLab)
+- Branching strategy reference
+
+**Code Quality:**
+- Linter
+- Formatter
+- Type checker (if TypeScript/mypy)
+
+**Package Management:**
+- Package manager
+- Lock file
+
+#### 7. Getting Help
+
+Links to guides:
+```markdown
+For more details, see:
+- [Architecture Guide](./guides/architecture.md) - System design, data flow, design decisions
+- [Getting Started Guide](./guides/getting-started.md) - Setup and prerequisites
+- [Backend Guide](./guides/backend.md) - Detailed backend directory structure and patterns (if has_backend)
+- [Frontend Guide](./guides/frontend.md) - Detailed frontend directory structure and patterns (if has_frontend)
+```
+
+#### 8. Footer
+```markdown
+---
+
+**Last Updated**: {date}
+```
+
+### Conditional Logic
+
+**If !has_backend:** Skip entire Backend section
+**If !has_frontend:** Skip entire Frontend section
+**If !has_database:** Skip Database subsection
+
+**Framework-specific libraries** (use relevant ones for detected framework):
+
+**Django:**
+- djangorestframework, Celery, django-extensions, django-cors-headers, Pillow, django-filter, drf-spectacular
+
+**FastAPI:**
+- Pydantic, SQLAlchemy, Alembic, python-jose (JWT), passlib, python-multipart, uvicorn
+
+**Express:**
+- cors, helmet, morgan, express-validator, passport, bcrypt
+
+**React:**
+- react-router-dom, axios/react-query, react-hook-form, zod, tailwindcss
+
+**Vue:**
+- vue-router, vuex/pinia, axios, vuelidate, tailwindcss
+
+**Next.js:**
+- swr/react-query, axios, next-auth, tailwindcss
+
+### Style Guidelines
+
+1. **Concise**: Dry, factual reference - no explanations
+2. **Technical precision**: Include exact versions where known
+3. **Practical**: Actual commands, paths, configurations
+4. **Framework-specific**: Libraries must match detected stack
+5. **No redundancy**: State once, reference elsewhere
+
+### Quality Checklist
+
+**Content:**
+- [ ] All detected technologies documented
+- [ ] Version numbers included where known
+- [ ] Framework-specific libraries (not generic)
+- [ ] Directory structure is top-level only (3 levels max)
+- [ ] Conditional sections included/excluded correctly
+- [ ] Links to guides are valid
+- [ ] No infrastructure/security/performance sections (removed — speculative)
+
+**Quality:**
+- [ ] Target 120-180 lines (not 300+)
+- [ ] No verbose explanations of standard practices
+- [ ] No "Recommended Setup" for unimplemented features
+- [ ] No {{PLACEHOLDERS}} remain
+- [ ] Commands use actual package manager
+
+**Anti-redundancy:**
+- [ ] No "Why?" explanations - just facts
+- [ ] No system design content (belongs in architecture.md)
+- [ ] No detailed directory structures (belong in backend/frontend guides)
+
+## Example: Input/Output
+
+**Input:**
+```json
+{
+  "project_name": "Acme Platform",
+  "backend_framework": "Django",
+  "backend_framework_version": "5.0",
+  "frontend_framework": "React",
+  "database": "PostgreSQL",
+  "is_monorepo": true,
+  "has_backend": true,
+  "has_frontend": true,
+  "api_style": "REST",
+  "generation_date": "2025-01-13"
+}
+```
+
+**Output structure:**
+- Header with project name and date
+- Overview: "Monorepo web application with Django 5.0 backend and React frontend"
+- Backend section with Django libraries (djangorestframework, Celery, etc.)
+- Frontend section with React libraries (react-router-dom, axios, etc.)
+- Development tools (linter, formatter, package manager)
+- Cross-references to architecture and backend/frontend guides
+
+**Important:** Follow the structure from Output Requirements above. Do NOT include a full 200-line example output here - that would be redundant.

@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "memento-workflow": {
+            "command": "uv",
+            "args": [
+                "run",
+                "--project", "${CLAUDE_PLUGIN_ROOT}",
+                "memento-workflow-mcp"
+            ],
+            "cwd": "${CLAUDE_PLUGIN_ROOT}"
+        }
+    }
+}

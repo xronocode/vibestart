@@ -1,0 +1,350 @@
+# Static Content Manifest
+#
+# Files listed here are copied to target projects WITHOUT modification.
+# Use this for universal content that doesn't need LLM adaptation.
+#
+# Format:
+#   - source: path relative to static/
+#     target: path relative to project root
+#     conditional: expression evaluated against project-analysis.json (null = always copy)
+#
+# Conditional expressions:
+#   - null                                    → always copy
+#   - "has_frontend"                          → copy if frontend detected
+#   - "has_backend"                           → copy if backend detected
+#   - "backend_language == 'Ruby'"            → copy if Ruby backend
+#   - "frontend_framework == 'React'"         → copy if React frontend
+#   - "has_frontend && has_tests"             → copy if both conditions true
+#   - "!has_database"                         → copy if NO database
+#
+# Available fields in project-analysis.json:
+#   - has_frontend, has_backend, has_database, has_tests
+#   - has_python, has_typescript
+#   - backend_language, frontend_framework, backend_framework
+#   - database_type, test_framework
+#   - is_monorepo, has_ci, has_docker
+
+files:
+  # Review competencies (universal)
+  - source: workflows/code-review/competencies/architecture.md
+    target: .workflows/code-review/competencies/architecture.md
+    conditional: null
+
+  - source: workflows/code-review/competencies/security.md
+    target: .workflows/code-review/competencies/security.md
+    conditional: null
+
+  - source: workflows/code-review/competencies/performance.md
+    target: .workflows/code-review/competencies/performance.md
+    conditional: null
+
+  - source: workflows/code-review/competencies/data-integrity.md
+    target: .workflows/code-review/competencies/data-integrity.md
+    conditional: null
+
+  - source: workflows/code-review/competencies/simplicity.md
+    target: .workflows/code-review/competencies/simplicity.md
+    conditional: null
+
+  # Review competencies (document-specific)
+  - source: workflows/code-review/competencies/protocol-completeness.md
+    target: .workflows/code-review/competencies/protocol-completeness.md
+    conditional: null
+
+  # Review competencies (language-specific)
+  - source: workflows/code-review/competencies/typescript.md
+    target: .workflows/code-review/competencies/typescript.md
+    conditional: "has_typescript"
+
+  - source: workflows/code-review/competencies/python.md
+    target: .workflows/code-review/competencies/python.md
+    conditional: "has_python"
+
+  # Review competencies (testing)
+  - source: workflows/code-review/competencies/testing.md
+    target: .workflows/code-review/competencies/testing.md
+    conditional: "has_tests"
+
+  - source: workflows/code-review/competencies/testing-platforms/pytest.md
+    target: .workflows/code-review/competencies/testing-platforms/pytest.md
+    conditional: "has_python"
+
+  - source: workflows/code-review/competencies/testing-platforms/jest.md
+    target: .workflows/code-review/competencies/testing-platforms/jest.md
+    conditional: "has_typescript"
+
+  - source: skills/load-context/SKILL.md
+    target: .claude/skills/load-context/SKILL.md
+    conditional: null
+
+  - source: skills/load-context/scripts/load-context.py
+    target: .claude/skills/load-context/scripts/load-context.py
+    conditional: null
+
+  - source: skills/design-reviewer/SKILL.md
+    target: .claude/skills/design-reviewer/SKILL.md
+    conditional: "has_frontend"
+
+  - source: skills/research-analyst/SKILL.md
+    target: .claude/skills/research-analyst/SKILL.md
+    conditional: null
+
+  - source: commands/prime.md
+    target: .claude/commands/prime.md
+    conditional: null
+
+  - source: skills/create-prd/SKILL.md
+    target: .claude/skills/create-prd/SKILL.md
+    conditional: null
+
+  - source: skills/create-prd/workflow.md
+    target: .claude/skills/create-prd/workflow.md
+    conditional: null
+
+  - source: skills/create-spec/SKILL.md
+    target: .claude/skills/create-spec/SKILL.md
+    conditional: null
+
+  - source: skills/create-spec/workflow.md
+    target: .claude/skills/create-spec/workflow.md
+    conditional: null
+
+  - source: skills/create-protocol/SKILL.md
+    target: .claude/skills/create-protocol/SKILL.md
+    conditional: null
+
+  - source: skills/update-memory-bank/SKILL.md
+    target: .claude/skills/update-memory-bank/SKILL.md
+    conditional: null
+
+  - source: skills/update-memory-bank/workflow.md
+    target: .claude/skills/update-memory-bank/workflow.md
+    conditional: null
+
+  - source: skills/doc-gardening/SKILL.md
+    target: .claude/skills/doc-gardening/SKILL.md
+    conditional: null
+
+  - source: skills/doc-gardening/workflow.md
+    target: .claude/skills/doc-gardening/workflow.md
+    conditional: null
+
+  - source: skills/commit/SKILL.md
+    target: .claude/skills/commit/SKILL.md
+    conditional: null
+
+  - source: skills/defer/SKILL.md
+    target: .claude/skills/defer/SKILL.md
+    conditional: null
+
+  - source: skills/defer/scripts/defer.py
+    target: .claude/skills/defer/scripts/defer.py
+    conditional: null
+
+  - source: skills/develop/SKILL.md
+    target: .claude/skills/develop/SKILL.md
+    conditional: null
+
+  - source: skills/run-tests/SKILL.md
+    target: .claude/skills/run-tests/SKILL.md
+    conditional: null
+
+  - source: skills/code-review/SKILL.md
+    target: .claude/skills/code-review/SKILL.md
+    conditional: null
+
+  - source: skills/process-protocol/SKILL.md
+    target: .claude/skills/process-protocol/SKILL.md
+    conditional: null
+
+  # Workflows (deployed to .workflows/)
+  - source: workflows/_dsl.py
+    target: .workflows/_dsl.py
+    conditional: null
+
+  - source: workflows/develop/DEVELOPMENT_README.md
+    target: .workflows/develop/DEVELOPMENT_README.md
+    conditional: null
+
+  - source: workflows/develop/workflow.py
+    target: .workflows/develop/workflow.py
+    conditional: null
+
+  - source: workflows/develop/prompts/00-classify.md
+    target: .workflows/develop/prompts/00-classify.md
+    conditional: null
+
+  - source: workflows/develop/prompts/00r-resume-context.md
+    target: .workflows/develop/prompts/00r-resume-context.md
+    conditional: null
+
+  - source: workflows/develop/prompts/01-explore.md
+    target: .workflows/develop/prompts/01-explore.md
+    conditional: null
+
+  - source: workflows/develop/prompts/02-plan.md
+    target: .workflows/develop/prompts/02-plan.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03a-write-tests.md
+    target: .workflows/develop/prompts/03a-write-tests.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03c-implement.md
+    target: .workflows/develop/prompts/03c-implement.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03d-coverage.md
+    target: .workflows/develop/prompts/03d-coverage.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03e-fix.md
+    target: .workflows/develop/prompts/03e-fix.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03f-fix-verify-custom.md
+    target: .workflows/develop/prompts/03f-fix-verify-custom.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03g-acceptance-check.md
+    target: .workflows/develop/prompts/03g-acceptance-check.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03h-acceptance-tests.md
+    target: .workflows/develop/prompts/03h-acceptance-tests.md
+    conditional: null
+
+  - source: workflows/develop/prompts/03i-acceptance-impl.md
+    target: .workflows/develop/prompts/03i-acceptance-impl.md
+    conditional: null
+
+  - source: workflows/develop/dev-tools.py
+    target: .workflows/develop/dev-tools.py
+    conditional: null
+
+  - source: workflows/develop/collect-result.py
+    target: .workflows/develop/collect-result.py
+    conditional: null
+
+  - source: workflows/develop/prompts/04-fast-track.md
+    target: .workflows/develop/prompts/04-fast-track.md
+    conditional: null
+
+  - source: workflows/develop/prompts/05-complete.md
+    target: .workflows/develop/prompts/05-complete.md
+    conditional: null
+
+  - source: workflows/code-review/workflow.py
+    target: .workflows/code-review/workflow.py
+    conditional: null
+
+  - source: workflows/code-review/prompts/01-scope.md
+    target: .workflows/code-review/prompts/01-scope.md
+    conditional: null
+
+  - source: workflows/code-review/prompts/02-review.md
+    target: .workflows/code-review/prompts/02-review.md
+    conditional: null
+
+  - source: workflows/code-review/prompts/03-synthesize.md
+    target: .workflows/code-review/prompts/03-synthesize.md
+    conditional: null
+
+  - source: workflows/code-review/prompts/04-defer.md
+    target: .workflows/code-review/prompts/04-defer.md
+    conditional: null
+
+  - source: workflows/testing/workflow.py
+    target: .workflows/testing/workflow.py
+    conditional: null
+
+  - source: workflows/testing/prompts/01-analyze.md
+    target: .workflows/testing/prompts/01-analyze.md
+    conditional: null
+
+  - source: workflows/process-protocol/workflow.py
+    target: .workflows/process-protocol/workflow.py
+    conditional: null
+
+  - source: workflows/process-protocol/prompts/fix-review.md
+    target: .workflows/process-protocol/prompts/fix-review.md
+    conditional: null
+
+  - source: workflows/process-protocol/helpers.py
+    target: .workflows/process-protocol/helpers.py
+    conditional: null
+
+  - source: workflows/process-protocol/protocol_md.py
+    target: .workflows/process-protocol/protocol_md.py
+    conditional: null
+
+  - source: workflows/merge-protocol/workflow.py
+    target: .workflows/merge-protocol/workflow.py
+    conditional: null
+
+  - source: workflows/merge-protocol/helpers.py
+    target: .workflows/merge-protocol/helpers.py
+    conditional: null
+
+  - source: workflows/merge-protocol/prompts/fix-review.md
+    target: .workflows/merge-protocol/prompts/fix-review.md
+    conditional: null
+
+  - source: skills/merge-protocol/SKILL.md
+    target: .claude/skills/merge-protocol/SKILL.md
+    conditional: null
+
+  - source: skills/create-protocol/SKILL.md
+    target: .claude/skills/create-protocol/SKILL.md
+    conditional: null
+
+  - source: workflows/create-protocol/workflow.py
+    target: .workflows/create-protocol/workflow.py
+    conditional: null
+
+  - source: workflows/create-protocol/write-prd.py
+    target: .workflows/create-protocol/write-prd.py
+    conditional: null
+
+  - source: workflows/create-protocol/prompts/01-ensure-prd.md
+    target: .workflows/create-protocol/prompts/01-ensure-prd.md
+    conditional: null
+
+  - source: workflows/create-protocol/prompts/02-plan-protocol.md
+    target: .workflows/create-protocol/prompts/02-plan-protocol.md
+    conditional: null
+
+  - source: workflows/create-protocol/prompts/03-review.md
+    target: .workflows/create-protocol/prompts/03-review.md
+    conditional: null
+
+  - source: workflows/verify-fix/workflow.py
+    target: .workflows/verify-fix/workflow.py
+    conditional: null
+
+  - source: workflows/verify-fix/prompts/fix.md
+    target: .workflows/verify-fix/prompts/fix.md
+    conditional: null
+
+  - source: workflows/commit/workflow.py
+    target: .workflows/commit/workflow.py
+    conditional: null
+
+  - source: workflows/commit/commit-tools.py
+    target: .workflows/commit/commit-tools.py
+    conditional: null
+
+  - source: workflows/commit/prompts/analyze.md
+    target: .workflows/commit/prompts/analyze.md
+    conditional: null
+
+
+# More examples (uncomment to use):
+#
+#   - source: memory_bank/guides/ruby-style-guide.md
+#     target: .memory_bank/guides/ruby-style-guide.md
+#     conditional: "backend_language == 'Ruby'"
+#
+#   - source: memory_bank/workflows/pr-process.md
+#     target: .memory_bank/workflows/pr-process.md
+#     conditional: "has_ci"

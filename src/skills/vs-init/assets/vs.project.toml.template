@@ -57,10 +57,22 @@ forbidden_actions = [
   "delete files"
 ]
 
+[git]
+# Git safety settings for vs-init
+git_required = false          # If true, abort vs-init if no git repository
+auto_create_tag = true        # Automatically create safety tag before changes
+tag_prefix = "vs-init-backup" # Prefix for safety tags
+
 [git.commit_format]
 template = """grace(M-XXX): short description inPhase N, Step N
 Module: ModuleName (src/path/to/file.ts)
 Contract: one-line purpose from development-plan.xml"""
+
+[migration]
+# XML migration settings for vs-init
+migration_mode = "migrate"    # "migrate" | "replace" | "keep"
+backup_retention = 5          # Number of backups to keep in docs/.backup/
+generate_report = true        # Create migration report after migration
 
 [gates]
 require_sign_off = true

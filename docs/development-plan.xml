@@ -137,9 +137,40 @@
       </observability>
       <verification-ref>V-M-FRAGMENTS</verification-ref>
       <notes>
-        <note-1>Core fragments always loaded, feature/stack fragments conditional</note-1>
+            <note-1>Core fragments always loaded, feature/stack fragments conditional</note-1>
       </notes>
     </M-FRAGMENTS>
+
+    <M-STACKFRAGMENTS NAME="StackFragments" TYPE="UTILITY" LAYER="0" ORDER="5" STATUS="done">
+      <contract>
+        <purpose>Provide stack-specific coding conventions and patterns</purpose>
+        <inputs>
+          <param name="stackName" type="string" />
+        </inputs>
+        <outputs>
+          <param name="stackGuidelines" type="markdown" />
+        </outputs>
+        <errors>
+          <error code="STACK_NOT_SUPPORTED" />
+        </errors>
+      </contract>
+      <interface>
+        <export-loadStackFragment PURPOSE="Load stack-specific fragment" />
+        <export-listStacks PURPOSE="List available stacks" />
+      </interface>
+      <depends>None</depends>
+      <target>
+        <source>src/fragments/stacks/*.md</source>
+        <tests>Visual inspection of fragment files</tests>
+      </target>
+      <observability>
+        <log-prefix>[FRAGMENT:stack]</log-prefix>
+      </observability>
+      <verification-ref>V-M-STACKFRAGMENTS</verification-ref>
+      <notes>
+        <note-1>5 stack fragments: typescript, python, react, node, fastify</note-1>
+      </notes>
+    </M-STACKFRAGMENTS>
 
     <!-- Layer 1: Core Skills -->
     <M-VSINIT NAME="vs-init" TYPE="ENTRY_POINT" LAYER="1" ORDER="1" STATUS="done">
@@ -491,6 +522,74 @@
         <note-1>Checks contract compliance, standards adherence</note-1>
       </notes>
     </M-GRACEREVIEWER>
+
+    <!-- New: Multi-agent Support -->
+    <M-GRACESETUP NAME="grace-setup-subagents" TYPE="UTILITY" LAYER="1" ORDER="12" STATUS="planned">
+      <contract>
+        <purpose>Create GRACE subagent presets for agent shells</purpose>
+        <inputs>
+          <param name="shellType" type="string" />
+        </inputs>
+        <outputs>
+          <param name="createdFiles" type="array" />
+        </outputs>
+        <errors>
+          <error code="UNSUPPORTED_SHELL" />
+        </errors>
+      </contract>
+      <interface>
+        <export-detectShell PURPOSE="Ident agent shell type" />
+        <export-createPresets PURPOSE="Generate worker, reviewer, coordinator presets" />
+      </interface>
+      <depends>M-GRACEINIT</depends>
+      <target>
+        <source>src/skills/grace/grace-setup-subagents/SKILL.md</source>
+        <tests>Manual testing with different shells</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-setup-subagents]</log-prefix>
+      </observability>
+      <verification-ref>V-M-GRACESETUP</verification-ref>
+      <notes>
+        <note-1>Supports Claude Code, OpenCode, Codex, Cursor, Generic shells</note-1>
+      </notes>
+    </M-GRACESETUP>
+
+    <M-GRACEMULTIEXEC NAME="grace-multiagent-execute" TYPE="CORE_LOGIC" LAYER="1" ORDER="13" STATUS="planned">
+      <contract>
+        <purpose>Execute GRACE plan with parallel agents</purpose>
+        <inputs>
+          <param name="developmentPlan" type="xml" />
+          <param name="safetyProfile" type="string" />
+        </inputs>
+        <outputs>
+          <param name="executionResults" type="object" />
+        </outputs>
+        <errors>
+          <error code="NO_AGENTS" />
+          <error code="EXECUTION_FAILED" />
+        </errors>
+      </contract>
+      <interface>
+        <export-analyzeDependencies PURPOSE="Calculate parallel execution waves" />
+        <export-executeWaves PURPOSE="Run agents in parallel" />
+        <export-collectResults PURPOSE="Aggregate results from all agents" />
+      </interface>
+      <depends>M-GRACEPLAN, M-GRACESETUP, M-GRACEVERIFY</depends>
+      <target>
+        <source>src/skills/grace/grace-multiagent-execute/SKILL.md</source>
+        <tests>Manual testing with sample project</tests>
+      </target>
+      <observability>
+        <log-prefix>[SKILL:grace-multiagent-execute]</log-prefix>
+        <critical-block>WAVE_EXECUTION, AGENT_COORDINATION</critical-block>
+      </observability>
+      <verification-ref>V-M-GRACEMULTIEXEC</verification-ref>
+      <notes>
+        <note-1>Safety profiles: conservative, balanced, aggressive</note-1>
+        <note-2>Coordinates worker and reviewer agents</note-2>
+      </notes>
+    </M-GRACEMULTIEXEC>
   </Modules>
 
   <DataFlow>

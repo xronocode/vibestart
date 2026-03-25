@@ -1,0 +1,21 @@
+{
+    "name": "memento-marketplace",
+    "owner": {
+        "name": "Max Derkachev",
+        "email": "max.derkachev@gmail.com"
+    },
+    "plugins": [
+        {
+            "name": "memento",
+            "source": "./memento",
+            "description": "AI-powered development environment generator with Memory Bank",
+            "version": "2.0.1"
+        },
+        {
+            "name": "memento-workflow",
+            "source": "./memento-workflow",
+            "description": "Stateful workflow engine MCP server for multi-step automation",
+            "version": "1.0.2"
+        }
+    ]
+}

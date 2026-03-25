@@ -1,0 +1,35 @@
+[project]
+name = "memento-dev"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.408",
+    "pytest>=8.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.15.6",
+]
+
+[tool.uv.workspace]
+members = ["memento", "memento-workflow"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["E731"]
+
+[tool.pyright]
+typeCheckingMode = "basic"
+extraPaths = ["memento-workflow", "memento/static/workflows"]
+exclude = ["**/tests/**", "memento/skills/**"]
+# Pydantic discriminated unions narrow str → Literal["..."] in subclasses;
+# pyright treats this as invariance violation — false positive for Pydantic models.
+reportIncompatibleVariableOverride = false
+
+[tool.pytest.ini_options]
+testpaths = ["memento/tests", "memento-workflow/tests"]
+markers = ["e2e: end-to-end tests (real MCP server, slow — run with: uv run pytest -m e2e)"]
+addopts = "-m 'not e2e'"

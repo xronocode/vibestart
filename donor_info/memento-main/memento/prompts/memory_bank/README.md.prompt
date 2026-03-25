@@ -1,0 +1,84 @@
+---
+file: README.md
+target_path: .memory_bank/
+priority: 2
+dependencies: []
+conditional: null
+---
+
+# Generation Instructions for README.md
+
+## Context
+
+You are generating the Memory Bank README — the **primary navigation hub** loaded on every `/prime`.
+Every line must earn its place in the context window.
+
+**Audience**: AI assistants (primary)
+**Tone**: Concise, navigational
+**Length**: 25-35 lines
+
+## Input Data
+
+```json
+{
+  "project_name": "string",
+  "project_type": "web_app|api|mobile_app|cli|library",
+  "has_frontend": true|false,
+  "has_backend": true|false,
+  "has_multiple_backends": true|false,
+  "backends": [{"framework": "string", "language": "string", "dir": "string"}],
+  "primary_language": "string",
+  "generation_date": "YYYY-MM-DD"
+}
+```
+
+## Output Structure
+
+Generate EXACTLY this structure (no additional sections):
+
+````markdown
+# Memory Bank: {project_name}
+
+**Last Updated**: {generation_date}
+**Type**: {project_type, nicely formatted}
+**Stack**: {concise tech stack summary}
+
+## Quick Start
+
+Run `/prime` to load context. Must-read before coding:
+- `./product_brief.md` — what this project is
+- `./tech_stack.md` — dependencies and commands
+- `./guides/architecture.md` — system design
+
+## Guides
+
+| Guide | Purpose |
+|-------|---------|
+| [getting-started.md](./guides/getting-started.md) | Setup and first contribution |
+| [architecture.md](./guides/architecture.md) | System design, data flow |
+{if has_backend: | [backend.md](./guides/backend.md) | Backend patterns and conventions |}
+{if has_frontend: | [frontend.md](./guides/frontend.md) | Frontend patterns and components |}
+{if has_frontend: | [visual-design.md](./guides/visual-design.md) | Design system, accessibility |}
+
+## Patterns
+
+See [patterns/index.md](./patterns/index.md).
+````
+
+### Conditional Logic
+
+**If has_backend:**
+- Include backend.md row in the Guides table
+- Include api-design.md row in Patterns (as a link, not just "see index")
+
+**If has_multiple_backends:**
+- backend.md row becomes an index entry; add a row per backend-{framework}.md
+
+**If has_frontend:**
+- Include frontend.md and visual-design.md rows in the Guides table
+
+### Style Rules
+
+- All internal links use relative paths starting with `./`
+- No `{{PLACEHOLDERS}}` in output
+- No filler prose — this is a map, not a manual
