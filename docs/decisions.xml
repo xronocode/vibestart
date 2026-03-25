@@ -181,7 +181,7 @@
         <module>M-VSINIT</module>
       </impacts>
       <consequences>
-        <positive>Simpler vs-init (911 to 197 lines, 78% reduction), more reliable AI execution, offline support, faster initialization</positive>
+        <positive>Simpler vs-init (911 to 262 lines, 71% reduction), more reliable AI execution, offline support, faster initialization</positive>
         <negative>Requires migration of existing template files, documentation updates, verification scripts need updates</negative>
       </consequences>
       <links>
@@ -196,7 +196,7 @@
       <review>
         <date>2026-03-24</date>
         <outcome>implemented</outcome>
-        <notes>vs-init SKILL.md reduced from 911 to 197 lines, 8 template files created in assets/ directory, framework clone workflow eliminated</notes>
+        <notes>vs-init SKILL.md reduced from 911 to 262 lines (649 lines, 71% reduction), 8 template files created in assets/ directory, framework clone workflow eliminated</notes>
       </review>
     </D-004>
   </Decisions>

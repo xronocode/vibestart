@@ -165,6 +165,17 @@
       </exports>
     </M-GRACEASK>
 
+    <M-GRACEREVIEWER>
+      <name>grace-reviewer</name>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Code review with GRACE context - contract compliance checking</description>
+      <source>src/skills/grace/grace-reviewer/</source>
+      <exports>
+        <export-reviewReport PURPOSE="Generate review report with contract compliance" />
+      </exports>
+    </M-GRACEREVIEWER>
+
     <M-STACKFRAGMENTS>
       <name>StackFragments</name>
       <type>UTILITY</type>
@@ -264,11 +275,11 @@
 
   <Layers>
     <layer-0 count="5" modules="M-CONFIG, M-STANDARDS, M-TEMPLATES, M-FRAGMENTS, M-STACKFRAGMENTS" />
-    <layer-1 count="11" modules="M-VSINIT, M-GRACEINIT, M-GRACEPLAN, M-GRACEEXEC, M-GRACEVERIFY, M-GRACEREFRESH, M-GRACESTATUS, M-GRACEFIX, M-GRACEASK, M-GRACESETUP, M-GRACEMULTIEXEC" />
+    <layer-1 count="12" modules="M-VSINIT, M-GRACEINIT, M-GRACEPLAN, M-GRACEEXEC, M-GRACEVERIFY, M-GRACEREFRESH, M-GRACESTATUS, M-GRACEFIX, M-GRACEASK, M-GRACEREVIEWER, M-GRACESETUP, M-GRACEMULTIEXEC" />
   </Layers>
 
   <Health>
-    <last-updated>2026-03-24</last-updated>
+    <last-updated>2026-03-25</last-updated>
     <integrity-check>
       <orphaned-nodes>0</orphaned-nodes>
       <missing-dependencies>0</missing-dependencies>

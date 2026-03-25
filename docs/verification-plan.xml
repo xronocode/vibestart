@@ -626,6 +626,249 @@
       <verification-level>phase</verification-level>
       <safe-for-autonomous>true</safe-for-autonomous>
     </V-M-GRACEMULTIEXEC>
+
+    <V-M-GRACEREVIEWER MODULE="M-GRACEREVIEWER">
+      <contract>
+        <purpose>Verify grace-reviewer performs code review with GRACE context</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification, file-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test review with sample code changes</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Knowledge graph loaded for context</scenario-1>
+        <scenario-2>Contracts retrieved for affected modules</scenario-2>
+        <scenario-3>Code changes analyzed against contracts</scenario-3>
+        <scenario-4>Compliance issues identified and reported</scenario-4>
+        <scenario-5>Review report generated with findings</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-reviewer] Loading knowledge graph...</trace-1>
+        <trace-2>[SKILL:grace-reviewer] Retrieving contracts for affected modules...</trace-2>
+        <trace-3>[SKILL:grace-reviewer] Analyzing code changes...</trace-3>
+        <trace-4>[SKILL:grace-reviewer] Checking contract compliance...</trace-4>
+        <trace-5>[SKILL:grace-reviewer] Generating review report...</trace-5>
+        <trace-6>[SKILL:grace-reviewer] ✓ Review complete</trace-6>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-reviewer with sample changes</test-command>
+        <trace-validation>Verify review markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>LOAD_GRAPH</block>
+        <block>RETRIEVE_CONTRACTS</block>
+        <block>ANALYZE_CHANGES</block>
+        <block>CHECK_COMPLIANCE</block>
+        <block>GENERATE_REPORT</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEREVIEWER>
+
+    <V-M-GRACEASK MODULE="M-GRACEASK">
+      <contract>
+        <purpose>Verify grace-ask answers questions about project correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test with sample questions about project</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Knowledge graph loaded successfully</scenario-1>
+        <scenario-2>Question parsed and understood</scenario-2>
+        <scenario-3>Relevant modules identified</scenario-3>
+        <scenario-4>Answer generated with citations</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-ask] Loading knowledge graph...</trace-1>
+        <trace-2>[SKILL:grace-ask] Parsing question...</trace-2>
+        <trace-3>[SKILL:grace-ask] Navigating to relevant modules...</trace-3>
+        <trace-4>[SKILL:grace-ask] Generating answer with citations...</trace-4>
+        <trace-5>[SKILL:grace-ask] ✓ Answer provided</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-ask with test question</test-command>
+        <trace-validation>Verify answer generation markers appear</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>LOAD_GRAPH</block>
+        <block>PARSE_QUESTION</block>
+        <block>NAVIGATE_MODULES</block>
+        <block>GENERATE_ANSWER</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEASK>
+
+    <V-M-GRACEREFRESH MODULE="M-GRACEREFRESH">
+      <contract>
+        <purpose>Verify grace-refresh synchronizes code with documentation</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification, file-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test with out-of-sync artifacts</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Code changes detected</scenario-1>
+        <scenario-2>Affected artifacts identified</scenario-2>
+        <scenario-3>Knowledge graph updated</scenario-3>
+        <scenario-4>Verification plan updated</scenario-4>
+        <scenario-5>Sync report generated</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-refresh] Scanning for code changes...</trace-1>
+        <trace-2>[SKILL:grace-refresh] Identifying affected artifacts...</trace-2>
+        <trace-3>[SKILL:grace-refresh] Updating knowledge graph...</trace-3>
+        <trace-4>[SKILL:grace-refresh] Updating verification plan...</trace-4>
+        <trace-5>[SKILL:grace-refresh] ✓ Artifacts synchronized</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-refresh after code changes</test-command>
+        <trace-validation>Verify sync markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>SCAN_CHANGES</block>
+        <block>IDENTIFY_ARTIFACTS</block>
+        <block>UPDATE_GRAPH</block>
+        <block>UPDATE_VERIFICATION</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACEREFRESH>
+
+    <V-M-GRACESTATUS MODULE="M-GRACESTATUS">
+      <contract>
+        <purpose>Verify grace-status checks GRACE project health correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification, file-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test in GRACE project</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>GRACE artifacts located</scenario-1>
+        <scenario-2>Artifact integrity checked</scenario-2>
+        <scenario-3>Module coverage calculated</scenario-3>
+        <scenario-4>Health report generated</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-status] Locating GRACE artifacts...</trace-1>
+        <trace-2>[SKILL:grace-status] Checking artifact integrity...</trace-2>
+        <trace-3>[SKILL:grace-status] Calculating module coverage...</trace-3>
+        <trace-4>[SKILL:grace-status] Generating health report...</trace-4>
+        <trace-5>[SKILL:grace-status] ✓ Status report complete</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-status in test project</test-command>
+        <trace-validation>Verify status markers appear in execution</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>LOCATE_ARTIFACTS</block>
+        <block>CHECK_INTEGRITY</block>
+        <block>CALCULATE_COVERAGE</block>
+        <block>GENERATE_REPORT</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-GRACESTATUS>
+
+    <V-M-GRACEFIX MODULE="M-GRACEFIX">
+      <contract>
+        <purpose>Verify grace-fix debugs issues with GRACE navigation</purpose>
+      </contract>
+      <strategy>
+        <approach>trace-based</approach>
+        <mocking>none</mocking>
+        <evidence-type>execution-path-verification</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: SKILL.md exists and is valid</file>
+        <file>Manual: Test with sample error/bug</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Error/bug description parsed</scenario-1>
+        <scenario-2>Knowledge graph navigated to find source</scenario-2>
+        <scenario-3>Contracts checked for expected behavior</scenario-3>
+        <scenario-4>Fix suggestions generated</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SKILL:grace-fix] Parsing error description...</trace-1>
+        <trace-2>[SKILL:grace-fix] Navigating knowledge graph...</trace-2>
+        <trace-3>[SKILL:grace-fix] Checking contracts for expected behavior...</trace-3>
+        <trace-4>[SKILL:grace-fix] Generating fix suggestions...</trace-4>
+        <trace-5>[SKILL:grace-fix] ✓ Fix suggestions provided</trace-5>
+      </traces>
+      <commands>
+        <test-command>Manual: Run /grace-fix with test error</test-command>
+        <trace-validation>Verify fix navigation markers appear</trace-validation>
+      </commands>
+      <critical-blocks>
+        <block>PARSE_ERROR</block>
+        <block>NAVIGATE_GRAPH</block>
+        <block>CHECK_CONTRACTS</block>
+        <block>SUGGEST_FIX</block>
+      </critical-blocks>
+      <verification-level>wave</verification-level>
+      <safe-for-autonomous>false</safe-for-autonomous>
+      <requires-human-oversight>
+        <reason>Fix implementation needs user confirmation</reason>
+      </requires-human-oversight>
+    </V-M-GRACEFIX>
+
+    <V-M-STACKFRAGMENTS MODULE="M-STACKFRAGMENTS">
+      <contract>
+        <purpose>Verify stack fragments exist and assemble correctly</purpose>
+      </contract>
+      <strategy>
+        <approach>deterministic</approach>
+        <mocking>none</mocking>
+        <evidence-type>file-count, markdown-validation</evidence-type>
+      </strategy>
+      <test-files>
+        <file>check: stack fragment directories exist</file>
+        <file>check: valid markdown syntax in fragments</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Stack directories present in src/fragments/stacks/</scenario-1>
+        <scenario-2>Each stack has required fragment files</scenario-2>
+        <scenario-3>Fragments valid markdown</scenario-3>
+        <scenario-4>Fragments assemble correctly into AGENTS.md</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>[SYSTEM] Checking stack fragments integrity...</trace-1>
+        <trace-2>[FRAGMENT] ✓ Stack fragments present</trace-2>
+        <trace-3>[FRAGMENT] ✓ All stack fragments valid markdown</trace-3>
+      </traces>
+      <commands>
+        <test-command>test -d src/fragments/stacks/</test-command>
+        <validation-command>find src/fragments/stacks -name "*.md" -exec markdownlint {} \;</validation-command>
+      </commands>
+      <critical-blocks>
+        <block>CHECK_STACK_FRAGMENTS</block>
+        <block>VALIDATE_FRAGMENTS</block>
+      </critical-blocks>
+      <verification-level>module</verification-level>
+      <safe-for-autonomous>true</safe-for-autonomous>
+    </V-M-STACKFRAGMENTS>
   </ModuleChecks>
 
   <PhaseGates>
@@ -759,9 +1002,14 @@
       <module>M-STANDARDS</module>
       <module>M-TEMPLATES</module>
       <module>M-FRAGMENTS</module>
+      <module>M-STACKFRAGMENTS</module>
       <module>M-GRACEEXEC</module>
       <module>M-GRACEVERIFY</module>
       <module>M-GRACEMULTIEXEC</module>
+      <module>M-GRACEREVIEWER</module>
+      <module>M-GRACEASK</module>
+      <module>M-GRACEREFRESH</module>
+      <module>M-GRACESTATUS</module>
     </safe-modules>
     
     <requires-oversight-modules>
@@ -769,6 +1017,7 @@
       <module reason="project info gathering needs user input">M-GRACEINIT</module>
       <module reason="architecture approval needs user confirmation">M-GRACEPLAN</module>
       <module reason="shell detection and scope choice may need user confirmation">M-GRACESETUP</module>
+      <module reason="fix implementation needs user confirmation">M-GRACEFIX</module>
     </requires-oversight-modules>
     
     <justification>
@@ -786,16 +1035,16 @@
   </AutonomousExecutionSafety>
 
   <Health>
-    <last-updated>2026-03-24</last-updated>
+    <last-updated>2026-03-25</last-updated>
     <coverage>
-      <modules-covered>11/16</modules-covered>
+      <modules-covered>17/17</modules-covered>
       <phase-gates-defined>4/4</phase-gates-defined>
-      <deterministic-checks>4</deterministic-checks>
-      <trace-based-checks>7</trace-based-checks>
+      <deterministic-checks>5</deterministic-checks>
+      <trace-based-checks>12</trace-based-checks>
     </coverage>
     <verification-readiness>
-      <autonomous-ready>7 modules</autonomous-ready>
-      <requires-oversight>4 modules</requires-oversight>
+      <autonomous-ready>12 modules</autonomous-ready>
+      <requires-oversight>5 modules</requires-oversight>
     </verification-readiness>
   </Health>
   
