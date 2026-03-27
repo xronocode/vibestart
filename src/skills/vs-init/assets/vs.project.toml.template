@@ -1,16 +1,19 @@
 # vs.project.toml Template
 <!-- Template: assets/vs.project.toml.template -->
+<!-- vibestart v3.0.0 -->
 
 [project]
 name = "$PROJECT_NAME"
 version = "$PROJECT_VERSION"
 annotation = "$PROJECT_ANNOTATION"
 keywords = [$PROJECT_KEYWORDS]
+mode = "$INSTALL_MODE"  # "lite" | "advanced"
 
 [features]
 grace = true
 session_log = true
-conport = false
+conport = $CONPORT_ENABLED  # true если выбрано в ADVANCED
+entire = $ENTIRE_ENABLED    # true если выбрано в ADVANCED
 batch_mode = true
 design_first = true
 
@@ -67,6 +70,21 @@ tag_prefix = "vs-init-backup" # Prefix for safety tags
 template = """grace(M-XXX): short description inPhase N, Step N
 Module: ModuleName (src/path/to/file.ts)
 Contract: one-line purpose from development-plan.xml"""
+
+[integrations.entire]
+enabled = $ENTIRE_ENABLED
+cli_version = ""
+checkpoints_branch = "entire/checkpoints/v1"
+
+[integrations.conport]
+enabled = $CONPORT_ENABLED
+mcp_configured = false
+memory_bank_path = ".conport/memory.db"
+
+[vibestart]
+version = "3.0.0"
+installed_at = "$TIMESTAMP"
+last_updated = "$TIMESTAMP"
 
 [migration]
 # XML migration settings for vs-init

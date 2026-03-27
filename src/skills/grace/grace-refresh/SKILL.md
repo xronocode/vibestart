@@ -15,6 +15,7 @@ After code changes, artifacts may drift from reality. grace-refresh:
 3. Syncs verification plan with tests
 4. Updates session log
 5. Validates consistency
+6. **NEW:** Syncs integrations (Entire.io, ConPort) if enabled
 
 ## Execution Flow
 
@@ -24,10 +25,41 @@ After code changes, artifacts may drift from reality. grace-refresh:
 
 ---
 
+## Step 0: Check Integrations Status
+
+```
+[SKILL:grace-refresh] Step 0/6: Checking integrations...
+[TOOL:read] Reading vs.project.toml...
+```
+
+### Integration Detection
+
+```
+Integrations status:
+  • Entire.io: [enabled/disabled]
+  • ConPort: [enabled/disabled]
+```
+
+If Entire.io enabled:
+```
+  ✓ Checking entire CLI...
+  ✓ Verifying git hooks...
+  ✓ Checkpoint branch exists
+```
+
+If ConPort enabled:
+```
+  ✓ Checking ConPort MCP config...
+  ✓ Memory Bank exists
+  ✓ Connection verified
+```
+
+---
+
 ## Step 1: Detect Changes
 
 ```
-[SKILL:grace-refresh] Step 1/5: Detecting changes...
+[SKILL:grace-refresh] Step 1/6: Detecting changes...
 [TOOL:git] Checking git status...
 ```
 
@@ -53,7 +85,7 @@ Changes detected:
 ## Step 2: Update Knowledge Graph
 
 ```
-[SKILL:grace-refresh] Step 2/5: Updating knowledge graph...
+[SKILL:grace-refresh] Step 2/6: Updating knowledge graph...
 [STANDARD:grace] Reading docs/knowledge-graph.xml...
 ```
 
@@ -81,7 +113,7 @@ Knowledge Graph Updates:
 ## Step 3: Sync Verification Plan
 
 ```
-[SKILL:grace-refresh] Step 3/5: Syncing verification plan...
+[SKILL:grace-refresh] Step 3/6: Syncing verification plan...
 [STANDARD:verification] Scanning test files...
 ```
 
@@ -107,7 +139,7 @@ Verification Plan Updates:
 ## Step 4: Update Session Log
 
 ```
-[SKILL:grace-refresh] Step 4/5: Updating session log...
+[SKILL:grace-refresh] Step 4/6: Updating session log...
 [STANDARD:grace] Appending to docs/session-log.md...
 ```
 
@@ -134,7 +166,7 @@ Verification Plan Updates:
 ## Step 5: Validate Consistency
 
 ```
-[SKILL:grace-refresh] Step 5/5: Validating consistency...
+[SKILL:grace-refresh] Step 5/6: Validating consistency...
 [STANDARD:grace] Cross-referencing artifacts...
 ```
 
@@ -156,6 +188,47 @@ Consistency Check:
 
 ---
 
+## Step 6: Sync Integrations
+
+```
+[SKILL:grace-refresh] Step 6/6: Syncing integrations...
+```
+
+### If Entire.io Enabled
+
+```
+Entire.io Sync:
+  ✓ Checking entire CLI version...
+  ✓ Verifying git hooks are active...
+  ✓ Checkpoint branch: entire/checkpoints/v1
+  ✓ Last checkpoint: chk_abc123 (2026-03-27T14:30:22Z)
+```
+
+### If ConPort Enabled
+
+```
+ConPort Sync:
+  ✓ Checking ConPort MCP connection...
+  ✓ Memory Bank: .conport/memory.db
+  ✓ Memories count: 42
+  ✓ Last session: sess_20260327_143022
+```
+
+### Integration Issues
+
+If issues detected:
+
+```
+⚠️ Integration Issue: Entire.io hooks not found
+
+Suggested fix:
+  Run: entire enable
+  
+Or run: /vs-init --repair
+```
+
+---
+
 ## Summary
 
 ```
@@ -172,6 +245,10 @@ Consistency Check:
 ║    ✓ docs/knowledge-graph.xml (4 changes)                              ║
 ║    ✓ docs/verification-plan.xml (3 changes)                            ║
 ║    ✓ docs/session-log.md (entry added)                                 ║
+║                                                                        ║
+║  Integrations synced:                                                  ║
+║    ✓ Entire.io (enabled)                                               ║
+║    ✓ ConPort (enabled)                                                 ║
 ║                                                                        ║
 ║  Consistency: ✓ All checks passed                                      ║
 ║                                                                        ║

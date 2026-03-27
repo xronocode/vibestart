@@ -14,7 +14,8 @@ Provides a quick overview of:
 2. Module implementation progress
 3. Verification coverage
 4. Knowledge graph consistency
-5. Suggested next actions
+5. **NEW:** Integration status (Entire.io, ConPort)
+6. Suggested next actions
 
 ## Execution Flow
 
@@ -24,10 +25,54 @@ Provides a quick overview of:
 
 ---
 
+## Step 0: Check Integration Status
+
+```
+[SKILL:grace-status] Step 0/6: Checking integrations...
+[TOOL:read] Reading vs.project.toml...
+```
+
+### Integration Detection
+
+```
+Integrations:
+  • Entire.io: [enabled/disabled]
+  • ConPort: [enabled/disabled]
+```
+
+If Entire.io enabled:
+```
+  Entire.io:
+    ✓ CLI installed (v1.2.0)
+    ✓ Git hooks active
+    ✓ Checkpoint branch: entire/checkpoints/v1
+    ✓ Checkpoints: 15 sessions
+```
+
+If ConPort enabled:
+```
+  ConPort:
+    ✓ MCP configured
+    ✓ Memory Bank: .conport/memory.db
+    ✓ Memories: 42 entries
+    ✓ Last session: 2026-03-27T14:30:22Z
+```
+
+If integration issues:
+```
+  ⚠️ Entire.io: hooks not found
+    → Run: entire enable
+    
+  ⚠️ ConPort: MCP not configured
+    → Run: /vs-init --repair
+```
+
+---
+
 ## Step 1: Check Artifact Existence
 
 ```
-[SKILL:grace-status] Step 1/5: Checking artifacts...
+[SKILL:grace-status] Step 1/6: Checking artifacts...
 [STANDARD:grace] Scanning docs/ directory...
 ```
 
@@ -61,7 +106,7 @@ Artifacts:
 ## Step 2: Analyze Module Progress
 
 ```
-[SKILL:grace-status] Step 2/5: Analyzing module progress...
+[SKILL:grace-status] Step 2/6: Analyzing module progress...
 [STANDARD:grace] Reading docs/development-plan.xml...
 ```
 
@@ -93,7 +138,7 @@ Module Progress:
 ## Step 3: Check Knowledge Graph Health
 
 ```
-[SKILL:grace-status] Step 3/5: Checking knowledge graph...
+[SKILL:grace-status] Step 3/6: Checking knowledge graph...
 [STANDARD:grace] Validating docs/knowledge-graph.xml...
 ```
 
@@ -120,7 +165,7 @@ Knowledge Graph:
 ## Step 4: Check Verification Coverage
 
 ```
-[SKILL:grace-status] Step 4/5: Checking verification coverage...
+[SKILL:grace-status] Step 4/6: Checking verification coverage...
 [STANDARD:verification] Reading docs/verification-plan.xml...
 ```
 
@@ -143,7 +188,7 @@ Verification Coverage:
 ## Step 5: Generate Recommendations
 
 ```
-[SKILL:grace-status] Step 5/5: Generating recommendations...
+[SKILL:grace-status] Step 5/6: Generating recommendations...
 ```
 
 ### Recommendation Logic
@@ -184,6 +229,10 @@ elif all_done:
 ║    ⚠ 7 modules missing tests                                           ║
 ║                                                                        ║
 ║  Knowledge Graph: ✓ Healthy                                            ║
+║                                                                        ║
+║  Integrations:                                                         ║
+║    ✓ Entire.io (enabled) — 15 checkpoints                              ║
+║    ✓ ConPort (enabled) — 42 memories                                   ║
 ║                                                                        ║
 ║  ──────────────────────────────────────────────────────────────────── ║
 ║                                                                        ║

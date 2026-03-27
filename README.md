@@ -1,9 +1,10 @@
-# vibestart
+# vibestart v3.0.0
 
 **From zero to vibe coding in one paste.**
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/xronocode/vibestart/releases/tag/v2.1.0)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/xronocode/vibestart/releases/tag/v3.0.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/tests-72%2F76%20passing-brightgreen)](https://github.com/xronocode/vibestart/tree/main/tests)
 
 ---
 
@@ -19,8 +20,26 @@ vibestart is a **framework** for AI-assisted development that includes:
 - **Standards** — development rules (architecture, error-handling, git-workflow)
 - **Templates** — XML templates for project artifacts
 - **Fragments** — modular components for AGENTS.md generation
+- **Integrations** — Entire.io (session audit), ConPort (long-term memory)
 
 **Note:** vibestart uses GRACE methodology for its own development (dogfooding). This validates the templates work correctly and provides a real-world example for users.
+
+### Installation Modes
+
+| Mode | Description | Time | Includes |
+|------|-------------|------|----------|
+| **LITE** | Quick start | 1-2 min | GRACE + XML artifacts + vs-init |
+| **ADVANCED** | Full platform | 10-15 min | LITE + Entire.io + ConPort |
+
+### vs-init Modes
+
+| Mode | When | What |
+|------|------|------|
+| **INSTALL** | New project | Full setup from scratch |
+| **UPDATE** | Existing vibestart | Update to latest version |
+| **REPAIR** | Broken installation | Fix problems |
+| **MIGRATE** | v1.x/v2.x project | Migrate to v3.0.0 |
+| **REFRESH** | Regenerate artifacts | Refresh AGENTS.md |
 
 ### What You Need To Do
 
@@ -68,11 +87,20 @@ The vs-init skill contains all initialization instructions. Read it now:
 Open and read `.vibestart/src/skills/vs-init/SKILL.md`, then follow its instructions.
 
 The skill will guide you through:
+
+**INSTALL mode:**
 1. Framework integrity check (7 checks)
 2. Conflict detection (6 types)
 3. Conflict resolution
-4. AGENTS.md generation
-5. GRACE artifacts creation
+4. LITE or ADVANCED mode selection
+5. AGENTS.md generation
+6. GRACE artifacts creation
+
+**UPDATE/REPAIR/MIGRATE/REFRESH modes:**
+- Automatic detection of existing installation
+- Backup creation before changes
+- Migration from v1.x/v2.x to v3.0.0
+- Integration setup (Entire.io, ConPort)
 
 ---
 
@@ -109,9 +137,46 @@ user-project/
     ├── knowledge-graph.xml
     ├── verification-plan.xml
     ├── technology.xml
-    ├── SESSION_LOG.md
-    └── TASK_LOG.md
+    └── decisions.xml
+
+# If ADVANCED mode with integrations:
+├── .conport/                # ConPort Memory Bank (if enabled)
+└── .git/hooks/              # Entire.io hooks (if enabled)
 ```
+
+## Integrations (ADVANCED mode)
+
+### Entire.io — Session Audit
+
+**What it does:**
+- Captures AI agent sessions automatically
+- Links sessions to Git commits
+- Searchable history of how code was written
+- Checkpoints with full context
+
+**Requirements:**
+- entire CLI (`npm install -g @entire/cli`)
+- Git repository
+
+**Storage:** Git branch (`entire/checkpoints/v1`)
+
+**Cost:** Free (MIT license)
+
+### ConPort — Long-term Memory
+
+**What it does:**
+- Persistent memory between sessions
+- Semantic search
+- Context carry-over
+- Decision migration to GRACE
+
+**Requirements:**
+- ConPort MCP server
+- Agent with MCP support (Claude Code, Kilo Code, Cursor)
+
+**Storage:** Local file (`.conport/memory.db`)
+
+**Cost:** Free (open source)
 
 ---
 
@@ -168,6 +233,9 @@ vibestart provides:
 | Document | Description |
 |----------|-------------|
 | [docs/ru.md](docs/ru.md) | Инструкция на русском |
+| [docs/grace-explainer.md](docs/grace-explainer.md) | GRACE methodology reference |
+| [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) | Entire.io & ConPort setup |
+| [RUNNING_TESTS.md](RUNNING_TESTS.md) | How to run tests |
 | [docs/why.md](docs/why.md) | Why GRACE + ConPort |
 | [docs/grace-macros.md](docs/grace-macros.md) | GRACE macros reference |
 | [src/README.md](src/README.md) | Framework internals (Russian) |
