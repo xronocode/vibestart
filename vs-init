@@ -1,0 +1,466 @@
+#!/bin/bash
+# vs-init — Vibestart v3.1 Main Entry Point
+# MODULE_ID: M-VSINIT
+# CONTRACT:
+#   PURPOSE: Bootstrap AI coding environments with GRACE methodology
+#   SCOPE: Full setup flow from detection to completion
+#   DEPENDS: All lib/*.sh modules
+#   EXPORTS:
+#     main() — main entry point
+#     run_auto_mode() — non-interactive setup
+#     run_interactive_mode() — interactive setup
+
+set -e
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Script Setup
+# ═══════════════════════════════════════════════════════════════════════════
+
+readonly SCRIPT_VERSION="3.1.0"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly VIBESTART_ROOT="$SCRIPT_DIR"
+readonly LIB_DIR="$VIBESTART_ROOT/lib"
+
+# Source all required modules
+source "$LIB_DIR/ui.sh"
+source "$LIB_DIR/detect.sh"
+source "$LIB_DIR/preflight.sh"
+source "$LIB_DIR/marketplace.sh"
+source "$LIB_DIR/conport.sh"
+source "$LIB_DIR/entire.sh"
+source "$LIB_DIR/shortcuts.sh"
+source "$LIB_DIR/config/kilo.sh"
+source "$LIB_DIR/config/claude.sh"
+source "$LIB_DIR/config/qwen.sh"
+source "$LIB_DIR/config/copilot.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CLI Arguments
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Default values
+AUTO_MODE="false"
+DRY_RUN="false"
+ENV_OVERRIDE=""
+CONPORT_OVERRIDE=""
+ENTIRE_OVERRIDE=""
+SHORTCUTS_OVERRIDE=""
+
+# Parse arguments
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --auto)
+                AUTO_MODE="true"
+                shift
+                ;;
+            --dry-run)
+                DRY_RUN="true"
+                shift
+                ;;
+            --env=*)
+                ENV_OVERRIDE="${1#*=}"
+                shift
+                ;;
+            --conport=*)
+                CONPORT_OVERRIDE="${1#*=}"
+                shift
+                ;;
+            --entire)
+                ENTIRE_OVERRIDE="enabled"
+                shift
+                ;;
+            --no-entire)
+                ENTIRE_OVERRIDE="skip"
+                shift
+                ;;
+            --no-aliases)
+                SHORTCUTS_OVERRIDE="skip"
+                shift
+                ;;
+            --update-marketplace)
+                update_marketplace
+                exit 0
+                ;;
+            --version)
+                echo "vibestart v${SCRIPT_VERSION}"
+                exit 0
+                ;;
+            --help|-h)
+                show_help
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1"
+                echo "Run 'vs-init --help' for usage"
+                exit 1
+                ;;
+        esac
+    done
+}
+
+show_help() {
+    cat << 'HELP_EOF'
+Vibestart v3.1 - AI Coding Environment Bootstrap
+
+USAGE:
+    vs-init [OPTIONS]
+
+OPTIONS:
+    --auto                  Run in non-interactive mode with smart defaults
+    --dry-run               Show what would be done without making changes
+    --env=ENV               Target environment (kilo, claude, qwen, copilot)
+    --conport=MODE          ConPort mode (full, lite, skip)
+    --entire                Enable Entire.io installation
+    --no-entire             Skip Entire.io installation
+    --no-aliases            Skip GRACE shortcuts creation
+    --update-marketplace    Force update GRACE marketplace
+    --version               Show version
+    --help, -h              Show this help
+
+EXAMPLES:
+    vs-init                              # Interactive setup
+    vs-init --auto                       # Auto setup with defaults
+    vs-init --auto --env=claude          # Auto setup for Claude Code
+    vs-init --auto --conport=lite        # Auto setup with ConPort Lite
+    vs-init --dry-run --auto             # Preview what would happen
+
+ENVIRONMENT VARIABLES:
+    GRACE_MARKETPLACE_VERSION    Marketplace branch/tag (default: main)
+
+DOCUMENTATION:
+    https://github.com/osovv/vibestart
+
+HELP_EOF
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Environment Selection (Interactive)
+# ═══════════════════════════════════════════════════════════════════════════
+
+ask_environment() {
+    local detected="$1"
+    
+    ui_section "Environment Selection"
+    
+    if [[ "$detected" == "none" ]]; then
+        ui_warning "No environment detected"
+    elif [[ "$detected" =~ ^multiple: ]]; then
+        ui_warning "Multiple environments detected: ${detected#multiple:}"
+    else
+        ui_success "Detected: $detected"
+    fi
+    
+    echo ""
+    echo "  [1] Kilo Code"
+    echo "  [2] Claude Code"
+    echo "  [3] Qwen"
+    echo "  [4] GitHub Copilot"
+    echo ""
+    
+    local default_num="1"
+    if [[ "$detected" != "none" ]] && [[ ! "$detected" =~ ^multiple: ]]; then
+        case "$detected" in
+            kilo) default_num="1" ;;
+            claude) default_num="2" ;;
+            qwen) default_num="3" ;;
+            copilot) default_num="4" ;;
+        esac
+    fi
+    
+    local choice
+    read -p "  Choice [1-4] (default: $default_num): " choice
+    
+    case "${choice:-$default_num}" in
+        1) echo "kilo" ;;
+        2) echo "claude" ;;
+        3) echo "qwen" ;;
+        4) echo "copilot" ;;
+        *) echo "kilo" ;;
+    esac
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Configuration Summary
+# ═══════════════════════════════════════════════════════════════════════════
+
+show_summary() {
+    local env="$1"
+    local conport="$2"
+    local entire="$3"
+    local shortcuts="$4"
+    local os="$5"
+    
+    ui_summary "Configuration Summary" \
+        "Environment:  $env" \
+        "Platform:     $os" \
+        "ConPort:      $conport" \
+        "Entire.io:    $entire" \
+        "Shortcuts:    $shortcuts"
+    
+    if [[ "$conport" != "skip" ]] || [[ "$entire" != "skip" ]]; then
+        echo -e "  ${YELLOW}⚠️  ConPort/Entire cannot be changed after session starts!${NC}"
+        echo ""
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Dry Run Mode
+# ═══════════════════════════════════════════════════════════════════════════
+
+run_dry_run() {
+    local env="$1"
+    local conport="$2"
+    local entire="$3"
+    local shortcuts="$4"
+    
+    ui_section "Dry Run Preview"
+    ui_info "No changes will be made"
+    echo ""
+    
+    echo "  Would create:"
+    echo "    • $(get_profile_info "$env" "context_file") (context file)"
+    echo "    • $(get_profile_info "$env" "mcp_path") (MCP config)"
+    echo "    • $(get_profile_info "$env" "skills_dir")/ (skills directory)"
+    
+    if [[ "$conport" != "skip" ]]; then
+        echo "    • .conport/ (ConPort $conport mode)"
+    fi
+    
+    if [[ "$shortcuts" == "enabled" ]]; then
+        echo "    • GRACE shortcuts (\$exec, \$plan, etc.)"
+    fi
+    
+    echo ""
+    echo "  Would install:"
+    
+    if [[ "$conport" == "full" ]]; then
+        echo "    • ConPort Full via uvx/pip (1.5GB)"
+    elif [[ "$conport" == "lite" ]]; then
+        echo "    • ConPort Lite CLI (10MB)"
+    fi
+    
+    if [[ "$entire" == "enabled" ]] && [[ "$VIBESTART_OS" != "windows" ]]; then
+        echo "    • Entire.io CLI"
+    fi
+    
+    echo ""
+    echo "    • GRACE marketplace from git archive"
+    
+    echo ""
+    ui_info "Run without --dry-run to execute"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Interactive Mode
+# ═══════════════════════════════════════════════════════════════════════════
+
+run_interactive_mode() {
+    # Step 0: Show process instruction
+    ui_show_process_instruction
+    
+    # Step 1: Detect environment
+    local detected_env
+    detected_env=$(detect_environment)
+    
+    if [[ -n "$ENV_OVERRIDE" ]]; then
+        VIBESTART_ENV="$ENV_OVERRIDE"
+        ui_info "Using override environment: $VIBESTART_ENV"
+    else
+        VIBESTART_ENV=$(ask_environment "$detected_env")
+    fi
+    
+    ui_success "Target environment: $VIBESTART_ENV"
+    
+    # Step 2: Pre-flight checks
+    run_preflight || exit 1
+    
+    # Step 3: Ask integrations
+    local conport_default="${CONPORT_OVERRIDE:-$CONPORT_DEFAULT}"
+    local entire_default="${ENTIRE_OVERRIDE:-$ENTIRE_DEFAULT}"
+    local shortcuts_default="${SHORTCUTS_OVERRIDE:-$SHORTCUTS_DEFAULT}"
+    
+    if [[ -z "$CONPORT_OVERRIDE" ]]; then
+        CONPORT_MODE=$(ask_conport "$conport_default")
+    else
+        CONPORT_MODE="$CONPORT_OVERRIDE"
+    fi
+    
+    if [[ -z "$ENTIRE_OVERRIDE" ]]; then
+        ENTIRE_MODE=$(ask_entire "$VIBESTART_OS" "$entire_default")
+    else
+        ENTIRE_MODE="$ENTIRE_OVERRIDE"
+    fi
+    
+    if [[ -z "$SHORTCUTS_OVERRIDE" ]]; then
+        SHORTCUTS_MODE=$(ask_shortcuts "$shortcuts_default")
+    else
+        SHORTCUTS_MODE="$SHORTCUTS_OVERRIDE"
+    fi
+    
+    # Step 4: Show summary and confirm
+    show_summary "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE" "$VIBESTART_OS"
+    
+    if [[ "$DRY_RUN" == "true" ]]; then
+        run_dry_run "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE"
+        exit 0
+    fi
+    
+    if ! ui_confirm "This configuration will be applied"; then
+        ui_info "Cancelled by user"
+        exit 0
+    fi
+    
+    # Execute setup
+    execute_setup "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Auto Mode
+# ═══════════════════════════════════════════════════════════════════════════
+
+run_auto_mode() {
+    ui_info "Running in auto mode with smart defaults"
+    echo ""
+    
+    # Detect environment or use override
+    if [[ -n "$ENV_OVERRIDE" ]]; then
+        VIBESTART_ENV="$ENV_OVERRIDE"
+    else
+        local detected_env
+        detected_env=$(detect_environment)
+        
+        if [[ "$detected_env" == "none" ]]; then
+            VIBESTART_ENV="kilo"  # Default
+            ui_info "No environment detected, defaulting to Kilo"
+        elif [[ "$detected_env" =~ ^multiple: ]]; then
+            VIBESTART_ENV="kilo"  # Default
+            ui_info "Multiple environments detected, defaulting to Kilo"
+        else
+            VIBESTART_ENV="$detected_env"
+        fi
+    fi
+    
+    ui_success "Environment: $VIBESTART_ENV"
+    
+    # Run pre-flight
+    run_preflight || exit 1
+    
+    # Use defaults or overrides
+    CONPORT_MODE="${CONPORT_OVERRIDE:-$CONPORT_DEFAULT}"
+    ENTIRE_MODE="${ENTIRE_OVERRIDE:-$ENTIRE_DEFAULT}"
+    SHORTCUTS_MODE="${SHORTCUTS_OVERRIDE:-$SHORTCUTS_DEFAULT}"
+    
+    # Show what will be done
+    show_summary "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE" "$VIBESTART_OS"
+    
+    if [[ "$DRY_RUN" == "true" ]]; then
+        run_dry_run "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE"
+        exit 0
+    fi
+    
+    # Execute setup
+    execute_setup "$VIBESTART_ENV" "$CONPORT_MODE" "$ENTIRE_MODE" "$SHORTCUTS_MODE"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Execute Setup
+# ═══════════════════════════════════════════════════════════════════════════
+
+execute_setup() {
+    local env="$1"
+    local conport_mode="$2"
+    local entire_mode="$3"
+    local shortcuts_mode="$4"
+    
+    ui_section "Executing Setup"
+    
+    # Step 1: Download marketplace
+    ensure_marketplace || {
+        ui_error "Failed to download marketplace"
+        exit 1
+    }
+    
+    # Step 2: Install ConPort
+    install_conport "$conport_mode" || {
+        ui_warning "ConPort installation had issues - continuing"
+    }
+    
+    # Step 3: Install Entire.io
+    if [[ "$entire_mode" == "enabled" ]]; then
+        install_entire || {
+            ui_warning "Entire.io installation failed - continuing without it"
+        }
+    fi
+    
+    # Step 4: Generate configuration
+    case "$env" in
+        "kilo")
+            generate_kilo_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
+            ;;
+        "claude")
+            generate_claude_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
+            ;;
+        "qwen")
+            generate_qwen_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
+            ;;
+        "copilot")
+            generate_copilot_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
+            ;;
+    esac
+    
+    # Step 5: Create shortcuts
+    if [[ "$shortcuts_mode" == "enabled" ]]; then
+        create_shortcuts "$env"
+    fi
+    
+    # Step 6: Completion
+    ui_completion_banner
+    
+    # Additional instructions
+    echo "  Created files:"
+    echo "    • $(get_profile_info "$env" "context_file")"
+    echo "    • $(get_profile_info "$env" "mcp_path")"
+    echo ""
+    
+    if [[ "$conport_mode" == "lite" ]]; then
+        echo "  ConPort Lite:"
+        echo "    • python3 .conport/conport-cli.py init"
+        echo "    • python3 .conport/conport-cli.py log-decision 'summary'"
+        echo ""
+    fi
+    
+    echo "  Restart your AI coding environment to activate changes."
+    echo ""
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Main Entry Point
+# ═══════════════════════════════════════════════════════════════════════════
+
+main() {
+    # Parse command line arguments
+    parse_args "$@"
+    
+    # Show banner
+    ui_banner "Vibestart" "$SCRIPT_VERSION"
+    
+    # Check minimum requirements
+    if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+        ui_error "Bash 4.0+ required"
+        exit 1
+    fi
+    
+    # Detect OS
+    VIBESTART_OS=$(detect_os)
+    
+    # Run appropriate mode
+    if [[ "$AUTO_MODE" == "true" ]]; then
+        run_auto_mode
+    else
+        run_interactive_mode
+    fi
+}
+
+# Run main with all arguments
+main "$@"

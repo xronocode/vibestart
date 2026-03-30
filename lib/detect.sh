@@ -1,0 +1,214 @@
+#!/bin/bash
+# lib/detect.sh — Environment Detection
+# MODULE_ID: M-DETECT
+# CONTRACT:
+#   PURPOSE: Detect AI agent environment (Kilo, Claude, Qwen, Copilot)
+#   SCOPE: Agent detection, OS detection
+#   DEPENDS: M-UI
+#   EXPORTS:
+#     detect_environment() — Detect which agent is active
+#     detect_os()          — Detect operating system
+
+set -e
+
+# Source dependencies
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=ui.sh
+source "$SCRIPT_DIR/ui.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OS Detection
+# ═══════════════════════════════════════════════════════════════════════════
+
+# detect_os: Detect operating system
+# USAGE: os=$(detect_os)
+# RETURNS: macos, linux, windows, or unknown
+detect_os() {
+    local os_name
+    
+    case "$(uname -s)" in
+        Darwin*)
+            os_name="macos"
+            ;;
+        Linux*)
+            # Check if running under WSL
+            if grep -qi microsoft /proc/version 2>/dev/null; then
+                os_name="windows"  # WSL treated as Windows
+            else
+                os_name="linux"
+            fi
+            ;;
+        CYGWIN*|MINGW*|MSYS*)
+            os_name="windows"
+            ;;
+        *)
+            os_name="unknown"
+            ;;
+    esac
+    
+    echo "$os_name"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Agent Detection
+# ═══════════════════════════════════════════════════════════════════════════
+
+# detect_environment: Detect which AI agent is active
+# USAGE: env=$(detect_environment)
+# RETURNS: kilo, claude, qwen, copilot, none, or multiple:<envs>
+detect_environment() {
+    local detected_envs=()
+    
+    # Check for Kilo Code (.kilo/ directory)
+    if [[ -d ".kilo" ]]; then
+        detected_envs+=("kilo")
+    fi
+    
+    # Check for Claude Code (.claude/ directory)
+    if [[ -d ".claude" ]]; then
+        detected_envs+=("claude")
+    fi
+    
+    # Check for Qwen/Qwen-Coder (.qwen/ or .qwen-coder/ directory)
+    if [[ -d ".qwen" ]] || [[ -d ".qwen-coder" ]]; then
+        detected_envs+=("qwen")
+    fi
+    
+    # Check for GitHub Copilot (.github/copilot/ or .vscode/ with Copilot)
+    if [[ -d ".github/copilot" ]] || [[ -f ".vscode/settings.json" ]] && grep -q "copilot" .vscode/settings.json 2>/dev/null; then
+        detected_envs+=("copilot")
+    fi
+    
+    # Check for Cursor (.cursor/ directory)
+    if [[ -d ".cursor" ]]; then
+        detected_envs+=("claude")  # Cursor uses Claude-compatible config
+    fi
+    
+    # Return result
+    local count=${#detected_envs[@]}
+    
+    if [[ $count -eq 0 ]]; then
+        echo "none"
+    elif [[ $count -eq 1 ]]; then
+        echo "${detected_envs[0]}"
+    else
+        # Multiple environments detected
+        local envs_list
+        envs_list=$(IFS=,; echo "${detected_envs[*]}")
+        echo "multiple:${envs_list}"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Helper Functions
+# ═══════════════════════════════════════════════════════════════════════════
+
+# get_profile_info: Get profile-specific information
+# USAGE: value=$(get_profile_info "kilo" "context_file")
+# AVAILABLE KEYS: context_file, mcp_path, skills_dir
+get_profile_info() {
+    local env="$1"
+    local key="$2"
+    
+    case "$env" in
+        kilo)
+            case "$key" in
+                context_file) echo ".kilo/context.md" ;;
+                mcp_path)     echo ".kilo/mcp_settings.json" ;;
+                skills_dir)   echo ".kilo/skills" ;;
+                *)            echo "" ;;
+            esac
+            ;;
+        claude)
+            case "$key" in
+                context_file) echo ".claude/context.md" ;;
+                mcp_path)     echo ".claude/mcp-servers.json" ;;
+                skills_dir)   echo ".claude/skills" ;;
+                *)            echo "" ;;
+            esac
+            ;;
+        qwen)
+            case "$key" in
+                context_file) echo ".qwen/context.md" ;;
+                mcp_path)     echo ".qwen/mcp-servers.json" ;;
+                skills_dir)   echo ".qwen/skills" ;;
+                *)            echo "" ;;
+            esac
+            ;;
+        copilot)
+            case "$key" in
+                context_file) echo ".github/copilot/instructions.md" ;;
+                mcp_path)     echo ".github/copilot/mcp-config.json" ;;
+                skills_dir)   echo ".github/copilot/skills" ;;
+                *)            echo "" ;;
+            esac
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
+
+# ask_environment: Ask user to select environment
+# USAGE: env=$(ask_environment "detected_env")
+ask_environment() {
+    local detected="$1"
+    
+    ui_section "Environment Selection"
+    
+    if [[ "$detected" != "none" ]] && [[ ! "$detected" =~ ^multiple: ]]; then
+        ui_info "Detected: ${detected}"
+        echo ""
+        echo "  [1] ${detected} (detected)"
+        echo "  [2] Kilo Code"
+        echo "  [3] Claude Code"
+        echo "  [4] Qwen"
+        echo "  [5] GitHub Copilot"
+        echo ""
+        
+        local choice
+        read -p "  Choice [1-5] (default: 1): " choice
+        
+        case "${choice:-1}" in
+            1) echo "$detected" ;;
+            2) echo "kilo" ;;
+            3) echo "claude" ;;
+            4) echo "qwen" ;;
+            5) echo "copilot" ;;
+            *) echo "$detected" ;;
+        esac
+    else
+        if [[ "$detected" =~ ^multiple: ]]; then
+            ui_warning "Multiple environments detected"
+        else
+            ui_warning "No environment detected"
+        fi
+        
+        echo ""
+        echo "  [1] Kilo Code"
+        echo "  [2] Claude Code"
+        echo "  [3] Qwen"
+        echo "  [4] GitHub Copilot"
+        echo ""
+        
+        local choice
+        read -p "  Choice [1-4] (default: 1): " choice
+        
+        case "${choice:-1}" in
+            1) echo "kilo" ;;
+            2) echo "claude" ;;
+            3) echo "qwen" ;;
+            4) echo "copilot" ;;
+            *) echo "kilo" ;;
+        esac
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Export Validation
+# ═══════════════════════════════════════════════════════════════════════════
+
+declare -f detect_environment detect_os get_profile_info ask_environment &>/dev/null || {
+    echo "[DETECT] Error: Export validation failed" >&2
+    exit 1
+}
