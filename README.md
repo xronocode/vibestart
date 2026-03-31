@@ -211,10 +211,6 @@ user-project/
     ├── technology.xml
     └── decisions.xml
 ```
-    ├── knowledge-graph.xml
-    ├── verification-plan.xml
-    ├── technology.xml
-    └── decisions.xml
 
 # If ADVANCED mode with integrations:
 ├── .conport/                # ConPort Memory Bank (if enabled)
