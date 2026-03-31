@@ -1,10 +1,9 @@
-# vibestart v3.0.0
+# vibestart v3.1.0
 
 **From zero to vibe coding in one paste.**
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/xronocode/vibestart/releases/tag/v3.0.0)
+[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/xronocode/vibestart/releases/tag/v3.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-72%2F76%20passing-brightgreen)](https://github.com/xronocode/vibestart/tree/main/tests)
 
 ---
 
@@ -16,7 +15,7 @@ You found this repository. The user wants to set up vibestart in their project.
 
 vibestart is a **framework** for AI-assisted development that includes:
 - **GRACE methodology** — contract-driven development with knowledge graphs
-- **Skills** — AI agent instructions (vs-init, grace-*)
+- **Skills** — AI agent instructions (vs-init, external GRACE skills)
 - **Standards** — development rules (architecture, error-handling, git-workflow)
 - **Templates** — XML templates for project artifacts
 - **Fragments** — modular components for AGENTS.md generation
@@ -38,7 +37,7 @@ vibestart is a **framework** for AI-assisted development that includes:
 | **INSTALL** | New project | Full setup from scratch |
 | **UPDATE** | Existing vibestart | Update to latest version |
 | **REPAIR** | Broken installation | Fix problems |
-| **MIGRATE** | v1.x/v2.x project | Migrate to v3.0.0 |
+| **MIGRATE** | v1.x/v2.x project | Migrate to v3.1.0 |
 | **REFRESH** | Regenerate artifacts | Refresh AGENTS.md |
 
 ### What You Need To Do
@@ -47,60 +46,81 @@ vibestart is a **framework** for AI-assisted development that includes:
 
 ---
 
-## Step 1: Clone vibestart into the project
+## Step 1: Download vibestart into the project
 
-Clone this repository into a subfolder of the user's project:
+Download vibestart using git archive (clean, no .git directory):
 
 ```bash
-# In the user's project directory, create .vibestart folder and clone there
+# In the user's project directory
+mkdir -p .vibestart
+git archive --remote=https://github.com/xronocode/vibestart.git HEAD | tar -xf - -C .vibestart
+```
+
+**Alternative methods:**
+
+```bash
+# Method 2: Download and extract ZIP (if git archive unavailable)
+curl -L https://github.com/xronocode/vibestart/archive/refs/heads/main.zip -o /tmp/vibestart.zip
+unzip /tmp/vibestart.zip -d /tmp/
+mv /tmp/vibestart-main .vibestart
+rm /tmp/vibestart.zip
+
+# Method 3: Clone then remove .git (if you need git history)
 git clone https://github.com/xronocode/vibestart.git .vibestart
+rm -rf .vibestart/.git
 ```
 
 **What this does:**
 - Creates `.vibestart/` folder in the user's project
-- Downloads the complete vibestart framework
-- The framework includes: skills, standards, templates, fragments
+- Downloads the complete vibestart framework **without .git directory** (cleaner, smaller)
+- The framework includes: installer (vs-init), standards, templates, fragments
 
-**Result:** You now have `.vibestart/src/skills/vs-init/` in the project.
-
----
-
-## Step 2: Read the vs-init skill
-
-The vs-init skill contains all initialization instructions. Read it now:
-
-```
-.vibestart/src/skills/vs-init/SKILL.md
-```
-
-**This skill will tell you:**
-- How to check framework integrity
-- How to detect and resolve conflicts
-- How to create project configuration
-- How to generate AGENTS.md
-- How to create GRACE artifacts
+**Result:** You now have `.vibestart/vs-init` executable in the project.
 
 ---
 
-## Step 3: Follow vs-init instructions
+## Step 2: Run the installer
 
-Open and read `.vibestart/src/skills/vs-init/SKILL.md`, then follow its instructions.
+The installer will set up everything automatically:
 
-The skill will guide you through:
+```bash
+cd .vibestart
+./vs-init
+```
 
-**INSTALL mode:**
-1. Framework integrity check (7 checks)
-2. Conflict detection (6 types)
-3. Conflict resolution
-4. LITE or ADVANCED mode selection
-5. AGENTS.md generation
-6. GRACE artifacts creation
+**The installer will:**
+- Check system requirements (disk space, dependencies)
+- Ask about integrations (ConPort, Entire.io) **BEFORE** session starts
+- Download GRACE marketplace skills
+- Generate configuration files for your AI agent
+- Create GRACE shortcuts (`$init`, `$plan`, `$exec`, etc.)
 
-**UPDATE/REPAIR/MIGRATE/REFRESH modes:**
-- Automatic detection of existing installation
-- Backup creation before changes
-- Migration from v1.x/v2.x to v3.0.0
-- Integration setup (Entire.io, ConPort)
+**Interactive mode** (default):
+- Asks questions about environment and integrations
+- Shows configuration summary before applying
+- Confirms before making changes
+
+**Auto mode** (for CI/CD or experienced users):
+```bash
+./vs-init --auto
+./vs-init --auto --env=claude
+./vs-init --auto --conport=lite --no-entire
+```
+
+**Dry-run** (preview without changes):
+```bash
+./vs-init --dry-run --auto
+```
+
+---
+
+## Step 3: Restart your AI agent
+
+After installation completes, restart your AI coding environment to activate:
+
+- ConPort (if enabled) — project memory
+- Entire.io (if enabled) — library documentation
+- GRACE shortcuts — quick commands
 
 ---
 
@@ -109,31 +129,88 @@ The skill will guide you through:
 | What | Where |
 |------|-------|
 | **Framework** | `.vibestart/` |
-| **Skills** | `.vibestart/src/skills/` |
-| **Standards** | `.vibestart/src/standards/` |
+| **Installer** | `.vibestart/vs-init` |
+| **Bash modules** | `.vibestart/lib/` |
+| **Environment profiles** | `.vibestart/profiles/` |
+| **GRACE Marketplace** | Install from https://github.com/osovv/grace-marketplace |
 | **Templates** | `.vibestart/src/templates/` |
 | **Fragments** | `.vibestart/src/fragments/` |
 | **vs-init skill** | `.vibestart/src/skills/vs-init/SKILL.md` |
 
 ---
 
+## Installing GRACE Skills
+
+vibestart v3.1.0+ uses bash-based installer with **early binding** for integrations.
+
+### Architecture Highlights
+
+**Early Binding (Critical!)**
+- ConPort and Entire.io are asked at **Step 1** (not Step 7)
+- This ensures integrations are ready **BEFORE** the AI agent session starts
+- Agent can log decisions from the first minute
+
+**ConPort Modes**
+- **Full** (1.5GB): MCP server with semantic search and embeddings
+- **Lite** (10MB): CLI wrapper with SQLite full-text search
+- **Skip**: No project memory
+
+**Multi-Environment Support**
+- Kilo Code (`.kilo/`)
+- Claude Code (`.claude/`)
+- Qwen (`.qwen/`)
+- GitHub Copilot (`.github/copilot/`)
+
+### Installation
+
+The installer will automatically download GRACE marketplace from:
+https://github.com/osovv/grace-marketplace
+
+```bash
+# GRACE marketplace is downloaded to:
+~/.kilocode/skills/grace/          # For Kilo Code
+~/.claude/skills/grace/            # For Claude Code
+~/.qwen/skills/grace/              # For Qwen
+~/.github/copilot/skills/grace/    # For Copilot
+```
+
+For manual installation or updates:
+```bash
+# Update GRACE marketplace
+./vs-init --update-marketplace
+```
+
+---
+
 ## What Gets Created
 
-After following vs-init instructions:
+After running `./vs-init`:
 
 ```
 user-project/
-├── .vibestart/              # Framework (you just cloned this)
-│   └── src/
-│       ├── skills/
-│       ├── standards/
-│       ├── templates/
-│       └── fragments/
-├── vs.project.toml          # Project configuration (you will create)
-├── AGENTS.md                # Agent instructions (you will generate)
-└── docs/                    # GRACE artifacts (you will create)
+├── .vibestart/              # Framework (downloaded via git archive)
+│   ├── vs-init             # Main installer
+│   ├── lib/                # Bash modules (ui, detect, preflight, etc.)
+│   ├── profiles/           # Environment profiles
+│   └── src/                # Standards, templates, fragments
+├── .kilo/                  # Kilo Code config (if Kilo selected)
+│   ├── context.md          # Project context
+│   ├── mcp_settings.json   # MCP server config
+│   └── skills/             # GRACE shortcuts
+├── .conport/               # ConPort (if enabled)
+│   ├── conport-cli.py      # Lite CLI wrapper
+│   └── memory.db           # SQLite database
+├── .claude/                # Claude Code config (if Claude selected)
+├── .qwen/                  # Qwen config (if Qwen selected)
+├── .github/copilot/        # Copilot config (if Copilot selected)
+└── docs/                   # GRACE artifacts
     ├── development-plan.xml
     ├── requirements.xml
+    ├── knowledge-graph.xml
+    ├── verification-plan.xml
+    ├── technology.xml
+    └── decisions.xml
+```
     ├── knowledge-graph.xml
     ├── verification-plan.xml
     ├── technology.xml
@@ -230,16 +307,14 @@ vibestart provides:
 
 ## 📚 Documentation
 
-| Document | Description |
+| Resource | Description |
 |----------|-------------|
-| [docs/ru.md](docs/ru.md) | Инструкция на русском |
-| [docs/grace-explainer.md](docs/grace-explainer.md) | GRACE methodology reference |
-| [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) | Entire.io & ConPort setup |
-| [RUNNING_TESTS.md](RUNNING_TESTS.md) | How to run tests |
-| [docs/why.md](docs/why.md) | Why GRACE + ConPort |
-| [docs/grace-macros.md](docs/grace-macros.md) | GRACE macros reference |
-| [src/README.md](src/README.md) | Framework internals (Russian) |
-| [src/CHANGELOG.md](src/CHANGELOG.md) | Version history |
+| [README.md](README.md) | This file - quick start guide |
+| [src/skills/vs-init/SKILL.md](src/skills/vs-init/SKILL.md) | vs-init skill reference |
+| [src/standards/](src/standards/) | Development standards |
+| [GRACE Marketplace](https://github.com/osovv/grace-marketplace) | GRACE methodology & skills |
+
+> **Note:** Development documentation (RU, INTEGRATIONS, etc.) is available in the `dev-assets` branch.
 
 ---
 
