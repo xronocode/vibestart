@@ -210,46 +210,11 @@ user-project/
     ├── verification-plan.xml
     ├── technology.xml
     └── decisions.xml
-```
 
 # If ADVANCED mode with integrations:
-├── .conport/                # ConPort Memory Bank (if enabled)
+├── .conport/               # ConPort Memory Bank (if enabled)
 └── .git/hooks/              # Entire.io hooks (if enabled)
 ```
-
-## Integrations (ADVANCED mode)
-
-### Entire.io — Session Audit
-
-**What it does:**
-- Captures AI agent sessions automatically
-- Links sessions to Git commits
-- Searchable history of how code was written
-- Checkpoints with full context
-
-**Requirements:**
-- entire CLI (`npm install -g @entire/cli`)
-- Git repository
-
-**Storage:** Git branch (`entire/checkpoints/v1`)
-
-**Cost:** Free (MIT license)
-
-### ConPort — Long-term Memory
-
-**What it does:**
-- Persistent memory between sessions
-- Semantic search
-- Context carry-over
-- Decision migration to GRACE
-
-**Requirements:**
-- ConPort MCP server
-- Agent with MCP support (Claude Code, Kilo Code, Cursor)
-
-**Storage:** Local file (`.conport/memory.db`)
-
-**Cost:** Free (open source)
 
 ---
 
@@ -290,27 +255,6 @@ vibestart provides:
 ---
 
 ## 🌐 Supported Agents
-
-| Agent | Status | Notes |
-|-------|--------|-------|
-| **Kilo Code** | ✅ Full | Primary target, all features tested |
-| **Cursor** | ✅ Full | All features work |
-| **Claude Code** | ✅ Basic | Core functionality works |
-| **Windsurf** | ⏳ Partial | On request |
-| **Aider** | ⏳ Partial | On request |
-
----
-
-## 📚 Documentation
-
-| Resource | Description |
-|----------|-------------|
-| [README.md](README.md) | This file - quick start guide |
-| [src/skills/vs-init/SKILL.md](src/skills/vs-init/SKILL.md) | vs-init skill reference |
-| [src/standards/](src/standards/) | Development standards |
-| [GRACE Marketplace](https://github.com/osovv/grace-marketplace) | GRACE methodology & skills |
-
-> **Note:** Development documentation (RU, INTEGRATIONS, etc.) is available in the `dev-assets` branch.
 
 ---
 
