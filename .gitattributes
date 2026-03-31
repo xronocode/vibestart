@@ -1,0 +1,22 @@
+# Development files - excluded from git archive
+# These are preserved in dev-assets branch for maintainers
+
+# Kilocode config (if recreated)
+.kilocode/ export-ignore
+
+# Tests
+tests/ export-ignore
+
+# Development plans
+plans/ export-ignore
+
+# Verification scripts
+verify-*.* export-ignore
+VERIFICATION-CHECKlist.md export-ignore
+
+# Internal documentation
+src/README.md export-ignore
+src/CHANGELOG.md export-ignore
+
+# Test directories inside skills
+__tests__/ export-ignore
