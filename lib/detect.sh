@@ -2,7 +2,7 @@
 # lib/detect.sh — Environment Detection
 # MODULE_ID: M-DETECT
 # CONTRACT:
-#   PURPOSE: Detect AI agent environment (Kilo, Claude, Qwen, Copilot)
+#   PURPOSE: Detect AI agent environment (Kilo, Claude, Codex, Qwen, Copilot)
 #   SCOPE: Agent detection, OS detection
 #   DEPENDS: M-UI
 #   EXPORTS:
@@ -12,9 +12,9 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DETECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$DETECT_DIR/ui.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # OS Detection
@@ -55,7 +55,7 @@ detect_os() {
 
 # detect_environment: Detect which AI agent is active
 # USAGE: env=$(detect_environment)
-# RETURNS: kilo, claude, qwen, copilot, none, or multiple:<envs>
+# RETURNS: kilo, claude, codex, qwen, copilot, none, or multiple:<envs>
 detect_environment() {
     local detected_envs=()
     
@@ -67,6 +67,11 @@ detect_environment() {
     # Check for Claude Code (.claude/ directory)
     if [[ -d ".claude" ]]; then
         detected_envs+=("claude")
+    fi
+
+    # Check for Codex (.codex/ directory or Codex shell env vars)
+    if [[ -d ".codex" ]] || [[ -n "${CODEX_CI:-}" ]] || [[ -n "${CODEX_THREAD_ID:-}" ]] || [[ -n "${CODEX_INTERNAL_ORIGINATOR_OVERRIDE:-}" ]]; then
+        detected_envs+=("codex")
     fi
     
     # Check for Qwen/Qwen-Coder (.qwen/ or .qwen-coder/ directory)
@@ -103,6 +108,35 @@ detect_environment() {
 # Helper Functions
 # ═══════════════════════════════════════════════════════════════════════════
 
+# load_environment_profile: Load profile defaults for the selected environment
+# USAGE: load_environment_profile "environment"
+# RETURNS: 0 = success, 1 = unknown environment
+load_environment_profile() {
+    local env="$1"
+    local profiles_dir="$DETECT_DIR/../profiles"
+
+    case "$env" in
+        kilo)
+            source "$profiles_dir/kilo.env"
+            ;;
+        claude)
+            source "$profiles_dir/claude.env"
+            ;;
+        codex)
+            source "$profiles_dir/codex.env"
+            ;;
+        qwen)
+            source "$profiles_dir/qwen.env"
+            ;;
+        copilot)
+            source "$profiles_dir/copilot.env"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 # get_profile_info: Get profile-specific information
 # USAGE: value=$(get_profile_info "kilo" "context_file")
 # AVAILABLE KEYS: context_file, mcp_path, skills_dir
@@ -124,6 +158,14 @@ get_profile_info() {
                 context_file) echo ".claude/context.md" ;;
                 mcp_path)     echo ".claude/mcp-servers.json" ;;
                 skills_dir)   echo ".claude/skills" ;;
+                *)            echo "" ;;
+            esac
+            ;;
+        codex)
+            case "$key" in
+                context_file) echo "AGENTS.md" ;;
+                mcp_path)     echo ".codex/config.toml" ;;
+                skills_dir)   echo ".codex/skills" ;;
                 *)            echo "" ;;
             esac
             ;;
@@ -162,19 +204,21 @@ ask_environment() {
         echo "  [1] ${detected} (detected)"
         echo "  [2] Kilo Code"
         echo "  [3] Claude Code"
-        echo "  [4] Qwen"
-        echo "  [5] GitHub Copilot"
+        echo "  [4] Codex"
+        echo "  [5] Qwen"
+        echo "  [6] GitHub Copilot"
         echo ""
         
         local choice
-        read -p "  Choice [1-5] (default: 1): " choice
+        read -p "  Choice [1-6] (default: 1): " choice
         
         case "${choice:-1}" in
             1) echo "$detected" ;;
             2) echo "kilo" ;;
             3) echo "claude" ;;
-            4) echo "qwen" ;;
-            5) echo "copilot" ;;
+            4) echo "codex" ;;
+            5) echo "qwen" ;;
+            6) echo "copilot" ;;
             *) echo "$detected" ;;
         esac
     else
@@ -187,18 +231,20 @@ ask_environment() {
         echo ""
         echo "  [1] Kilo Code"
         echo "  [2] Claude Code"
-        echo "  [3] Qwen"
-        echo "  [4] GitHub Copilot"
+        echo "  [3] Codex"
+        echo "  [4] Qwen"
+        echo "  [5] GitHub Copilot"
         echo ""
         
         local choice
-        read -p "  Choice [1-4] (default: 1): " choice
+        read -p "  Choice [1-5] (default: 1): " choice
         
         case "${choice:-1}" in
             1) echo "kilo" ;;
             2) echo "claude" ;;
-            3) echo "qwen" ;;
-            4) echo "copilot" ;;
+            3) echo "codex" ;;
+            4) echo "qwen" ;;
+            5) echo "copilot" ;;
             *) echo "kilo" ;;
         esac
     fi
@@ -208,7 +254,7 @@ ask_environment() {
 # Export Validation
 # ═══════════════════════════════════════════════════════════════════════════
 
-declare -f detect_environment detect_os get_profile_info ask_environment &>/dev/null || {
+declare -f detect_environment detect_os load_environment_profile get_profile_info ask_environment &>/dev/null || {
     echo "[DETECT] Error: Export validation failed" >&2
     exit 1
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
-# lib/json.sh — JSON Utilities with jq Fallback
+# lib/json.sh — JSON Utilities with jq/Python Fallback
 # MODULE_ID: M-JSON
 # CONTRACT:
-#   PURPOSE: JSON manipulation with fallback for systems without jq
+#   PURPOSE: JSON manipulation with jq/Python fallback
 #   SCOPE: JSON parsing, merging, setting values
 #   DEPENDS: —
 #   EXPORTS:
@@ -25,6 +25,21 @@ json_has_jq() {
     command -v jq &>/dev/null
 }
 
+# json_has_python: Check if python3 is available
+# USAGE: if json_has_python; then ...
+# RETURNS: 0 = available, 1 = not available
+json_has_python() {
+    command -v python3 &>/dev/null
+}
+
+# json_normalize_path: Normalize a dotted path for helper functions
+# USAGE: path=$(json_normalize_path ".parent.child")
+# RETURNS: Dotted path without leading dots
+json_normalize_path() {
+    local path="${1#.}"
+    echo "$path"
+}
+
 # ═══════════════════════════════════════════════════════════════════════════
 # JSON Operations
 # ═══════════════════════════════════════════════════════════════════════════
@@ -43,6 +58,29 @@ json_get() {
     
     if json_has_jq; then
         jq -r "$key" "$file" 2>/dev/null || echo ""
+    elif json_has_python; then
+        python3 - "$file" "$key" << 'PY' 2>/dev/null || echo ""
+import json
+import sys
+
+file_path, key = sys.argv[1:3]
+with open(file_path, "r", encoding="utf-8") as handle:
+    data = json.load(handle)
+
+parts = [part for part in key.lstrip(".").split(".") if part]
+value = data
+for part in parts:
+    if isinstance(value, dict):
+        value = value.get(part, "")
+    else:
+        value = ""
+        break
+
+if isinstance(value, (dict, list)):
+    print(json.dumps(value))
+else:
+    print("" if value is None else value)
+PY
     else
         # Fallback: grep and sed (limited support for simple keys)
         local key_name
@@ -58,39 +96,90 @@ json_get() {
 # RETURNS: 0 = success, 1 = failure
 json_set() {
     local file="$1"
-    local key="$2"
+    local key
+    key=$(json_normalize_path "$2")
     local value="$3"
+    local value_file
+    value_file=$(mktemp)
+    printf '%s' "$value" > "$value_file"
     
     if [[ ! -f "$file" ]]; then
         echo "[JSON] Error: File not found: $file" >&2
+        rm -f "$value_file"
         return 1
     fi
     
     if json_has_jq; then
         local tmp
+        local path_json
         tmp=$(mktemp)
-        
-        if jq --arg k "$key" --arg v "$value" '.[$k] = $v' "$file" > "$tmp" 2>/dev/null; then
+        path_json=$(jq -cn --arg key "$key" '$key | split(".")')
+
+        if jq -e . "$value_file" >/dev/null 2>&1; then
+            if jq --argjson path "$path_json" --slurpfile value "$value_file" 'setpath($path; $value[0])' "$file" > "$tmp" 2>/dev/null; then
+                mv "$tmp" "$file"
+                rm -f "$value_file"
+                return 0
+            fi
+        elif jq --argjson path "$path_json" --rawfile value "$value_file" 'setpath($path; $value)' "$file" > "$tmp" 2>/dev/null; then
             mv "$tmp" "$file"
+            rm -f "$value_file"
             return 0
-        else
-            rm -f "$tmp"
-            return 1
         fi
-    else
-        # Fallback: simple string replacement (limited)
-        # Only works for simple string values at top level
+
+        rm -f "$tmp" "$value_file"
+        return 1
+    elif json_has_python; then
         local tmp
         tmp=$(mktemp)
-        
-        if sed 's/"'"$key"'"[[:space:]]*:[[:space:]]*"[^"]*"/"'"$key"'": "'"$value"'"/' "$file" > "$tmp" 2>/dev/null; then
+
+        if python3 - "$file" "$key" "$value_file" > "$tmp" << 'PY' 2>/dev/null
+import json
+import sys
+
+file_path, key, value_path = sys.argv[1:4]
+
+with open(file_path, "r", encoding="utf-8") as handle:
+    data = json.load(handle)
+
+with open(value_path, "r", encoding="utf-8") as handle:
+    raw_value = handle.read()
+
+try:
+    value = json.loads(raw_value)
+except json.JSONDecodeError:
+    value = raw_value
+
+parts = [part for part in key.split(".") if part]
+if not parts:
+    raise SystemExit(1)
+
+current = data
+for part in parts[:-1]:
+    existing = current.get(part)
+    if not isinstance(existing, dict):
+        existing = {}
+        current[part] = existing
+    current = existing
+
+current[parts[-1]] = value
+
+json.dump(data, sys.stdout, indent=2)
+sys.stdout.write("\n")
+PY
+        then
             mv "$tmp" "$file"
+            rm -f "$value_file"
             return 0
-        else
-            rm -f "$tmp"
-            return 1
         fi
+
+        rm -f "$tmp" "$value_file"
+        return 1
     fi
+
+    echo "[JSON] Error: json_set requires jq or python3 for safe updates" >&2
+    rm -f "$value_file"
+    return 1
 }
 
 # json_merge: Merge two JSON objects
@@ -108,6 +197,35 @@ json_merge() {
     
     if json_has_jq; then
         jq -s '.[0] * .[1]' "$file1" "$file2" > "$output" 2>/dev/null
+        return $?
+    elif json_has_python; then
+        python3 - "$file1" "$file2" "$output" << 'PY' 2>/dev/null
+import json
+import sys
+
+file1, file2, output = sys.argv[1:4]
+
+def merge(base, override):
+    if isinstance(base, dict) and isinstance(override, dict):
+        result = dict(base)
+        for key, value in override.items():
+            if key in result:
+                result[key] = merge(result[key], value)
+            else:
+                result[key] = value
+        return result
+    return override
+
+with open(file1, "r", encoding="utf-8") as handle:
+    left = json.load(handle)
+with open(file2, "r", encoding="utf-8") as handle:
+    right = json.load(handle)
+
+merged = merge(left, right)
+with open(output, "w", encoding="utf-8") as handle:
+    json.dump(merged, handle, indent=2)
+    handle.write("\n")
+PY
         return $?
     else
         # Fallback: not a true merge, just use first file
@@ -140,6 +258,9 @@ json_validate() {
     
     if json_has_jq; then
         jq '.' "$file" >/dev/null 2>&1
+        return $?
+    elif json_has_python; then
+        python3 -m json.tool "$file" >/dev/null 2>&1
         return $?
     else
         # Basic validation: check for balanced braces
@@ -226,7 +347,7 @@ json_delete_key() {
 # Export Validation
 # ═══════════════════════════════════════════════════════════════════════════
 
-declare -f json_has_jq json_get json_set json_merge json_create json_validate json_add_to_array json_delete_key &>/dev/null || {
+declare -f json_has_jq json_has_python json_normalize_path json_get json_set json_merge json_create json_validate json_add_to_array json_delete_key &>/dev/null || {
     echo "[JSON] Error: Export validation failed" >&2
     exit 1
 }

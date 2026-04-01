@@ -35,7 +35,7 @@ Sets up specialized subagents for GRACE workflow:
 |-------|------------------|-------------|
 | Claude Code | `.claude/` | Markdown |
 | OpenCode | `.opencode/` | YAML |
-| Codex | `.codex/` | JSON |
+| Codex | `.codex/` | TOML / Markdown |
 | Cursor | `.cursor/` | Markdown |
 | Generic | `.agents/` | Markdown |
 

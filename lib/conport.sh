@@ -14,9 +14,9 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONPORT_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$CONPORT_MODULE_DIR/ui.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants

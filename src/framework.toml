@@ -1,9 +1,9 @@
 # vibestart Framework Configuration
-# Version 2.0.0
+# Version 3.2.0
 
 [framework]
 name = "vibestart"
-version = "2.0.0"
+version = "3.2.0"
 description = "AI development toolkit manager - standards, templates, and skills"
 repository = "https://github.com/xronocode/vibestart"
 license = "MIT"
@@ -13,6 +13,7 @@ license = "MIT"
 agents = [
   { name = "kilocode", priority = "P1", skills_path = ".kilocode/skills" },
   { name = "cursor", priority = "P1", skills_path = ".cursor/skills" },
+  { name = "codex", priority = "P1", skills_path = ".codex/skills" },
   { name = "claude", priority = "P2", skills_path = ".claude/skills" },
   { name = "windsurf", priority = "P3", skills_path = ".windsurf/skills" },
   { name = "aider", priority = "P3", skills_path = ".aider/skills" }
@@ -44,7 +45,7 @@ decisions = "templates/decisions.xml.template"
 
 [skills]
 # Management skills
-vs_init = { version = "2.1.0", description = "Smart initialization with conflict detection and integrated AGENTS.md rendering" }
+vs_init = { version = "3.2.0", description = "Smart initialization with conflict detection and integrated AGENTS.md rendering" }
 
 # GRACE skills (enhanced)
 grace_init = { version = "2.1.0", source = "vibestart" }

@@ -13,9 +13,9 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MARKETPLACE_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$MARKETPLACE_MODULE_DIR/ui.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
@@ -23,7 +23,34 @@ source "$SCRIPT_DIR/ui.sh"
 
 readonly MARKETPLACE_REPO="https://github.com/osovv/grace-marketplace.git"
 readonly MARKETPLACE_BRANCH="${GRACE_MARKETPLACE_VERSION:-main}"
-readonly MARKETPLACE_DIR="$HOME/.kilocode/skills/grace"
+readonly DEFAULT_MARKETPLACE_DIR="$HOME/.kilocode/skills/grace"
+
+# get_marketplace_dir: Resolve marketplace install path for current environment
+# USAGE: dir=$(get_marketplace_dir ["environment"])
+get_marketplace_dir() {
+    local env="${1:-${ENV_OVERRIDE:-${VIBESTART_ENV:-}}}"
+
+    case "$env" in
+        claude)
+            echo "$HOME/.claude/skills/grace"
+            ;;
+        codex)
+            echo "$HOME/.codex/skills/grace"
+            ;;
+        qwen)
+            echo "$HOME/.qwen/skills/grace"
+            ;;
+        copilot)
+            echo "$HOME/.github/copilot/skills/grace"
+            ;;
+        kilo|"")
+            echo "$DEFAULT_MARKETPLACE_DIR"
+            ;;
+        *)
+            echo "$DEFAULT_MARKETPLACE_DIR"
+            ;;
+    esac
+}
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Clean Clone (git archive)
@@ -76,14 +103,17 @@ clone_clean() {
 # RETURNS: 0 = success, 1 = failure
 ensure_marketplace() {
     ui_section "GRACE Marketplace"
+
+    local marketplace_dir
+    marketplace_dir=$(get_marketplace_dir)
     
     # Check if already installed
-    if [[ -d "$MARKETPLACE_DIR" ]]; then
-        ui_info "Marketplace already installed at $MARKETPLACE_DIR"
+    if [[ -d "$marketplace_dir" ]]; then
+        ui_info "Marketplace already installed at $marketplace_dir"
         
         # Check version
         local current_branch
-        current_branch=$(cd "$MARKETPLACE_DIR" && git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+        current_branch=$(cd "$marketplace_dir" && git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
         
         if [[ "$current_branch" == "$MARKETPLACE_BRANCH" ]]; then
             ui_success "Using marketplace version: $MARKETPLACE_BRANCH"
@@ -100,11 +130,11 @@ ensure_marketplace() {
     ui_info "Downloading GRACE marketplace (branch: $MARKETPLACE_BRANCH)..."
     
     # Method 1: Try git clone (faster for full clone)
-    if git clone --branch "$MARKETPLACE_BRANCH" --depth 1 "$MARKETPLACE_REPO" "$MARKETPLACE_DIR" 2>/dev/null; then
+    if git clone --branch "$MARKETPLACE_BRANCH" --depth 1 "$MARKETPLACE_REPO" "$marketplace_dir" 2>/dev/null; then
         ui_success "Marketplace downloaded via git clone"
         
         # Remove .git directory to save space
-        rm -rf "$MARKETPLACE_DIR/.git"
+        rm -rf "$marketplace_dir/.git"
         ui_info "Removed .git directory to save space"
         
         return 0
@@ -113,9 +143,9 @@ ensure_marketplace() {
     # Method 2: Fallback to git archive (if clone fails)
     ui_warning "Git clone failed, trying git archive..."
     
-    mkdir -p "$MARKETPLACE_DIR"
+    mkdir -p "$marketplace_dir"
     
-    if clone_clean "$MARKETPLACE_REPO" "$MARKETPLACE_DIR" "$MARKETPLACE_BRANCH"; then
+    if clone_clean "$MARKETPLACE_REPO" "$marketplace_dir" "$MARKETPLACE_BRANCH"; then
         ui_success "Marketplace downloaded via git archive"
         return 0
     fi
@@ -140,11 +170,11 @@ ensure_marketplace() {
     
     # Extract ZIP
     if command -v unzip &>/dev/null; then
-        mkdir -p "$MARKETPLACE_DIR"
+        mkdir -p "$marketplace_dir"
         unzip -q "$tmp_zip" -d /tmp/grace-extract 2>/dev/null
         
         # Move extracted files (ZIP contains subdirectory)
-        mv /tmp/grace-extract/grace-marketplace-*/* "$MARKETPLACE_DIR/" 2>/dev/null
+        mv /tmp/grace-extract/grace-marketplace-*/* "$marketplace_dir/" 2>/dev/null
         rm -rf /tmp/grace-extract
         rm -f "$tmp_zip"
         
@@ -162,11 +192,14 @@ ensure_marketplace() {
 # RETURNS: 0 = success, 1 = failure
 update_marketplace() {
     ui_section "Updating GRACE Marketplace"
+
+    local marketplace_dir
+    marketplace_dir=$(get_marketplace_dir)
     
     # Remove existing installation
-    if [[ -d "$MARKETPLACE_DIR" ]]; then
+    if [[ -d "$marketplace_dir" ]]; then
         ui_info "Removing existing marketplace..."
-        rm -rf "$MARKETPLACE_DIR"
+        rm -rf "$marketplace_dir"
     fi
     
     # Re-download
@@ -183,20 +216,23 @@ update_marketplace() {
 # USAGE: version=$(get_marketplace_version)
 # RETURNS: Version string or "unknown"
 get_marketplace_version() {
-    if [[ ! -d "$MARKETPLACE_DIR" ]]; then
+    local marketplace_dir
+    marketplace_dir=$(get_marketplace_dir)
+
+    if [[ ! -d "$marketplace_dir" ]]; then
         echo "not-installed"
         return 1
     fi
     
     # Try to get version from file
-    if [[ -f "$MARKETPLACE_DIR/VERSION" ]]; then
-        cat "$MARKETPLACE_DIR/VERSION"
+    if [[ -f "$marketplace_dir/VERSION" ]]; then
+        cat "$marketplace_dir/VERSION"
         return 0
     fi
     
     # Try to get from git
-    if [[ -d "$MARKETPLACE_DIR/.git" ]]; then
-        (cd "$MARKETPLACE_DIR" && git describe --tags 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+    if [[ -d "$marketplace_dir/.git" ]]; then
+        (cd "$marketplace_dir" && git describe --tags 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
         return 0
     fi
     
@@ -208,14 +244,17 @@ get_marketplace_version() {
 # USAGE: list_marketplace_skills
 # RETURNS: 0 = success
 list_marketplace_skills() {
-    if [[ ! -d "$MARKETPLACE_DIR" ]]; then
+    local marketplace_dir
+    marketplace_dir=$(get_marketplace_dir)
+
+    if [[ ! -d "$marketplace_dir" ]]; then
         ui_error "Marketplace not installed"
         return 1
     fi
     
     ui_info "Available GRACE skills:"
     
-    for skill_dir in "$MARKETPLACE_DIR"/skills/grace/*/; do
+    for skill_dir in "$marketplace_dir"/skills/grace/*/; do
         if [[ -f "$skill_dir/SKILL.md" ]]; then
             local skill_name
             skill_name=$(basename "$skill_dir")
@@ -230,7 +269,7 @@ list_marketplace_skills() {
 # Export Validation
 # ═══════════════════════════════════════════════════════════════════════════
 
-declare -f ensure_marketplace update_marketplace clone_clean get_marketplace_version list_marketplace_skills &>/dev/null || {
+declare -f ensure_marketplace update_marketplace clone_clean get_marketplace_dir get_marketplace_version list_marketplace_skills &>/dev/null || {
     echo "[MARKETPLACE] Error: Export validation failed" >&2
     exit 1
 }

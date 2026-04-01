@@ -12,9 +12,9 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SHORTCUTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$SHORTCUTS_DIR/ui.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
@@ -72,7 +72,7 @@ ask_shortcuts() {
 
 # create_shortcuts: Create environment-specific shortcuts
 # USAGE: create_shortcuts "environment"
-# ENVIRONMENT: kilo, claude, qwen, copilot
+# ENVIRONMENT: kilo, claude, codex, qwen, copilot
 # RETURNS: 0 = success, 1 = failure
 create_shortcuts() {
     local env="$1"
@@ -85,6 +85,9 @@ create_shortcuts() {
             ;;
         claude|cursor)
             create_shortcuts_claude
+            ;;
+        codex)
+            create_shortcuts_codex
             ;;
         qwen)
             create_shortcuts_qwen
@@ -198,6 +201,33 @@ SHORTCUT_EOF
     ui_success "Created ${#GRACE_SHORTCUTS[@]} shortcuts in .qwen/skills/"
 }
 
+# create_shortcuts_codex: Create Codex-specific shortcuts
+create_shortcuts_codex() {
+    local skills_dir=".codex/skills"
+    mkdir -p "$skills_dir"
+
+    for shortcut in "${!GRACE_SHORTCUTS[@]}"; do
+        local skill_name="${GRACE_SHORTCUTS[$shortcut]}"
+        local skill_file="$skills_dir/${skill_name}.md"
+
+        cat > "$skill_file" << SHORTCUT_EOF
+# $skill_name
+
+**Shortcut:** \`$shortcut\`
+
+Use the external GRACE marketplace skill: \`$skill_name\`
+
+## Note
+
+Codex marketplace skills are installed at \`~/.codex/skills/grace/\`.
+SHORTCUT_EOF
+
+        ui_info "  Created $shortcut → $skill_name"
+    done
+
+    ui_success "Created ${#GRACE_SHORTCUTS[@]} shortcuts in .codex/skills/"
+}
+
 # create_shortcuts_copilot: Create Copilot-specific shortcuts
 create_shortcuts_copilot() {
     local skills_dir=".github/copilot/skills"
@@ -230,7 +260,7 @@ SHORTCUT_EOF
 # Export Validation
 # ═══════════════════════════════════════════════════════════════════════════
 
-declare -f create_shortcuts ask_shortcuts create_shortcuts_kilo create_shortcuts_claude create_shortcuts_qwen create_shortcuts_copilot &>/dev/null || {
+declare -f create_shortcuts ask_shortcuts create_shortcuts_kilo create_shortcuts_claude create_shortcuts_qwen create_shortcuts_codex create_shortcuts_copilot &>/dev/null || {
     echo "[SHORTCUTS] Error: Export validation failed" >&2
     exit 1
 }

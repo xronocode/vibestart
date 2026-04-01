@@ -15,11 +15,11 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PREFLIGHT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$PREFLIGHT_DIR/ui.sh"
 # shellcheck source=detect.sh
-source "$SCRIPT_DIR/detect.sh"
+source "$PREFLIGHT_DIR/detect.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
@@ -220,7 +220,7 @@ check_agent_compatibility() {
     
     # Environment-specific checks
     case "$env" in
-        kilo|claude|qwen|copilot)
+        kilo|claude|codex|qwen|copilot)
             ui_success "Environment '$env' is supported"
             return 0
             ;;

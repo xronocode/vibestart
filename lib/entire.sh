@@ -12,11 +12,11 @@
 set -e
 
 # Source dependencies
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENTIRE_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ui.sh
-source "$SCRIPT_DIR/ui.sh"
+source "$ENTIRE_MODULE_DIR/ui.sh"
 # shellcheck source=detect.sh
-source "$SCRIPT_DIR/detect.sh"
+source "$ENTIRE_MODULE_DIR/detect.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # User Interaction

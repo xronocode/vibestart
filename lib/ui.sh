@@ -18,6 +18,12 @@
 
 set -e
 
+if [[ -n "${VIBESTART_UI_LOADED:-}" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+
+readonly VIBESTART_UI_LOADED=1
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Color Definitions (ANSI)
 # ═══════════════════════════════════════════════════════════════════════════

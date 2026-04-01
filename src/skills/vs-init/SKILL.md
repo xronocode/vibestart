@@ -449,6 +449,7 @@ Identify which AI agent is running:
 - Kilo Code: Check for `.kilocode/config.json`
 - Cursor: Check for `.cursorrules`
 - Claude Code: Check for `.claude/`
+- Codex: Check for `.codex/` or `CODEX_*` environment variables
 
 ### 1.3 Detect Project Stack
 

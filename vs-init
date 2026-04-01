@@ -1,5 +1,5 @@
-#!/bin/bash
-# vs-init — Vibestart v3.1 Main Entry Point
+#!/usr/bin/env bash
+# vs-init — Vibestart v3.2.0 Main Entry Point
 # MODULE_ID: M-VSINIT
 # CONTRACT:
 #   PURPOSE: Bootstrap AI coding environments with GRACE methodology
@@ -12,11 +12,25 @@
 
 set -e
 
+if [[ "${BASH_VERSINFO[0]:-0}" -lt 4 ]]; then
+    if [[ -x "/opt/homebrew/bin/bash" ]]; then
+        exec /opt/homebrew/bin/bash "$0" "$@"
+    fi
+
+    if [[ -x "/usr/local/bin/bash" ]]; then
+        exec /usr/local/bin/bash "$0" "$@"
+    fi
+
+    echo "vibestart requires Bash 4.0+"
+    echo "On macOS, run it with a newer bash such as /opt/homebrew/bin/bash"
+    exit 1
+fi
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Script Setup
 # ═══════════════════════════════════════════════════════════════════════════
 
-readonly SCRIPT_VERSION="3.1.0"
+readonly SCRIPT_VERSION="3.2.0"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly VIBESTART_ROOT="$SCRIPT_DIR"
 readonly LIB_DIR="$VIBESTART_ROOT/lib"
@@ -31,6 +45,7 @@ source "$LIB_DIR/entire.sh"
 source "$LIB_DIR/shortcuts.sh"
 source "$LIB_DIR/config/kilo.sh"
 source "$LIB_DIR/config/claude.sh"
+source "$LIB_DIR/config/codex.sh"
 source "$LIB_DIR/config/qwen.sh"
 source "$LIB_DIR/config/copilot.sh"
 
@@ -101,7 +116,7 @@ parse_args() {
 
 show_help() {
     cat << 'HELP_EOF'
-Vibestart v3.1 - AI Coding Environment Bootstrap
+Vibestart v3.2.0 - AI Coding Environment Bootstrap
 
 USAGE:
     vs-init [OPTIONS]
@@ -109,7 +124,7 @@ USAGE:
 OPTIONS:
     --auto                  Run in non-interactive mode with smart defaults
     --dry-run               Show what would be done without making changes
-    --env=ENV               Target environment (kilo, claude, qwen, copilot)
+    --env=ENV               Target environment (kilo, claude, codex, qwen, copilot)
     --conport=MODE          ConPort mode (full, lite, skip)
     --entire                Enable Entire.io installation
     --no-entire             Skip Entire.io installation
@@ -154,28 +169,31 @@ ask_environment() {
     echo ""
     echo "  [1] Kilo Code"
     echo "  [2] Claude Code"
-    echo "  [3] Qwen"
-    echo "  [4] GitHub Copilot"
+    echo "  [3] Codex"
+    echo "  [4] Qwen"
+    echo "  [5] GitHub Copilot"
     echo ""
-    
+
     local default_num="1"
     if [[ "$detected" != "none" ]] && [[ ! "$detected" =~ ^multiple: ]]; then
         case "$detected" in
             kilo) default_num="1" ;;
             claude) default_num="2" ;;
-            qwen) default_num="3" ;;
-            copilot) default_num="4" ;;
+            codex) default_num="3" ;;
+            qwen) default_num="4" ;;
+            copilot) default_num="5" ;;
         esac
     fi
     
     local choice
-    read -p "  Choice [1-4] (default: $default_num): " choice
+    read -p "  Choice [1-5] (default: $default_num): " choice
     
     case "${choice:-$default_num}" in
         1) echo "kilo" ;;
         2) echo "claude" ;;
-        3) echo "qwen" ;;
-        4) echo "copilot" ;;
+        3) echo "codex" ;;
+        4) echo "qwen" ;;
+        5) echo "copilot" ;;
         *) echo "kilo" ;;
     esac
 }
@@ -269,6 +287,11 @@ run_interactive_mode() {
     else
         VIBESTART_ENV=$(ask_environment "$detected_env")
     fi
+
+    load_environment_profile "$VIBESTART_ENV" || {
+        ui_error "Unknown environment profile: $VIBESTART_ENV"
+        exit 1
+    }
     
     ui_success "Target environment: $VIBESTART_ENV"
     
@@ -340,6 +363,11 @@ run_auto_mode() {
             VIBESTART_ENV="$detected_env"
         fi
     fi
+
+    load_environment_profile "$VIBESTART_ENV" || {
+        ui_error "Unknown environment profile: $VIBESTART_ENV"
+        exit 1
+    }
     
     ui_success "Environment: $VIBESTART_ENV"
     
@@ -401,6 +429,9 @@ execute_setup() {
         "claude")
             generate_claude_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
             ;;
+        "codex")
+            generate_codex_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
+            ;;
         "qwen")
             generate_qwen_config "$conport_mode" "$entire_mode" "$VIBESTART_OS"
             ;;
@@ -444,12 +475,6 @@ main() {
     
     # Show banner
     ui_banner "Vibestart" "$SCRIPT_VERSION"
-    
-    # Check minimum requirements
-    if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
-        ui_error "Bash 4.0+ required"
-        exit 1
-    fi
     
     # Detect OS
     VIBESTART_OS=$(detect_os)

@@ -7,7 +7,7 @@
 | Условие | Режим |
 |---------|-------|
 | `vs.project.toml` существует | UPDATE |
-| Версия < текущей (3.0.0) | UPDATE |
+| Версия < текущей (3.2.0) | UPDATE |
 | `.vibestart/` существует | UPDATE |
 
 ## Flow
@@ -32,7 +32,7 @@ If something goes wrong, rollback with:
 [SKILL:vs-init] Step 2: Reading current configuration...
 
 Current configuration:
-  • Version: 2.1.0
+  • Version: 3.1.0
   • Mode: lite
   • Installed at: 2026-03-20T10:30:00Z
   • Integrations:
@@ -47,14 +47,13 @@ Current configuration:
 ```
 [SKILL:vs-init] Step 3: Analyzing changes...
 
-Changes in v3.0.0:
-  ✓ New: UPDATE/REPAIR/MIGRATE modes
-  ✓ New: Entire.io integration
-  ✓ New: ConPort integration
-  ✓ New: LITE/ADVANCED installation modes
-  ✓ Updated: vs-init skill structure (modular)
-  ✓ Updated: Conflict detection (6 types)
-  ✓ Updated: Documentation
+Changes in v3.2.0:
+  ✓ New: Codex environment support
+  ✓ New: Smoke tests for JSON, generators, and dry-run flow
+  ✓ Fixed: MCP JSON generation for agent configs
+  ✓ Fixed: Bash 4 bootstrap on macOS
+  ✓ Fixed: Marketplace install path selection
+  ✓ Updated: README and release notes
 ```
 
 ---
@@ -108,10 +107,10 @@ Total: 15 new files, 1 updated file
 Updating vs.project.toml:
 
 Old version:
-  vibestart.version = "2.1.0"
+  vibestart.version = "3.1.0"
 
 New version:
-  vibestart.version = "3.0.0"
+  vibestart.version = "3.2.0"
   vibestart.last_updated = "$TIMESTAMP"
 
 Preserving user settings:
@@ -208,7 +207,7 @@ Running verify-vibestart.sh:
 ╠═══════════════════════════════════════════════════════════════╣
 ║                                                                ║
 ║  Project: <project-name>                                      ║
-║  Updated: v2.1.0 → v3.0.0                                     ║
+║  Updated: v3.1.0 → v3.2.0                                     ║
 ║                                                                ║
 ║  Changes applied:                                             ║
 ║    ✓ Framework files updated (15 new, 1 updated)              ║
