@@ -77,7 +77,7 @@
       </notes>
     </M-002>
 
-    <M-003 NAME="MacroContracts" TYPE="CORE_LOGIC" LAYER="1" ORDER="1" STATUS="in-progress">
+    <M-003 NAME="MacroContracts" TYPE="CORE_LOGIC" LAYER="1" ORDER="1" STATUS="done">
       <contract>
         <purpose>Define the public macro API as deterministic state machines with routing guards, executable projection controls, read/write sets, invariants, and the internal skill layer that realizes it.</purpose>
         <inputs>
@@ -257,7 +257,7 @@
 
     <Phase-2 name="Workflow Language" status="in-progress">
       <goal>Lock the public macro API and the first governance semantics.</goal>
-      <step-1 module="M-003" status="in-progress" verification="V-M-003">Define macro contracts, routing guards, and state-machine transitions.</step-1>
+      <step-1 module="M-003" status="done" verification="V-M-003">Define macro contracts, routing guards, and state-machine transitions.</step-1>
       <step-2 module="M-004" status="in-progress" verification="V-M-004">Define adaptive governance algebra, sync split, thresholds, and calibration hooks.</step-2>
     </Phase-2>
 

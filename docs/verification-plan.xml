@@ -93,12 +93,13 @@
         <scenario-4>Each macro declares reads, writes, entry guards, transitions, and invariants.</scenario-4>
         <scenario-5>Routing is deterministic and explainable in guided mode.</scenario-5>
         <scenario-6>Executable projection controls live in refine rather than being split ambiguously across ontology and runtime config.</scenario-6>
+        <scenario-7>The internal skill layer is explicit, lower-level than the public macros, and mapped back to each macro contract.</scenario-7>
       </scenarios>
       <traces>
         <trace-1>The macro registry and the development plan module M-003 tell the same story.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/macros.toml','rb')); assert t['routing']['mode']=='deterministic'; assert 'precedence' in t['routing']; assert 'projection_mode' in t['macros']['refine']; assert 'entry_guard' in t['macros']['discover']; assert 'reads' in t['macros']['deliver']; assert 'writes' in t['macros']['deliver']; assert 'transitions' in t['macros']['deliver']; assert 'invariants' in t['macros']['sync']; assert 'cleanup_guard' in t['macros']['sync']; assert 'verified:done' in t['macros']['fix']['transitions']"</test-command>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/macros.toml','rb')); assert t['routing']['mode']=='deterministic'; assert 'precedence' in t['routing']; assert 'projection_mode' in t['macros']['refine']; assert 'entry_guard' in t['macros']['discover']; assert 'reads' in t['macros']['deliver']; assert 'writes' in t['macros']['deliver']; assert 'transitions' in t['macros']['deliver']; assert 'invariants' in t['macros']['sync']; assert 'cleanup_guard' in t['macros']['sync']; assert 'verified:done' in t['macros']['fix']['transitions']; assert t['skills']['public'] is False; assert t['skills']['compatibility_contract']=='macro-semantics-first'; assert all(name in t['skills']['mapping'] for name in ['discover','refine','deliver','fix','sync','resume','deploy','vibe','calibrate'])"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_MACRO_API</block>
@@ -402,7 +403,7 @@
   <TraceRequirements>
     <trace-req module="M-003">
       <marker>[VIBE][MacroContracts][BLOCK_DEFINE_MACRO_API]</marker>
-      <required-fields>macro, entry_guard, reads, writes, transitions, invariants, default_autonomy, default_agents</required-fields>
+      <required-fields>macro, entry_guard, reads, writes, transitions, invariants, default_autonomy, default_agents, skills_mapping, compatibility_contract</required-fields>
       <assertion>Macro definitions, state-machine contracts, and defaults must remain stable across artifacts.</assertion>
     </trace-req>
     <trace-req module="M-002">
