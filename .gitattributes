@@ -4,9 +4,6 @@
 # Kilocode config (if recreated)
 .kilocode/ export-ignore
 
-# Tests
-tests/ export-ignore
-
 # Development plans
 plans/ export-ignore
 
@@ -14,9 +11,12 @@ plans/ export-ignore
 verify-*.* export-ignore
 VERIFICATION-CHECKlist.md export-ignore
 
-# Internal documentation
-src/README.md export-ignore
-src/CHANGELOG.md export-ignore
+# Compatibility-only artifact
+docs/technology.xml export-ignore
+
+# Internal and quarantined legacy surfaces
+internal/** export-ignore
+legacy/** export-ignore
 
 # Test directories inside skills
 __tests__/ export-ignore
