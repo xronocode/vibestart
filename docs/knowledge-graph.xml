@@ -6,6 +6,70 @@
     <version>0.1.0-draft</version>
   </ProjectInfo>
 
+  <Ontology>
+    <FieldSemantics>
+      <field name="type">For non-module nodes, type is the ontological class: intent, feature, work, verification, decision, or deploy.</field>
+      <field name="kind">When present and equal to module, type is interpreted through the module taxonomy instead of the non-module ontology classes.</field>
+      <field name="stage">Lifecycle maturity uses the ordered values captured, clarified, designed, refined, ready, in_progress, verified, and done.</field>
+      <field name="status">Optional execution posture for work-tracking nodes uses active, blocked, deferred, dropped, or done.</field>
+    </FieldSemantics>
+
+    <NodeTypes>
+      <node-type name="intent">Represents a user or project intent before and during structured refinement.</node-type>
+      <node-type name="feature">Represents a stable capability or framework feature derived from intent.</node-type>
+      <node-type name="work">Represents active implementation or framework-definition work tracked over time.</node-type>
+      <node-type name="verification">Represents verification surfaces, phase gates, and proof obligations.</node-type>
+      <node-type name="decision">Represents an approved architectural or process decision.</node-type>
+      <node-type name="deploy">Represents deploy-facing workflow surfaces and readiness concerns.</node-type>
+    </NodeTypes>
+
+    <ModuleTaxonomy>
+      <module-type name="ENTRY_POINT">Execution begins here for a product surface such as vibestart profile selection.</module-type>
+      <module-type name="CORE_LOGIC">Owns framework semantics, graph rules, macro contracts, or governance behavior.</module-type>
+      <module-type name="DATA_LAYER">Reserved for future persistence or storage-oriented surfaces.</module-type>
+      <module-type name="UI_COMPONENT">Reserved for future user-facing UI surfaces.</module-type>
+      <module-type name="UTILITY">Owns shared helpers, configuration surfaces, or low-level support behavior.</module-type>
+      <module-type name="INTEGRATION">Reserved for future external service or environment adapters.</module-type>
+    </ModuleTaxonomy>
+
+    <LifecycleStages>
+      <stage name="captured" order="1">Knowledge has been captured but is still raw.</stage>
+      <stage name="clarified" order="2">Intent is clear enough to relate to existing project knowledge.</stage>
+      <stage name="designed" order="3">The shape of the solution is defined well enough for structured projection.</stage>
+      <stage name="refined" order="4">Execution and verification implications have been decomposed in the graph-aware model.</stage>
+      <stage name="ready" order="5">The work is mature enough for implementation.</stage>
+      <stage name="in_progress" order="6">Implementation or repair is underway.</stage>
+      <stage name="verified" order="7">Required verification and review obligations have been satisfied.</stage>
+      <stage name="done" order="8">The item is complete in the current framework context.</stage>
+    </LifecycleStages>
+
+    <AuxiliaryStatuses>
+      <status name="active">The work item is currently relevant and open.</status>
+      <status name="blocked">The work item is waiting on another dependency or decision.</status>
+      <status name="deferred">The work item is intentionally delayed.</status>
+      <status name="dropped">The work item is no longer being pursued.</status>
+      <status name="done">The work item is complete.</status>
+    </AuxiliaryStatuses>
+
+    <EdgeTypes>
+      <edge-type name="expands-to">Higher-level intent or feature expands into a more concrete feature or work item.</edge-type>
+      <edge-type name="requires">A feature or work item requires another work item or module to exist.</edge-type>
+      <edge-type name="implemented-by">A work item is realized by a module.</edge-type>
+      <edge-type name="depends">A module depends on another module for its semantics or operation.</edge-type>
+      <edge-type name="verified-by">A module or surface is covered by the shared verification surface.</edge-type>
+      <edge-type name="connects">A framework feature connects to another non-core surface such as deployment.</edge-type>
+      <edge-type name="governed-by">A module or surface is constrained by an approved decision.</edge-type>
+    </EdgeTypes>
+
+    <ProjectionInvariants>
+      <invariant-1>knowledge-graph.xml is the primary source of truth for graph-born intent, feature, work, and decision continuity.</invariant-1>
+      <invariant-2>requirements.xml is a cleaned projection and must not become the birthplace of new intent.</invariant-2>
+      <invariant-3>development-plan.xml and verification-plan.xml may be projected only after graph maturity guards are satisfied.</invariant-3>
+      <invariant-4>Reverse projection from downstream artifacts into the graph is forbidden unless an explicit contract says otherwise.</invariant-4>
+      <invariant-5>When a graph-to-projection conflict appears before commitment, the graph-first-until-committed rule applies.</invariant-5>
+    </ProjectionInvariants>
+  </Ontology>
+
   <Nodes>
     <I-001>
       <name>IntentDrivenEngineeringFramework</name>
