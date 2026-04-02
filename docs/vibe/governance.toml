@@ -290,6 +290,43 @@ allow_suggest = true
 # Recommended: false until the deterministic kernel and stronger verification are mature.
 allow_apply = false
 
+# Supported calibration modes in ascending order of impact.
+# Recommended: keep all three stable so tooling can discover the contract even when apply stays disabled.
+supported_modes = ["analyze", "suggest", "apply"]
+
+# Calibration apply must require explicit user intent and must never run as a silent side effect.
+# Recommended: true
+apply_requires_explicit_user_intent = true
+
+# Calibration apply remains an expert-only surface until the governance algebra and runtime traces mature further.
+# Recommended: true
+apply_expert_only = true
+
+[outputs]
+# Emit a normalized governance bundle so compliant runtimes expose the same decision shape.
+# Recommended: true
+normalized_bundle = true
+
+# Required fields that must appear in a governance trace or recommendation bundle.
+# Recommended: keep stable for interoperability across shells and runtimes.
+required_fields = ["signals", "risk_score", "selected_review", "sync_required", "sync_phase"]
+
+# Include the winning decision reason so guided mode can explain the chosen escalation path.
+# Recommended: true
+include_decision_reason = true
+
+# Explicit review-level ordering for deterministic escalation and comparison.
+# Recommended: ["quick", "scoped", "full"]
+review_levels = ["quick", "scoped", "full"]
+
+# Allowed sync phase values that may appear in the emitted governance bundle.
+# Recommended: ["none", "reconcile", "cleanup"]
+sync_phase_values = ["none", "reconcile", "cleanup"]
+
+# Cleanup may only appear as an emitted phase after reconcile has already been selected.
+# Recommended: true
+cleanup_requires_reconcile = true
+
 [recommendations]
 # Minimal token that accepts the currently recommended bundle in guided mode.
 # Recommended: "v"
