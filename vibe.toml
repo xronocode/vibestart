@@ -85,6 +85,35 @@ governance_file = "docs/vibe/governance.toml"
 # Recommended: keep macro behavior and extension rules in docs/vibe/macros.toml.
 macros_file = "docs/vibe/macros.toml"
 
+[boundary]
+# Canonical documentation root for VIBE project knowledge.
+# Recommended: "docs"
+canonical_docs_root = "docs"
+
+# Root for detailed human-facing policy and macro configuration.
+# Recommended: "docs/vibe"
+policy_docs_root = "docs/vibe"
+
+# Root for live runtime state, logs, and operational exhaust.
+# Recommended: ".vibestart/state"
+runtime_state_root = ".vibestart/state"
+
+# Role of the root manifest in the configuration system.
+# Recommended: "active-config"
+root_manifest_role = "active-config"
+
+# Role of the docs-level policy files.
+# Recommended: "detailed-policy"
+policy_docs_role = "detailed-policy"
+
+# Role of the runtime state root.
+# Recommended: "runtime-exhaust"
+runtime_state_role = "runtime-exhaust"
+
+# Whether runtime state is part of the canonical VIBE knowledge layer.
+# Recommended: false
+runtime_state_canonical = false
+
 [overrides]
 # Optional additional policy fragments, loaded after the primary policy files.
 # Recommended: leave empty unless a repository-specific exception is truly needed.
