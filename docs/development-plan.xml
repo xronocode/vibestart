@@ -255,7 +255,7 @@
       <step-3 module="M-005" status="done" verification="V-M-005">Define the manifest and policy boundary between root config, docs config, and runtime state.</step-3>
     </Phase-1>
 
-    <Phase-2 name="Workflow Language" status="in-progress">
+    <Phase-2 name="Workflow Language" status="done">
       <goal>Lock the public macro API and the first governance semantics.</goal>
       <step-1 module="M-003" status="done" verification="V-M-003">Define macro contracts, routing guards, and state-machine transitions.</step-1>
       <step-2 module="M-004" status="done" verification="V-M-004">Define adaptive governance algebra, sync split, thresholds, and calibration hooks.</step-2>
