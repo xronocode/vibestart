@@ -61,12 +61,13 @@
         <scenario-2>Requirements act as a cleaned projection instead of a raw discovery dump.</scenario-2>
         <scenario-3>Development plan references the same module and work vocabulary as the graph.</scenario-3>
         <scenario-4>Ontology defines the maturity and semantic invariants required for deterministic projection.</scenario-4>
+        <scenario-5>Field semantics distinguish type, kind, stage, and status explicitly enough for compliant runtimes to interpret the graph consistently.</scenario-5>
       </scenarios>
       <traces>
         <trace-1>CrossLinks connect framework use cases, modules, and decisions into one navigable graph.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/knowledge-graph.xml'); ET.parse('docs/development-plan.xml')"</test-command>
+        <test-command>python3 -c "import xml.etree.ElementTree as ET; root=ET.parse('docs/knowledge-graph.xml').getroot(); ET.parse('docs/development-plan.xml'); ont=root.find('Ontology'); assert ont is not None; assert ont.find('FieldSemantics') is not None; assert ont.find('NodeTypes') is not None; assert ont.find('ModuleTaxonomy') is not None; assert ont.find('LifecycleStages') is not None; assert ont.find('ProjectionInvariants') is not None; fields=[f.attrib['name'] for f in ont.find('FieldSemantics')]; assert all(name in fields for name in ['type','kind','stage','status']); node_types=[n.attrib['name'] for n in ont.find('NodeTypes')]; assert all(name in node_types for name in ['intent','feature','work','verification','decision','deploy']); stages=[s.attrib['name'] for s in ont.find('LifecycleStages')]; assert all(name in stages for name in ['captured','clarified','designed','refined','ready','in_progress','verified','done'])"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_PROJECTIONS</block>

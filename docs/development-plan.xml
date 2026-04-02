@@ -45,7 +45,7 @@
       </notes>
     </M-001>
 
-    <M-002 NAME="KnowledgeOntology" TYPE="CORE_LOGIC" LAYER="0" ORDER="2" STATUS="in-progress">
+    <M-002 NAME="KnowledgeOntology" TYPE="CORE_LOGIC" LAYER="0" ORDER="2" STATUS="done">
       <contract>
         <purpose>Define the graph-first ontology and the semantic invariants that constrain projection into requirements, plan, verification, and decisions.</purpose>
         <inputs>
@@ -251,7 +251,7 @@
     <Phase-1 name="Framework Foundation" status="in-progress">
       <goal>Lock the identity, ontology, and configuration boundaries before deeper product work begins.</goal>
       <step-1 module="M-001" status="done" verification="V-M-001">Define framework identity, principles, and value boundaries.</step-1>
-      <step-2 module="M-002" status="in-progress" verification="V-M-002">Define the graph-first ontology and artifact projection algebra.</step-2>
+      <step-2 module="M-002" status="done" verification="V-M-002">Define the graph-first ontology and artifact projection algebra.</step-2>
       <step-3 module="M-005" status="in-progress" verification="V-M-005">Define the manifest and policy boundary between root config, docs config, and runtime state.</step-3>
     </Phase-1>
 
