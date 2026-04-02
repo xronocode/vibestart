@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Requirements VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>VIBE / vibestart</name>
+    <version>0.1.0-draft</version>
+    <annotation>Define the VIBE framework and the optional vibestart bootstrap/runtime product as a coherent, agent-agnostic engineering system.</annotation>
+  </ProjectInfo>
+
+  <Principles>
+    <principle-1 name="Intent Awareness">Understand the actual engineering intent behind a request instead of merely obeying the literal wording.</principle-1>
+    <principle-2 name="Context Awareness">Use project state, prior decisions, active work, drift signals, and verification posture as first-class context.</principle-2>
+    <principle-3 name="Adaptive Execution">Adjust workflow depth and path to the scale, maturity, and risk of the current task.</principle-3>
+    <principle-4 name="Constructive Friction">Resist false clarity and force clarification when the shape of the work is still too ambiguous.</principle-4>
+    <principle-5 name="Contract-First Planning">Define the expected behavior and boundaries before implementation work begins.</principle-5>
+    <principle-6 name="Verification Before Trust">Treat tests, traces, review, and evidence as the basis for trust, not fluent output.</principle-6>
+    <principle-7 name="Semantic Anchors">Keep code, docs, and operational artifacts navigable through stable identifiers and structure.</principle-7>
+    <principle-8 name="Adaptive Governance">Escalate review and sync according to risk signals rather than static ritual.</principle-8>
+    <principle-9 name="Traceable Autonomy">Allow autonomous work only when actions, decisions, and status transitions remain explainable and inspectable.</principle-9>
+    <principle-10 name="Layered Redundancy">Repeat key knowledge across artifacts only when the repeated view serves a different role and helps detect drift.</principle-10>
+    <principle-11 name="Config as Documentation">Treat configuration as a readable operating contract with comments, recommended defaults, and safe review semantics.</principle-11>
+    <principle-12 name="Deterministic Control">Require routing, projection, review escalation, and sync semantics to be explicit, reproducible, and reviewable across runtimes.</principle-12>
+  </Principles>
+
+  <UseCases>
+    <UC-001>
+      <title>Define a standalone methodology for intent-driven engineering</title>
+      <actor>Framework author or adopting team</actor>
+      <precondition>Agentic development needs a stable engineering model that does not depend on one shell or one model vendor.</precondition>
+      <flow>
+        <step-1>Capture product and engineering intent in the canonical knowledge graph.</step-1>
+        <step-2>Project clarified intent into requirements, execution, and verification surfaces.</step-2>
+        <step-3>Run engineering work through explicit macro contracts instead of ad hoc prompting.</step-3>
+      </flow>
+      <postcondition>A project can adopt VIBE as a methodology without requiring vibestart.</postcondition>
+      <priority>P0</priority>
+      <status>in-progress</status>
+    </UC-001>
+
+    <UC-002>
+      <title>Bootstrap VIBE quickly in a real repository</title>
+      <actor>Developer new to agentic workflow or team lead standardizing a project</actor>
+      <precondition>A repository needs a low-friction path to canonical artifacts, defaults, and operating rules.</precondition>
+      <flow>
+        <step-1>Select an explicit vibestart profile: core or deep.</step-1>
+        <step-2>Install the canonical docs surface, manifest, and policy files.</step-2>
+        <step-3>Apply profile-specific product behavior without changing the VIBE methodology semantics.</step-3>
+        <step-4>Explain the installed surfaces, active defaults, optional extensions, and next-step contract during onboarding.</step-4>
+      </flow>
+      <postcondition>The repository has a usable VIBE operating surface with bounded setup complexity.</postcondition>
+      <priority>P0</priority>
+      <status>in-progress</status>
+    </UC-002>
+
+    <UC-003>
+      <title>Route ordinary engineering requests through a stable macro language</title>
+      <actor>Agent user interacting in plain language</actor>
+      <precondition>The user may not want to remember or manually chain workflow phases.</precondition>
+      <flow>
+        <step-1>Treat ordinary engineering requests as implicit entries into the top-level vibe macro.</step-1>
+        <step-2>Choose or recommend discover, refine, deliver, fix, sync, resume, or deploy through deterministic routing guards and explicit precedence rules.</step-2>
+        <step-3>Use guided or auto execution while keeping the same macro contract.</step-3>
+      </flow>
+      <postcondition>The user works against one public language instead of manually juggling phases.</postcondition>
+      <priority>P0</priority>
+      <status>in-progress</status>
+    </UC-003>
+
+    <UC-004>
+      <title>Reduce drift through graph-first knowledge and synchronized projections</title>
+      <actor>Agent or reviewer</actor>
+      <precondition>Code, planning artifacts, and verification surfaces can diverge during autonomous work.</precondition>
+      <flow>
+        <step-1>Keep the knowledge graph as the primary knowledge spine.</step-1>
+        <step-2>Project clarified intent into requirements and refined work into plan and verification artifacts through deterministic, idempotent projection rules.</step-2>
+        <step-3>Run sync as an ordered reconcile-then-cleanup flow across graph, requirements, plan, verification, code, and VIBE-owned operational state.</step-3>
+      </flow>
+      <postcondition>Cross-validated artifacts expose drift instead of hiding it.</postcondition>
+      <priority>P0</priority>
+      <status>in-progress</status>
+    </UC-004>
+
+    <UC-005>
+      <title>Let advanced users tune governance without silently changing the framework</title>
+      <actor>Framework maintainer or expert team</actor>
+      <precondition>Policy thresholds need calibration as the system is exercised on real projects.</precondition>
+      <flow>
+        <step-1>Record policy knobs in commented TOML files.</step-1>
+        <step-2>Analyze runtime and review traces with the hidden calibrate macro.</step-2>
+        <step-3>Suggest or apply explicit TOML diffs instead of mutating policy invisibly, and treat apply as an experimental path until deterministic guards are proven.</step-3>
+      </flow>
+      <postcondition>Governance evolves through inspectable configuration changes.</postcondition>
+      <priority>P1</priority>
+      <status>planned</status>
+    </UC-005>
+
+    <UC-006>
+      <title>Present a deterministic first-run contract for vibestart</title>
+      <actor>Repository operator on first install or profile switch</actor>
+      <precondition>vibestart is invoked with --core, --deep, or no explicit profile flag.</precondition>
+      <flow>
+        <step-1>Resolve profile choice explicitly through a flag or an interactive prompt.</step-1>
+        <step-2>State what is installed, what defaults are activated, and what remains optional.</step-2>
+        <step-3>State the immediate next-step contract, including how plain requests will be routed and how recommendations can be confirmed.</step-3>
+      </flow>
+      <postcondition>The operator understands the installed product surface without guessing hidden defaults.</postcondition>
+      <priority>P0</priority>
+      <status>in-progress</status>
+    </UC-006>
+  </UseCases>
+
+  <Decisions>
+  </Decisions>
+
+  <Constraints>
+    <technical>
+      <constraint-1>knowledge-graph.xml is the primary knowledge spine and source of orchestration continuity.</constraint-1>
+      <constraint-2>No mandatory docs/specs side-bridge is allowed; canonical knowledge must stay inside docs/*.xml and their projections.</constraint-2>
+      <constraint-3>Projection, routing, review selection, and sync behavior must be deterministic enough that two compliant runtimes choose the same control path from the same observable state.</constraint-3>
+    </technical>
+    <business>
+      <constraint-1>vibestart remains optional; VIBE must still deliver baseline engineering hygiene when its canonical files are fed directly to an agent.</constraint-1>
+      <constraint-2>Bootstrap profile choice must be explicit and must not assume that general development seniority equals maturity in agentic development.</constraint-2>
+      <constraint-3>guided and single are the normative starting defaults until auto, multi, and policy mutation paths are protected by formal guards and verification.</constraint-3>
+    </business>
+    <regulatory>
+      <constraint-1>Configuration and policy files must be self-explanatory and safe to review in version control without storing runtime secrets.</constraint-1>
+      <constraint-2>Canonical contract markup and structural labels must remain in English for cross-runtime and cross-agent interoperability; localized interaction aliases are allowed only as explicit UX tokens and never as structural labels.</constraint-2>
+    </regulatory>
+  </Constraints>
+
+  <Glossary>
+    <term name="VIBE">Verified Intent-Based Engineering, an agent-agnostic methodology for intent-driven engineering.</term>
+    <term name="vibestart">Optional bootstrap and runtime product that installs and operates VIBE in a concrete agent environment.</term>
+    <term name="Knowledge Spine">The role of docs/knowledge-graph.xml as the primary semantic center of the project.</term>
+    <term name="Macro">Stable public VIBE workflow contract such as discover, refine, deliver, or sync.</term>
+    <term name="Skill">Lower-level implementation operator used internally to realize a macro contract.</term>
+    <term name="Projection Algebra">The deterministic rules that project graph state into requirements, development, and verification artifacts.</term>
+    <term name="Router Contract">The deterministic precedence and guard system that maps an incoming request to a VIBE macro path.</term>
+    <term name="Experimental Surface">A permitted but non-normative execution path such as auto, multi, or calibrate apply, pending stronger guards and verification.</term>
+    <term name="First-Run Contract">The deterministic onboarding statement that tells the operator what vibestart installed, what defaults are active, and what happens next.</term>
+    <term name="Core">The lighter vibestart bootstrap profile with a low-friction operating layer.</term>
+    <term name="Deep">The heavier vibestart bootstrap profile intended for richer integrations and longer-lived projects.</term>
+  </Glossary>
+  
+</Requirements>

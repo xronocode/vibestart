@@ -1,0 +1,300 @@
+# VIBE macro configuration for this repository.
+# This file describes the public macro language and project-level macro behavior.
+
+[registry]
+# Public macro vocabulary exposed by the framework.
+# Recommended: keep this list stable and versioned.
+public = ["discover", "refine", "deliver", "fix", "sync", "resume", "deploy", "vibe"]
+
+# Expert or hidden macros that exist for power users and framework authors.
+# Recommended: keep this list short.
+expert = ["calibrate"]
+
+[routing]
+# Route normal engineering requests through the `vibe` macro unless another macro is explicit.
+# Recommended: true
+implicit_vibe = true
+
+# Select macro paths through an explicit and reproducible routing model.
+# Allowed: "deterministic" | "heuristic"
+# Recommended: "deterministic"
+mode = "deterministic"
+
+# In guided mode, announce the selected macro path before execution.
+# Recommended: true
+announce_route_in_guided = true
+
+# In auto mode, announce the selected macro path before execution.
+# Recommended: false to reduce friction.
+announce_route_in_auto = false
+
+# Ordered routing precedence from highest-confidence explicit path to lowest-confidence fallback.
+# Recommended: keep stable so two compliant runtimes choose the same path from the same context.
+precedence = ["explicit_macro", "resume_request", "bug_or_failed_verification", "explicit_deploy_request", "ready_work", "designed_work", "captured_or_ambiguous_intent", "fallback_discover"]
+
+# Fallback macro when no higher-precedence route is proven.
+# Recommended: "discover"
+fallback_macro = "discover"
+
+# How to break routing ties when more than one path appears valid.
+# Allowed: "less_autonomous_path" | "first_match"
+# Recommended: "less_autonomous_path"
+tie_break = "less_autonomous_path"
+
+[extensions]
+# Allow project-level tuning of standard macros without changing their public names.
+# Recommended: true
+allow_tune = true
+
+# Allow adding project-specific macros on top of the canonical VIBE vocabulary.
+# Recommended: true
+allow_extend = true
+
+# Allow overriding canonical macro behavior.
+# Recommended: true, but use sparingly.
+allow_override = true
+
+# Allow disabling canonical macros.
+# Recommended: true only if accompanied by an explicit warning.
+allow_disable = true
+
+# Emit warnings when a canonical macro is disabled and compatibility may be reduced.
+# Recommended: true
+warn_on_disable = true
+
+# Require an explicit acknowledgement when disabling canonical macros.
+# Recommended: true
+require_disable_acknowledgement = true
+
+[stability]
+# Normative framework default for autonomy.
+# Recommended: "guided"
+normative_autonomy = "guided"
+
+# Normative framework default for agent count.
+# Recommended: "single"
+normative_agents = "single"
+
+# Non-normative but permitted surfaces while the deterministic kernel is still being hardened.
+# Recommended: keep explicit.
+experimental = ["auto", "multi", "calibrate-apply"]
+
+[macros.discover]
+# Keep discover enabled. It is the entry point for structured clarification.
+enabled = true
+
+# Human-readable summary of the macro contract.
+# Recommended: keep this aligned with the framework spec and avoid shell-specific wording.
+purpose = "Capture and clarify intent in the knowledge graph until the work is ready for structured refinement."
+
+# Lineage explains which proven ideas were evolved into this macro.
+# Recommended: record origins to preserve compatible semantics without copying legacy commands blindly.
+lineage = ["superpowers:brainstorming", "grace:design-first", "vibe:graph-first-discovery"]
+
+# Default autonomy for discover.
+# Recommended: "guided"
+default_autonomy = "guided"
+
+# Default agent mode for discover.
+# Recommended: "single"
+default_agents = "single"
+
+# Allow discover to run in auto mode when the context is already rich.
+# Recommended: true
+allow_auto = true
+
+# Allow discover to accept multi mode. The runtime may still downgrade to single.
+# Recommended: true
+allow_multi = true
+
+# Auto is allowed but still experimental at the framework level.
+# Recommended: "experimental"
+auto_stability = "experimental"
+multi_stability = "experimental"
+
+# Minimum graph stage that can project into requirements.
+# Allowed: "captured" | "clarified" | "designed" | "refined"
+# Recommended: "clarified"
+requirements_projection_min_stage = "clarified"
+
+# Canonical read set for discover.
+reads = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml", "project-context"]
+
+# Canonical write set for discover.
+writes = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml"]
+
+# Entry guard for discover.
+# Recommended: route here when intent is new, raw, or ambiguous.
+entry_guard = "raw_or_changed_intent_present"
+
+# Formal stage transitions permitted by discover.
+transitions = ["captured:clarified", "clarified:designed"]
+
+# Invariants that discover must preserve.
+invariants = ["graph_node_created_or_updated", "no_plan_write_before_refine", "requirements_written_only_after_projection_guard"]
+
+[macros.refine]
+enabled = true
+purpose = "Project clarified intent into development and verification artifacts through the executable projection contract of the macro layer."
+lineage = ["grace:plan", "grace:verification", "vibe:projection-model"]
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = true
+auto_stability = "experimental"
+multi_stability = "experimental"
+
+# Minimum graph stage required before refine should proceed.
+# Recommended: "designed"
+min_input_stage = "designed"
+
+# Executable projection contract owned by the macro layer.
+projection_mode = "deterministic"
+projection_source_of_truth = "knowledge-graph"
+projection_idempotent = true
+requirements_projection_min_stage = "clarified"
+plan_projection_min_stage = "designed"
+verification_projection_min_stage = "designed"
+projection_conflict_policy = "graph-first-until-committed"
+reverse_projection_allowed = false
+
+reads = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml"]
+writes = ["docs/development-plan.xml", "docs/verification-plan.xml", "docs/knowledge-graph.xml", "docs/decisions.xml"]
+entry_guard = "designed_or_more_mature_graph_state_present"
+transitions = ["designed:refined", "refined:ready"]
+invariants = ["projection_is_idempotent", "requirements_remain_cleaned_projection", "plan_and_verification_crosslinked_back_to_graph"]
+
+[macros.deliver]
+enabled = true
+purpose = "Implement ready work under verification-first execution, adaptive review, and sync discipline."
+lineage = ["grace:execute", "grace:reviewer", "grace:verification", "grace:multiagent-execute", "vibe:adaptive-governance"]
+
+# Deliver can exploit autonomy, but guided remains the normative default until guards mature.
+# Recommended: "guided"
+default_autonomy = "guided"
+
+# Deliver is the first macro where multi-agent execution is often beneficial.
+# Recommended: "single" as default, with optional multi when supported.
+default_agents = "single"
+allow_auto = true
+allow_multi = true
+auto_stability = "experimental"
+multi_stability = "experimental"
+reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "docs/decisions.xml", "codebase"]
+writes = ["codebase", "docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "docs/decisions.xml"]
+entry_guard = "ready_work_and_verification_surface_present"
+transitions = ["ready:in_progress", "in_progress:verified", "verified:done"]
+invariants = ["verification_before_trust", "review_floor_selected_by_governance", "sync_reconcile_precedes_sync_cleanup_when_both_trigger"]
+
+[macros.fix]
+enabled = true
+purpose = "Repair mismatches and regressions without losing artifact coherence or hiding structural drift."
+lineage = ["grace:fix", "vibe:drift-aware-repair"]
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = true
+auto_stability = "experimental"
+multi_stability = "experimental"
+reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "codebase", "runtime-evidence"]
+writes = ["codebase", "docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml"]
+entry_guard = "failing_evidence_or_drift_signal_present"
+transitions = ["done:in_progress", "in_progress:verified", "verified:done"]
+invariants = ["repair_explains_mismatch", "artifact_updates_only_when_structure_changed", "review_after_fix_selected_before_close"]
+
+[macros.sync]
+enabled = true
+purpose = "Reconcile canonical artifacts with code and normalize VIBE-owned operational exhaust."
+lineage = ["grace:status", "grace:refresh", "g-drift", "vibe:ownership-cleanup"]
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = false
+auto_stability = "experimental"
+reads = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "docs/decisions.xml", "codebase", ".vibestart/state/*"]
+writes = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/development-plan.xml", "docs/verification-plan.xml", ".vibestart/state/*"]
+entry_guard = "detected_or_anticipated_drift_present"
+cleanup_guard = "vibe_owned_operational_exhaust_present"
+transitions = ["reconcile:done", "reconcile:cleanup", "cleanup:done"]
+invariants = ["reconcile_precedes_cleanup", "cleanup_is_owned_only", "unknown_artifacts_are_reported_not_mutated", "cleanup_runs_only_when_guard_is_true"]
+
+[macros.resume]
+enabled = true
+purpose = "Recover the current work position and recommend the next safe engineering step."
+lineage = ["vibestart:session-management", "conport:context-carry-over", "vibe:graph-centric-resume"]
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = false
+auto_stability = "experimental"
+reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", ".vibestart/state/*"]
+writes = [".vibestart/state/*"]
+entry_guard = "interrupted_or_returning_session_present"
+transitions = ["resume:in_progress"]
+invariants = ["current_position_explained", "next_safe_step_recommended"]
+
+[macros.deploy]
+enabled = true
+purpose = "Move verified work toward a local or quick-cloud deployment path through an explicit deployment flow."
+lineage = ["vibe:new-capability"]
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = false
+auto_stability = "experimental"
+reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "project-config"]
+writes = ["deployment-config", "docs/knowledge-graph.xml", "docs/decisions.xml", ".vibestart/state/*"]
+entry_guard = "verified_work_or_explicit_deploy_request_present"
+transitions = ["verified:done"]
+invariants = ["reconcile_before_deploy", "deploy_path_explained_or_executed"]
+
+[macros.vibe]
+enabled = true
+purpose = "Orchestrate the full intent-to-delivery cycle by routing ordinary requests into the right macro path."
+lineage = ["vibe:native-orchestrator"]
+
+# The top-level orchestrator inherits project defaults unless explicitly overridden.
+# Recommended: "guided" for framework work, "auto" for stable delivery flows.
+default_autonomy = "guided"
+default_agents = "single"
+allow_auto = true
+allow_multi = true
+auto_stability = "experimental"
+multi_stability = "experimental"
+reads = ["docs/*.xml", "vibe.toml", "docs/vibe/*.toml", "codebase", ".vibestart/state/*"]
+writes = ["delegated-to-selected-macro"]
+entry_guard = "ordinary_engineering_intent_present"
+transitions = ["route:discover", "route:refine", "route:deliver", "route:fix", "route:sync", "route:resume", "route:deploy"]
+invariants = ["routing_follows_precedence", "guided_mode_explains_selected_path", "per_run_override_beats_saved_default"]
+
+[macros.calibrate]
+enabled = true
+purpose = "Analyze operational evidence and tune governance policy through explicit configuration changes."
+lineage = ["vibe:calibration-hooks"]
+
+# Calibrate is an expert macro and should not be part of default onboarding.
+# Recommended: true
+hidden = true
+
+# Default action for a bare `calibrate` invocation.
+# Allowed: "analyze" | "suggest" | "apply"
+# Recommended: "analyze"
+default_action = "analyze"
+
+# Supported actions for calibrate.
+# Recommended: keep explicit to avoid silent policy mutation.
+actions = ["analyze", "suggest", "apply"]
+
+# Require explicit intent before policy files are changed.
+# Recommended: true
+apply_requires_explicit_confirmation = true
+
+# Apply remains experimental until the deterministic kernel and governance verification are stronger.
+# Recommended: "experimental"
+apply_stability = "experimental"
+
+reads = [".vibestart/state/*", "docs/vibe/governance.toml", "docs/vibe/macros.toml"]
+writes = ["docs/vibe/governance.toml", "docs/vibe/macros.toml"]
+entry_guard = "explicit_calibration_intent_present"
+transitions = ["analyze:suggest", "suggest:apply"]
+invariants = ["no_silent_policy_mutation", "apply_requires_explicit_confirmation"]

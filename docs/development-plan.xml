@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DevelopmentPlan VERSION="2.0.0">
+  
+  <ArchitectureNotes>
+    <objective>Define VIBE as a graph-first methodology and vibestart as its optional bootstrap/runtime product without collapsing methodology, runtime state, and policy tuning into one surface.</objective>
+    <non-goal>Do not implement the full vibestart deep integration layer in this planning pass.</non-goal>
+    <risk-1>Overfitting the framework to one agent shell or one product surface would break the agent-agnostic goal.</risk-1>
+    <risk-2>Allowing prose side-docs to become canonical would create a second knowledge system and accelerate drift.</risk-2>
+    <risk-3>Letting policy and runtime state mix would turn configuration into an unreadable operational dump.</risk-3>
+    <risk-4>Allowing implicit routing or projection semantics to remain heuristic would make the anti-drift claim non-reproducible across runtimes.</risk-4>
+    <risk-5>Using one sync action for both canonical reconciliation and operational cleanup would couple transactions with different safety properties.</risk-5>
+    <risk-6>Letting a GRACE compatibility shim silently become a new VIBE core source of truth would reintroduce artifact drift through boundary confusion.</risk-6>
+  </ArchitectureNotes>
+
+  <Modules>
+    <M-001 NAME="FrameworkIdentity" TYPE="CORE_LOGIC" LAYER="0" ORDER="1" STATUS="done">
+      <contract>
+        <purpose>Define VIBE positioning, principles, boundaries, and the relationship to vibestart.</purpose>
+        <inputs>
+          <param name="framework-values" type="session-decisions" />
+        </inputs>
+        <outputs>
+          <param name="identity-surface" type="requirements-and-decisions" />
+        </outputs>
+        <errors>
+          <error code="ERR_IDENTITY_DRIFT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-identity PURPOSE="Publish the stable VIBE and vibestart story." />
+      </interface>
+      <depends>none</depends>
+      <target>
+        <source>docs/requirements.xml</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][FrameworkIdentity]</log-prefix>
+        <critical-block>BLOCK_DEFINE_PRINCIPLES</critical-block>
+      </observability>
+      <verification-ref>V-M-001</verification-ref>
+      <notes>
+        <note-1>Must keep GRACE lineage in credits and compatibility, not in the primary value pitch.</note-1>
+        <note-2>docs/technology.xml may exist for GRACE compatibility, but it must not redefine the canonical VIBE core surfaces.</note-2>
+      </notes>
+    </M-001>
+
+    <M-002 NAME="KnowledgeOntology" TYPE="CORE_LOGIC" LAYER="0" ORDER="2" STATUS="in-progress">
+      <contract>
+        <purpose>Define the graph-first ontology and the semantic invariants that constrain projection into requirements, plan, verification, and decisions.</purpose>
+        <inputs>
+          <param name="knowledge-model-decisions" type="session-decisions" />
+        </inputs>
+        <outputs>
+          <param name="graph-and-projection-model" type="graph-and-projection-invariants" />
+        </outputs>
+        <errors>
+          <error code="ERR_ONTOLOGY_CONFLICT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-ontology PURPOSE="Specify node types, stages, edges, and the semantic invariants required for deterministic projection." />
+      </interface>
+      <depends>M-001</depends>
+      <target>
+        <source>docs/knowledge-graph.xml</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][KnowledgeOntology]</log-prefix>
+        <critical-block>BLOCK_DEFINE_PROJECTIONS</critical-block>
+      </observability>
+      <verification-ref>V-M-002</verification-ref>
+      <notes>
+        <note-1>knowledge-graph.xml must stay primary; requirements.xml is a cleaned projection, not the birthplace of ideas.</note-1>
+        <note-2>The ontology owns projection invariants and maturity semantics; the macro layer owns executable projection controls.</note-2>
+      </notes>
+    </M-002>
+
+    <M-003 NAME="MacroContracts" TYPE="CORE_LOGIC" LAYER="1" ORDER="1" STATUS="in-progress">
+      <contract>
+        <purpose>Define the public macro API as deterministic state machines with routing guards, executable projection controls, read/write sets, invariants, and the internal skill layer that realizes it.</purpose>
+        <inputs>
+          <param name="ontology" type="M-002" />
+          <param name="workflow-decisions" type="session-decisions" />
+        </inputs>
+        <outputs>
+          <param name="macro-contract-set" type="macro-state-machine-specification" />
+        </outputs>
+        <errors>
+          <error code="ERR_MACRO_AMBIGUITY" />
+        </errors>
+      </contract>
+      <interface>
+        <export-macroVocabulary PURPOSE="Expose discover, refine, deliver, fix, sync, resume, deploy, vibe, and calibrate semantics." />
+      </interface>
+      <depends>M-001, M-002</depends>
+      <target>
+        <source>docs/vibe/macros.toml</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][MacroContracts]</log-prefix>
+        <critical-block>BLOCK_DEFINE_MACRO_API</critical-block>
+      </observability>
+      <verification-ref>V-M-003</verification-ref>
+      <notes>
+        <note-1>Compatibility must be preserved at macro semantics and artifact discipline level, not at old command-name level.</note-1>
+        <note-2>Macro transitions, route selection, and executable projection controls must be formal contracts, not only narrative hints.</note-2>
+      </notes>
+    </M-003>
+
+    <M-004 NAME="GovernancePolicy" TYPE="CORE_LOGIC" LAYER="1" ORDER="2" STATUS="in-progress">
+      <contract>
+        <purpose>Define adaptive governance as a deterministic review-selection and sync-selection algebra with explicit calibration hooks.</purpose>
+        <inputs>
+          <param name="macro-api" type="M-003" />
+          <param name="artifact-surfaces" type="M-002" />
+        </inputs>
+        <outputs>
+          <param name="governance-policy" type="policy-surface" />
+        </outputs>
+        <errors>
+          <error code="ERR_POLICY_COLLISION" />
+        </errors>
+      </contract>
+      <interface>
+        <export-governance PURPOSE="Explain what signals exist and how project thresholds tune them." />
+      </interface>
+      <depends>M-001, M-002, M-003</depends>
+      <target>
+        <source>docs/vibe/governance.toml</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][GovernancePolicy]</log-prefix>
+        <critical-block>BLOCK_ESCALATE_REVIEW</critical-block>
+      </observability>
+      <verification-ref>V-M-004</verification-ref>
+      <notes>
+        <note-1>Time is explicitly not a primary governance signal.</note-1>
+        <note-2>Governance must define precedence, tie-breaking, and unknown-signal behavior so the same observable state yields the same review floor.</note-2>
+        <note-3>sync must separate reconcile from cleanup and must never mutate unknown artifacts during cleanup.</note-3>
+        <note-4>fix must support review-after-fix as an adaptive post-repair control hook before the repair is considered closed.</note-4>
+      </notes>
+    </M-004>
+
+    <M-005 NAME="ConfigurationSurface" TYPE="UTILITY" LAYER="1" ORDER="3" STATUS="in-progress">
+      <contract>
+        <purpose>Define the boundary between vibe.toml, docs/vibe/*.toml, and .vibestart/state/*, including normative defaults and experimental surfaces.</purpose>
+        <inputs>
+          <param name="policy-decisions" type="session-decisions" />
+        </inputs>
+        <outputs>
+          <param name="config-boundary" type="manifest-and-policy-layout" />
+        </outputs>
+        <errors>
+          <error code="ERR_CONFIG_SPILL" />
+        </errors>
+      </contract>
+      <interface>
+        <export-configLayout PURPOSE="Keep active config readable and runtime exhaust isolated." />
+      </interface>
+      <depends>M-001, M-002</depends>
+      <target>
+        <source>vibe.toml</source>
+        <tests>docs/vibe/governance.toml, docs/vibe/macros.toml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][ConfigurationSurface]</log-prefix>
+        <critical-block>BLOCK_DEFINE_CONFIG_BOUNDARY</critical-block>
+      </observability>
+      <verification-ref>V-M-005</verification-ref>
+      <notes>
+        <note-1>Config must remain explanatory and heavily commented.</note-1>
+        <note-2>guided and single remain normative defaults; auto, multi, and calibrate apply are controlled experimental surfaces until stronger guards exist.</note-2>
+        <note-3>docs/technology.xml is allowed as a GRACE compatibility shim and remains non-canonical for VIBE core semantics.</note-3>
+      </notes>
+    </M-005>
+
+    <M-006 NAME="BootstrapProfiles" TYPE="ENTRY_POINT" LAYER="2" ORDER="1" STATUS="done">
+      <contract>
+        <purpose>Map the vibestart product to explicit core and deep bootstrap profiles, onboarding flow, and a deterministic first-run contract without making vibestart mandatory for VIBE adoption.</purpose>
+        <inputs>
+          <param name="framework-surface" type="M-001" />
+          <param name="config-surface" type="M-005" />
+          <param name="governance-surface" type="M-004" />
+        </inputs>
+        <outputs>
+          <param name="bootstrap-profile-model" type="product-profile-contract" />
+        </outputs>
+        <errors>
+          <error code="ERR_PROFILE_CONFUSION" />
+          <error code="ERR_FIRST_RUN_AMBIGUITY" />
+        </errors>
+      </contract>
+      <interface>
+        <export-bootstrapProfiles PURPOSE="Expose vibestart core and vibestart deep as explicit setup choices." />
+        <export-firstRunContract PURPOSE="Explain install results, defaults, optionals, and next-step behavior deterministically." />
+      </interface>
+      <depends>M-003, M-004, M-005</depends>
+      <target>
+        <source>docs/vibe/vibestart-contract.md</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][BootstrapProfiles]</log-prefix>
+        <critical-block>BLOCK_SELECT_PROFILE</critical-block>
+      </observability>
+      <verification-ref>V-M-006</verification-ref>
+      <notes>
+        <note-1>core and deep are product profiles, not separate methodologies.</note-1>
+        <note-2>The first-run contract must say what was installed, what defaults are active, what remains optional, and how plain requests will be routed.</note-2>
+        <note-3>Contract markup and structural labels stay in English even when surrounding explanatory prose may vary by locale.</note-3>
+      </notes>
+    </M-006>
+  </Modules>
+
+  <DataFlow>
+    <DF-001 NAME="RawIntentToKnowledge" TRIGGER="discover">
+      <step-1>Capture a new or changed idea as an intent, feature, or work node in the knowledge graph.</step-1>
+      <step-2>Link the new node to existing product and project knowledge.</step-2>
+      <step-3>Promote the node from captured toward clarified or designed when the context is sufficient.</step-3>
+      <evidence>Updated graph node state plus a deterministic route trace that explains why the next step is refine, deliver, or sync.</evidence>
+    </DF-001>
+
+    <DF-002 NAME="KnowledgeToExecution" TRIGGER="refine">
+      <step-1>Read clarified or designed nodes from the knowledge graph.</step-1>
+      <step-2>Project stable intent into requirements and executable work into the development and verification plans through deterministic and idempotent projection rules.</step-2>
+      <step-3>Link modules, verification refs, decisions, and deploy concerns back into the graph.</step-3>
+      <evidence>Projection decisions, plan modules, implementation phases, and verification refs linked back to graph nodes.</evidence>
+    </DF-002>
+
+    <DF-003 NAME="ExecutionToCoherence" TRIGGER="deliver | fix">
+      <step-1>Implement or repair the approved scope under macro and governance rules.</step-1>
+      <step-2>Run verification and the selected review level.</step-2>
+      <step-3>Run sync-reconcile when the policy detects or anticipates drift, then run sync-cleanup only for VIBE-owned operational exhaust.</step-3>
+      <evidence>Code, verification evidence, review result, reconcile deltas, and optional cleanup report.</evidence>
+    </DF-003>
+
+    <DF-004 NAME="BootstrapToAdoption" TRIGGER="vibestart --core | vibestart --deep">
+      <step-1>Explicitly select a bootstrap profile.</step-1>
+      <step-2>Install canonical VIBE artifacts and policy surfaces.</step-2>
+      <step-3>Apply profile-specific product behavior without changing framework semantics.</step-3>
+      <step-4>Emit a deterministic first-run contract that explains the installed surfaces, defaults, optionals, and next step.</step-4>
+      <evidence>Profile selection, generated files, active defaults, optional surfaces, and an onboarding/first-run trace.</evidence>
+    </DF-004>
+  </DataFlow>
+
+  <ImplementationOrder>
+    <Phase-1 name="Framework Foundation" status="in-progress">
+      <goal>Lock the identity, ontology, and configuration boundaries before deeper product work begins.</goal>
+      <step-1 module="M-001" status="done" verification="V-M-001">Define framework identity, principles, and value boundaries.</step-1>
+      <step-2 module="M-002" status="in-progress" verification="V-M-002">Define the graph-first ontology and artifact projection algebra.</step-2>
+      <step-3 module="M-005" status="in-progress" verification="V-M-005">Define the manifest and policy boundary between root config, docs config, and runtime state.</step-3>
+    </Phase-1>
+
+    <Phase-2 name="Workflow Language" status="in-progress">
+      <goal>Lock the public macro API and the first governance semantics.</goal>
+      <step-1 module="M-003" status="in-progress" verification="V-M-003">Define macro contracts, routing guards, and state-machine transitions.</step-1>
+      <step-2 module="M-004" status="in-progress" verification="V-M-004">Define adaptive governance algebra, sync split, thresholds, and calibration hooks.</step-2>
+    </Phase-2>
+
+    <Phase-3 name="Bootstrap Product Mapping" status="done">
+      <goal>Map the framework cleanly onto vibestart core and deep profiles.</goal>
+      <step-1 module="M-006" status="done" verification="V-M-006">Translate the framework surfaces into an explicit bootstrap product contract.</step-1>
+    </Phase-3>
+  </ImplementationOrder>
+
+  <ExecutionPolicy>
+    <default-profile>guided-single</default-profile>
+    <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
+    <experimental-guard>Experimental surfaces are allowed but non-normative until deterministic guards and stronger verification are in place.</experimental-guard>
+    <controller-owns>docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
+    <worker-owns>Scoped implementation surfaces inside the approved write scope; no worker owns the canonical shared artifacts globally.</worker-owns>
+  </ExecutionPolicy>
+  
+</DevelopmentPlan>

@@ -1,0 +1,91 @@
+# Root VIBE manifest for this repository.
+# This file stores the active project-level VIBE configuration.
+# Keep this file short and stable. Put detailed policy tuning into docs/vibe/*.toml.
+
+# Manifest schema version.
+# Recommended: bump only for breaking config changes.
+version = "1"
+
+[project]
+# Human-readable project name.
+# Recommended: stable repository or product name.
+name = "vibe-framework"
+
+# Short annotation used in status, onboarding, and generated surfaces.
+# Recommended: one sentence describing the project scope.
+annotation = "Design workspace for the VIBE framework and the vibestart bootstrap/runtime product."
+
+# Active vibestart bootstrap profile for this repository.
+# Allowed: "core" | "deep"
+# Recommended: "core" while the methodology and product surface are still evolving.
+bootstrap_profile = "core"
+
+[defaults]
+# When true, plain engineering requests are routed through the VIBE macro layer
+# as if the user had invoked the top-level `vibe` macro explicitly.
+# Recommended: true
+implicit_vibe = true
+
+# Default autonomy mode for normal execution.
+# Allowed: "guided" | "auto"
+# Recommended: "guided" for framework and policy work.
+autonomy = "guided"
+
+# Default agent mode for normal execution.
+# Allowed: "single" | "multi"
+# Recommended: "single" until the plan shape and environment clearly support parallel work.
+agents = "single"
+
+[stability]
+# Normative framework default for autonomy.
+# Recommended: "guided"
+normative_autonomy = "guided"
+
+# Normative framework default for agent count.
+# Recommended: "single"
+normative_agents = "single"
+
+# Experimental but permitted surfaces while the deterministic kernel is still being hardened.
+# Recommended: keep explicit to avoid silent autonomy inflation.
+experimental = ["auto", "multi", "calibrate-apply"]
+
+[profiles]
+# Active governance profile name.
+# Recommended: use a small set of memorable profiles and tune details in docs/vibe/governance.toml.
+governance = "balanced"
+
+# Active macro behavior profile name.
+# Recommended: "default" unless the project adopts custom macro semantics.
+macros = "default"
+
+[features]
+# Primary memory surface for the project.
+# Allowed: "xml" | "db"
+# Recommended: "xml" for methodology-first work; switch to "db" only when long-lived memory is needed.
+memory = "xml"
+
+# Enables optional external docs/tool integrations.
+# Recommended: false until the core framework surface is stable.
+docs_integrations = false
+
+# Enables deployment planning as a first-class capability in the project.
+# Recommended: true because deploy is part of the VIBE macro vocabulary.
+deployment = true
+
+# Enables policy calibration hooks inside the methodology.
+# Recommended: true
+calibration_hooks = true
+
+[policy]
+# Detailed governance policy file.
+# Recommended: keep the active project policy in docs/vibe/governance.toml.
+governance_file = "docs/vibe/governance.toml"
+
+# Detailed macro behavior file.
+# Recommended: keep macro behavior and extension rules in docs/vibe/macros.toml.
+macros_file = "docs/vibe/macros.toml"
+
+[overrides]
+# Optional additional policy fragments, loaded after the primary policy files.
+# Recommended: leave empty unless a repository-specific exception is truly needed.
+policy_files = []

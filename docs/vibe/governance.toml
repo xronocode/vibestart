@@ -1,0 +1,308 @@
+# VIBE governance policy for this repository.
+# This file defines how review, sync, and risk escalation behave.
+# The standard defines which signals exist. This file tunes their thresholds.
+
+[policy]
+# Emit governance recommendations before a macro proceeds.
+# Recommended: true
+preflight_recommendations = true
+
+# Allow the system to trigger sync automatically when the selected policy requires it.
+# Recommended: true
+auto_sync = true
+
+# In guided mode, explain why a review or sync recommendation appeared.
+# Recommended: true
+explain_recommendations = true
+
+# Treat elapsed wall-clock time as a first-class governance signal.
+# Allowed: true | false
+# Recommended: false. VIBE governs by risk and evidence, not by ritual and elapsed time.
+use_time_as_primary_signal = false
+
+[decision_function]
+# Use an explicit and reproducible selection model for review and sync decisions.
+# Allowed: "deterministic" | "heuristic"
+# Recommended: "deterministic"
+mode = "deterministic"
+
+# Ordered precedence for deciding the minimum review floor before scale bands are applied.
+# Recommended: keep this stable so compliant runtimes converge on the same decision.
+precedence = ["security_change", "artifact_drift", "contract_or_api_change", "dependency_or_deploy_change", "multi_agent_complexity", "scale_thresholds", "review_streak"]
+
+# How to break ties when two rules suggest different review levels.
+# Allowed: "escalate" | "keep-lower"
+# Recommended: "escalate"
+tie_break = "escalate"
+
+# What to do when a runtime observes a signal the policy does not know how to classify.
+# Allowed: "escalate" | "ignore"
+# Recommended: "escalate"
+unknown_signal_policy = "escalate"
+
+# Deterministic order for scale comparison when multiple scale signals exist.
+# Recommended: "modules_then_files_then_lines"
+scale_driver = "modules_then_files_then_lines"
+
+[signals]
+# Track how many files changed since the last relevant review.
+# Recommended: true
+files_changed = true
+
+# Track how many modules were touched since the last relevant review.
+# Recommended: true
+modules_touched = true
+
+# Track how many lines changed. This is secondary to module and file scope.
+# Recommended: true
+lines_changed = true
+
+# Escalate policy when public contracts, APIs, or schemas change.
+# Recommended: true
+contract_or_api_change = true
+
+# Escalate policy when a change is explicitly security-sensitive.
+# Recommended: true
+security_change = true
+
+# Escalate policy when dependency shape or deployment shape changes.
+# Recommended: true
+dependency_or_deploy_change = true
+
+# Track whether work happened without corresponding tests, traces, or review coverage.
+# Recommended: true
+verification_gap = true
+
+# Track whether multi-agent waves or overlapping write scopes increased coordination risk.
+# Recommended: true
+multi_agent_complexity = true
+
+# Track whether artifacts and code drifted apart.
+# Recommended: true
+artifact_drift = true
+
+[review.thresholds]
+# Maximum changed files still treated as a local quick-review change.
+# Recommended: 5
+# Raise for very fragmented repos. Lower if you want earlier escalation.
+quick_max_files = 5
+
+# Maximum touched modules still treated as a quick-review change.
+# Recommended: 1
+quick_max_modules = 1
+
+# Maximum changed files still treated as a scoped review.
+# Recommended: 15
+scoped_max_files = 15
+
+# Maximum touched modules still treated as a scoped review.
+# Recommended: 3
+scoped_max_modules = 3
+
+# Minimum touched modules that should trigger a full review by scale alone.
+# Recommended: 4
+full_min_modules = 4
+
+# Consecutive quick reviews allowed before the next change should escalate to scoped.
+# Recommended: 3
+quick_streak_before_scoped = 3
+
+# Consecutive scoped reviews allowed before the next broad change should escalate to full.
+# Recommended: 2
+scoped_streak_before_full = 2
+
+[review.minimums]
+# Minimum review level when a contract, public API, or schema changes.
+# Allowed: "quick" | "scoped" | "full"
+# Recommended: "scoped"
+contract_change_min_review = "scoped"
+
+# Minimum review level when deployment behavior changes.
+# Recommended: "scoped"
+deploy_change_min_review = "scoped"
+
+# Minimum review level for security-sensitive or data-flow-sensitive changes.
+# Recommended: "full"
+security_change_min_review = "full"
+
+# Minimum review level after a completed multi-agent wave.
+# Recommended: "scoped"
+multi_agent_wave_min_review = "scoped"
+
+[review.after_fix]
+# Enable an explicit review-after-fix hook before a repair is considered closed.
+# Recommended: true
+enabled = true
+
+# Baseline review level after fix when no higher-risk signal dominates.
+# Allowed: "quick" | "scoped" | "full"
+# Recommended: "quick"
+baseline = "quick"
+
+# Reuse the same governance engine for review-after-fix escalation instead of inventing a separate rule tree.
+# Recommended: true
+use_same_risk_engine = true
+
+# Require the selected review-after-fix level before a fix is marked closed.
+# Recommended: true
+required_before_close = true
+
+[risk_scoring]
+# Enable explicit risk scoring as an explainability aid for governance traces.
+# Recommended: true
+enabled = true
+
+# Relative influence of changed file count on the computed risk score.
+# Recommended: 1
+files_weight = 1
+
+# Relative influence of touched module count on the computed risk score.
+# Recommended: 2
+modules_weight = 2
+
+# Relative influence of line churn on the computed risk score.
+# Recommended: 0 because line count is secondary to structural signals.
+lines_weight = 0
+
+# Relative influence of contract or API changes.
+# Recommended: 3
+contract_or_api_change_weight = 3
+
+# Relative influence of security-sensitive changes.
+# Recommended: 4 because these changes bypass the normal quick/scoped optimism.
+security_change_weight = 4
+
+# Relative influence of dependency or deploy-shape changes.
+# Recommended: 3
+dependency_or_deploy_change_weight = 3
+
+# Relative influence of verification gaps.
+# Recommended: 3
+verification_gap_weight = 3
+
+# Relative influence of multi-agent coordination complexity.
+# Recommended: 2
+multi_agent_complexity_weight = 2
+
+# Relative influence of artifact drift.
+# Recommended: 4 because drift directly threatens predictability.
+artifact_drift_weight = 4
+
+# Score band ceiling still considered quick by score alone.
+# Recommended: 3
+quick_max_score = 3
+
+# Score band ceiling still considered scoped by score alone.
+# Recommended: 8
+scoped_max_score = 8
+
+# Score band minimum considered full by score alone.
+# Recommended: 9
+full_min_score = 9
+
+[sync]
+# sync is modeled as two phases: canonical reconcile first, owned-only cleanup second.
+# Recommended: keep this explicit to avoid mixing two safety domains.
+mode = "two-phase"
+
+# Ordered phases inside a sync execution.
+# Recommended: ["reconcile", "cleanup"]
+phases = ["reconcile", "cleanup"]
+
+# Reconcile must run before cleanup when both are selected.
+# Recommended: true
+canonical_phase_first = true
+
+# Unknown files must never be auto-deleted or moved by cleanup.
+# Allowed: "report-only" | "ignore"
+# Recommended: "report-only"
+unknown_artifacts_policy = "report-only"
+
+[sync.reconcile]
+# Trigger reconcile after deliver when code and artifacts are both in play.
+# Recommended: true
+after_deliver = true
+
+# Trigger reconcile after fix when the repair may have changed structure or verification.
+# Recommended: true
+after_fix = true
+
+# Trigger reconcile after each completed multi-agent wave.
+# Recommended: true
+after_multi_agent_wave = true
+
+# Require reconcile before deploy.
+# Recommended: true
+before_deploy = true
+
+# Require reconcile before a full review when drift is suspected.
+# Recommended: true
+before_full_review_when_drift_detected = true
+
+# Trigger reconcile when a new or deleted module appears.
+# Recommended: true
+on_module_add_or_delete = true
+
+# Trigger reconcile when a dependency edge changes materially.
+# Recommended: true
+on_dependency_edge_change = true
+
+[sync.cleanup]
+# Allow cleanup after reconcile for VIBE-owned operational exhaust.
+# Recommended: true
+enabled = true
+
+# Cleanup must only touch artifacts that VIBE explicitly owns.
+# Recommended: true
+owned_artifacts_only = true
+
+# Cleanup must never mutate canonical docs surfaces.
+# Recommended: true
+canonical_docs_read_only = true
+
+# Run cleanup only when VIBE-owned operational exhaust is actually present.
+# Recommended: true
+run_only_when_owned_exhaust_present = true
+
+[drift]
+# Check graph, plan, and code for structural disagreement.
+# Recommended: true
+check_graph_plan_code = true
+
+# Check verification plan against actual tests and traces.
+# Recommended: true
+check_verification_projection = true
+
+# Check requirements projections against the current graph state.
+# Recommended: true
+check_requirements_projection = true
+
+[calibration]
+# Allow analyze mode for governance calibration.
+# Recommended: true
+allow_analyze = true
+
+# Allow suggest mode for governance calibration.
+# Recommended: true
+allow_suggest = true
+
+# Allow apply mode. Even when true, apply should still require explicit user intent.
+# Recommended: false until the deterministic kernel and stronger verification are mature.
+allow_apply = false
+
+[recommendations]
+# Minimal token that accepts the currently recommended bundle in guided mode.
+# Recommended: "v"
+confirmation_token = "v"
+
+# Additional layout-safe aliases for the confirmation token.
+# Recommended: include "м" as the Russian-layout equivalent of "v".
+confirmation_aliases = ["м"]
+
+# Treat the recommendation confirmation token case-insensitively.
+# Recommended: false
+confirmation_case_sensitive = false
+
+# Confirmation accepts the current recommendation bundle only, not arbitrary hidden actions.
+# Recommended: "accept-current-bundle"
+confirmation_semantics = "accept-current-bundle"

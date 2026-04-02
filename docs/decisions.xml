@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Decisions VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>VIBE / vibestart</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Decisions>
+    <D-001 DATE="2026-04-02" STATUS="approved">
+      <summary>Position VIBE as the methodology and vibestart as the optional bootstrap/runtime product.</summary>
+      <context>
+        <problem>The product story risked collapsing methodology and bootstrap into one indistinct system.</problem>
+        <constraints>VIBE must stay agent-agnostic, and vibestart must help rather than become a mandatory prerequisite.</constraints>
+      </context>
+      <options>
+        <option-1 name="Single indistinct product">
+          <description>Use one name and one surface for both the methodology and the bootstrap product.</description>
+          <pros>Simpler naming at first glance.</pros>
+          <cons>Blurs boundaries and makes adoption look more mandatory than intended.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Separate methodology and product">
+          <description>Treat VIBE as the framework and vibestart as the optional product that installs and operates it.</description>
+          <pros>Preserves agent-agnostic adoption and creates a cleaner product boundary.</pros>
+          <cons>Requires more precise documentation.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Separate methodology and product</chosen>
+        <rationale>It protects the framework identity while still allowing vibestart to accelerate adoption.</rationale>
+      </decision>
+      <impacts>
+        <module>M-001</module>
+        <module>M-006</module>
+      </impacts>
+      <consequences>
+        <positive>Users can adopt VIBE directly or via vibestart.</positive>
+        <negative>Documentation must explain the split clearly.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-001" />
+        <ref doc="requirements.xml" id="UC-002" />
+        <ref doc="development-plan.xml" id="M-001" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Foundational boundary for all subsequent work.</notes>
+      </review>
+    </D-001>
+
+    <D-002 DATE="2026-04-02" STATUS="approved">
+      <summary>Use knowledge-graph.xml as the primary knowledge spine and reject docs/specs as a mandatory side-bridge.</summary>
+      <context>
+        <problem>Separate narrative specs would create another knowledge surface that agents and humans would need to keep synchronized.</problem>
+        <constraints>The system must remain graph-first, drift-resistant, and low-noise.</constraints>
+      </context>
+      <options>
+        <option-1 name="Graph plus mandatory side-doc specs">
+          <description>Keep a human-readable docs/specs bridge between ideas and the canonical XML surfaces.</description>
+          <pros>Readable for humans.</pros>
+          <cons>Creates a third place to update and accelerates drift.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Graph-first canonical model">
+          <description>Capture ideas first in the graph and project them into requirements, plan, verification, and decisions.</description>
+          <pros>One semantic spine and fewer synchronization burdens.</pros>
+          <cons>Requires stronger ontology design.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Graph-first canonical model</chosen>
+        <rationale>Ideas are already project knowledge; they should enter the knowledge graph immediately and evolve there.</rationale>
+      </decision>
+      <impacts>
+        <module>M-002</module>
+      </impacts>
+      <consequences>
+        <positive>requirements.xml stays cleaner and more stable.</positive>
+        <negative>The graph ontology must carry more semantic load.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-004" />
+        <ref doc="development-plan.xml" id="M-002" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Central architectural decision for the framework.</notes>
+      </review>
+    </D-002>
+
+    <D-003 DATE="2026-04-02" STATUS="approved">
+      <summary>Keep active manifest in vibe.toml, detailed policy in docs/vibe/*.toml, and runtime exhaust in .vibestart/state.</summary>
+      <context>
+        <problem>Putting active config, detailed policy, and runtime state in one place would make the system unreadable and hard to review.</problem>
+        <constraints>Configuration must be inspectable, heavily commented, and agent-agnostic where possible.</constraints>
+      </context>
+      <options>
+        <option-1 name="One huge root manifest">
+          <description>Put all policy, thresholds, macros, and runtime knobs into vibe.toml.</description>
+          <pros>Single file.</pros>
+          <cons>Becomes a noisy dump and hard to maintain.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Layered config boundary">
+          <description>Keep root manifest small, detailed policy in docs/vibe, and runtime state isolated under .vibestart/state.</description>
+          <pros>Readable and reviewable configuration without mixing in operational noise.</pros>
+          <cons>Requires careful documentation of where each setting belongs.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Layered config boundary</chosen>
+        <rationale>This keeps config as documentation while protecting the runtime contour from becoming canonical.</rationale>
+      </decision>
+      <impacts>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>Configuration stays readable and operational noise stays isolated.</positive>
+        <negative>Maintainers must enforce the boundary consistently.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-005" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Pairs directly with the Config as Documentation principle.</notes>
+      </review>
+    </D-003>
+
+    <D-004 DATE="2026-04-02" STATUS="approved">
+      <summary>Define macros as the public API of VIBE and skills as the lower-level implementation operators.</summary>
+      <context>
+        <problem>Without a stable macro layer, the methodology would be hard to operate and hard to review as an engineering system.</problem>
+        <constraints>Compatibility must be semantic, not just command-name preservation.</constraints>
+      </context>
+      <options>
+        <option-1 name="Expose old skills directly">
+          <description>Keep legacy skills as the primary public language.</description>
+          <pros>Familiar to previous users.</pros>
+          <cons>Leaks implementation details and preserves old conceptual fragmentation.</cons>
+          <score>5/10</score>
+        </option-1>
+        <option-2 name="Macro-first public API">
+          <description>Use discover, refine, deliver, fix, sync, resume, deploy, vibe, and calibrate as the stable public surface.</description>
+          <pros>Cleaner orchestration language and better intent-level UX.</pros>
+          <cons>Requires a formal mapping from prior systems.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Macro-first public API</chosen>
+        <rationale>Macros are the human-facing contracts; skills remain implementation units that may evolve.</rationale>
+      </decision>
+      <impacts>
+        <module>M-003</module>
+      </impacts>
+      <consequences>
+        <positive>The framework gets a stable workflow language.</positive>
+        <negative>Compatibility must be documented through lineage and mapping.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-003" />
+        <ref doc="development-plan.xml" id="M-003" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Needed to make the methodology operable as a real system.</notes>
+      </review>
+    </D-004>
+
+    <D-005 DATE="2026-04-02" STATUS="approved">
+      <summary>Make implicit vibe enabled by default and keep guided/single as the safer starting defaults.</summary>
+      <context>
+        <problem>Users should not have to memorize macro prefixes just to get the methodology benefits, but the system still needs safe execution defaults.</problem>
+        <constraints>Implicit routing must not remove explicit user control.</constraints>
+      </context>
+      <options>
+        <option-1 name="Explicit-only routing">
+          <description>Require explicit macro invocations for most interactions.</description>
+          <pros>Clearer command boundaries.</pros>
+          <cons>Higher cognitive overhead and weaker default UX.</cons>
+          <score>5/10</score>
+        </option-1>
+        <option-2 name="Implicit vibe with safe defaults">
+          <description>Route normal engineering requests through vibe while keeping guided and single as the default execution posture.</description>
+          <pros>Strong default UX with explicit override paths.</pros>
+          <cons>Requires careful route explanation in guided mode.</cons>
+          <score>8/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Implicit vibe with safe defaults</chosen>
+        <rationale>This keeps the system easy to use while preserving a reviewable and explainable execution path.</rationale>
+      </decision>
+      <impacts>
+        <module>M-003</module>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>Users get VIBE behavior by default instead of manually assembling it.</positive>
+        <negative>Route selection must be transparent in guided mode.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-003" />
+        <ref doc="development-plan.xml" id="M-003" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Supports the mixed-audience product goal without dumbing down the framework.</notes>
+      </review>
+    </D-005>
+
+    <D-006 DATE="2026-04-02" STATUS="approved">
+      <summary>Base adaptive governance on risk and evidence, not on elapsed time, and expose calibration through an explicit expert macro.</summary>
+      <context>
+        <problem>Agentic work compresses time so aggressively that time-based ritual is a weak proxy for risk.</problem>
+        <constraints>Policy must stay explainable and tunable through configuration.</constraints>
+      </context>
+      <options>
+        <option-1 name="Time-heavy governance">
+          <description>Use elapsed time as a major trigger for review and sync.</description>
+          <pros>Simple to explain.</pros>
+          <cons>Misreads modern agentic throughput and creates bad rituals.</cons>
+          <score>2/10</score>
+        </option-1>
+        <option-2 name="Risk-and-evidence governance with calibration">
+          <description>Use scope, structural change, drift, verification gaps, and review history as the main signals, with explicit policy calibration.</description>
+          <pros>Better aligned with real engineering risk and easier to tune per project.</pros>
+          <cons>Requires more thoughtful policy design.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Risk-and-evidence governance with calibration</chosen>
+        <rationale>It matches the reality of agentic work and keeps governance inspectable instead of mystical.</rationale>
+      </decision>
+      <impacts>
+        <module>M-004</module>
+      </impacts>
+      <consequences>
+        <positive>Review and sync become better matched to real risk.</positive>
+        <negative>Thresholds need real-world tuning over time.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-005" />
+        <ref doc="development-plan.xml" id="M-004" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Calibration is allowed only through explicit analyze, suggest, and apply flows.</notes>
+      </review>
+    </D-006>
+
+    <D-007 DATE="2026-04-02" STATUS="approved">
+      <summary>Prioritize a deterministic kernel before expanding autonomous runtime behavior.</summary>
+      <context>
+        <problem>The draft promised anti-drift and predictability, but routing, projection, and governance semantics were still partly heuristic.</problem>
+        <constraints>The framework must reduce methodological entropy before it scales autonomy.</constraints>
+      </context>
+      <options>
+        <option-1 name="Expand runtime surfaces first">
+          <description>Keep broad automation paths and harden the semantics later.</description>
+          <pros>Faster visible product progress.</pros>
+          <cons>Lets hidden control drift accumulate in the core.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Deterministic kernel first">
+          <description>Lock projection, routing, and governance algebra before treating aggressive automation as normative.</description>
+          <pros>Protects the anti-drift and predictability claims at the architectural root.</pros>
+          <cons>Delays some runtime convenience paths.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Deterministic kernel first</chosen>
+        <rationale>VIBE should not claim control-theoretic stability while leaving its core transitions heuristic.</rationale>
+      </decision>
+      <impacts>
+        <module>M-002</module>
+        <module>M-003</module>
+        <module>M-004</module>
+      </impacts>
+      <consequences>
+        <positive>The framework core becomes reproducible across compliant runtimes.</positive>
+        <negative>Some autonomous flows remain intentionally conservative for longer.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-004" />
+        <ref doc="development-plan.xml" id="M-002" />
+        <ref doc="development-plan.xml" id="M-003" />
+        <ref doc="development-plan.xml" id="M-004" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Adopted after the first drift-focused audit of the draft.</notes>
+      </review>
+    </D-007>
+
+    <D-008 DATE="2026-04-02" STATUS="approved">
+      <summary>Formalize projection and routing as explicit contracts with guards, precedence, and conflict policy.</summary>
+      <context>
+        <problem>Projection and route selection were explained narratively but not specified strongly enough for deterministic replay.</problem>
+        <constraints>Graph-first continuity and implicit vibe must stay explainable.</constraints>
+      </context>
+      <options>
+        <option-1 name="Narrative semantics only">
+          <description>Leave projection and routing mostly descriptive and trust runtime implementations to align.</description>
+          <pros>Lower documentation overhead.</pros>
+          <cons>High risk of shell-specific drift and inconsistent control flow.</cons>
+          <score>2/10</score>
+        </option-1>
+        <option-2 name="Formal control contracts">
+          <description>Define deterministic routing guards, projection entry stages, idempotence, and conflict precedence.</description>
+          <pros>Improves predictability, interoperability, and reviewability.</pros>
+          <cons>Requires more explicit configuration and verification.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Formal control contracts</chosen>
+        <rationale>Graph-first systems drift unless the control edges between artifacts and macros are explicit.</rationale>
+      </decision>
+      <impacts>
+        <module>M-002</module>
+        <module>M-003</module>
+      </impacts>
+      <consequences>
+        <positive>Projection and routing become reproducible and testable.</positive>
+        <negative>The macro/config surface becomes more formal and therefore more verbose.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-002" />
+        <ref doc="development-plan.xml" id="M-003" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Necessary to keep implicit vibe from becoming hidden control flow.</notes>
+      </review>
+    </D-008>
+
+    <D-009 DATE="2026-04-02" STATUS="approved">
+      <summary>Split sync into canonical reconcile and owned-only cleanup phases.</summary>
+      <context>
+        <problem>One overloaded sync operation would mix canonical mutation and housekeeping with different safety requirements.</problem>
+        <constraints>sync must remain able to reduce drift without silently deleting or mutating unknown artifacts.</constraints>
+      </context>
+      <options>
+        <option-1 name="Single combined sync">
+          <description>Use one sync macro to reconcile artifacts and clean operational clutter in one undifferentiated step.</description>
+          <pros>Simple surface name.</pros>
+          <cons>High ambiguity, weaker safety model, and harder verification.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Two-phase sync">
+          <description>Run reconcile first for canonical surfaces, then optional cleanup only for VIBE-owned operational artifacts.</description>
+          <pros>Clearer invariants, safer cleanup, and better drift analysis.</pros>
+          <cons>Requires more explicit policy and trace structure.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Two-phase sync</chosen>
+        <rationale>Canonical correction and operational cleanup are not the same transaction and should not share the same safety assumptions.</rationale>
+      </decision>
+      <impacts>
+        <module>M-004</module>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>sync becomes safer and easier to reason about.</positive>
+        <negative>The policy surface must now describe both phases explicitly.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-004" />
+        <ref doc="development-plan.xml" id="M-004" />
+        <ref doc="development-plan.xml" id="M-005" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Applies both to drift control and to cleanup of operational exhaust.</notes>
+      </review>
+    </D-009>
+
+    <D-010 DATE="2026-04-02" STATUS="approved">
+      <summary>Keep guided and single as normative defaults; treat auto, multi, and calibrate apply as experimental until guards mature.</summary>
+      <context>
+        <problem>The draft already exposed aggressive runtime surfaces before the deterministic kernel and verification model were fully defined.</problem>
+        <constraints>Experimental does not mean forbidden, but it must not masquerade as the safe baseline.</constraints>
+      </context>
+      <options>
+        <option-1 name="Normative autonomy by ambition">
+          <description>Default the most convenient macros to auto and rely on later governance hardening.</description>
+          <pros>Faster hands-free UX.</pros>
+          <cons>Autonomy outpaces proof of safety and increases hidden drift risk.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Conservative normative defaults">
+          <description>Keep guided/single as the baseline and mark auto, multi, and policy mutation as experimental until guarded.</description>
+          <pros>Matches the stated emphasis on predictability and contract-first control.</pros>
+          <cons>Some users will perceive the framework as more conservative at first.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Conservative normative defaults</chosen>
+        <rationale>Normative defaults should represent the safest proven operating posture, not the most ambitious future posture.</rationale>
+      </decision>
+      <impacts>
+        <module>M-003</module>
+        <module>M-004</module>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>Framework promises and baseline behavior stay aligned.</positive>
+        <negative>Auto and multi remain opt-in or profile-specific until the kernel matures.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-003" />
+        <ref doc="requirements.xml" id="UC-005" />
+        <ref doc="development-plan.xml" id="M-003" />
+        <ref doc="development-plan.xml" id="M-005" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Experimental runtime paths remain allowed, but not normative.</notes>
+      </review>
+    </D-010>
+
+    <D-011 DATE="2026-04-02" STATUS="approved">
+      <summary>Define vibestart core and deep as product profiles over one methodology.</summary>
+      <context>
+        <problem>Profile naming could easily drift into a false impression that core and deep are separate framework variants.</problem>
+        <constraints>VIBE must remain one methodology, while vibestart can expose more than one product depth.</constraints>
+      </context>
+      <options>
+        <option-1 name="Profiles as methodology variants">
+          <description>Treat core and deep as different framework modes with distinct semantics.</description>
+          <pros>Sharper segmentation language.</pros>
+          <cons>Breaks methodological coherence and confuses migration.</cons>
+          <score>2/10</score>
+        </option-1>
+        <option-2 name="Profiles as product depth">
+          <description>Treat core and deep as installation and operating-depth profiles over one VIBE methodology.</description>
+          <pros>Preserves one framework while still allowing different product surfaces.</pros>
+          <cons>Requires careful product-contract wording.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Profiles as product depth</chosen>
+        <rationale>It keeps framework semantics stable while allowing vibestart to scale from minimal to richer setup.</rationale>
+      </decision>
+      <impacts>
+        <module>M-006</module>
+      </impacts>
+      <consequences>
+        <positive>Migration and documentation stay cleaner.</positive>
+        <negative>Product docs must explain the difference between methodology and profile depth clearly.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-002" />
+        <ref doc="development-plan.xml" id="M-006" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Locks the product segmentation without splitting the methodology.</notes>
+      </review>
+    </D-011>
+
+    <D-012 DATE="2026-04-02" STATUS="approved">
+      <summary>Require a deterministic first-run contract for vibestart.</summary>
+      <context>
+        <problem>Without explicit onboarding and first-run behavior, the product would reintroduce hidden defaults and startup ambiguity.</problem>
+        <constraints>The first-run contract must explain the installed surfaces, defaults, optionals, and next-step behavior.</constraints>
+      </context>
+      <options>
+        <option-1 name="Minimal install without explicit first-run contract">
+          <description>Install files and let the user infer the product behavior from the repository state.</description>
+          <pros>Lower initial product text surface.</pros>
+          <cons>Recreates onboarding ambiguity and hidden control flow.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Deterministic first-run contract">
+          <description>State what was installed, what defaults are active, what remains optional, and what happens next.</description>
+          <pros>Lower startup entropy and stronger operator trust.</pros>
+          <cons>Requires a stricter onboarding contract.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Deterministic first-run contract</chosen>
+        <rationale>Bootstrap tooling should reduce ambiguity, not relocate it into runtime behavior.</rationale>
+      </decision>
+      <impacts>
+        <module>M-006</module>
+      </impacts>
+      <consequences>
+        <positive>Operators know exactly what changed and what the next interaction model is.</positive>
+        <negative>Product docs and onboarding messages must stay synchronized.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-006" />
+        <ref doc="development-plan.xml" id="M-006" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Also constrains recommendation confirmation and implicit routing explanation.</notes>
+      </review>
+    </D-012>
+
+    <D-013 DATE="2026-04-02" STATUS="approved">
+      <summary>Keep canonical contract markup and structural labels in English.</summary>
+      <context>
+        <problem>Locale-dependent contract markup would reduce interoperability across agents, shells, and review tooling.</problem>
+        <constraints>Human-facing prose may vary by audience, but canonical structural markup must stay stable.</constraints>
+      </context>
+      <options>
+        <option-1 name="Localized markup">
+          <description>Translate contract labels and structural keys along with explanatory prose.</description>
+          <pros>Feels more local to one audience.</pros>
+          <cons>Breaks consistency across tools, agents, and migration docs.</cons>
+          <score>2/10</score>
+        </option-1>
+        <option-2 name="English-only contract markup">
+          <description>Keep canonical contract markup and structural labels in English while allowing localized surrounding prose.</description>
+          <pros>Stable cross-runtime semantics and easier tooling interoperability.</pros>
+          <cons>Requires discipline when writing new canonical surfaces.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>English-only contract markup</chosen>
+        <rationale>Contract structure is part of the machine-readable and agent-readable protocol surface, not only reader-facing prose.</rationale>
+      </decision>
+      <impacts>
+        <module>M-006</module>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>Contracts remain portable and easier to validate across tools.</positive>
+        <negative>Writers must separate localized explanation from canonical structure.</negative>
+      </consequences>
+      <links>
+        <ref doc="requirements.xml" id="UC-006" />
+        <ref doc="development-plan.xml" id="M-006" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Applies to contract markup, structural labels, and canonical config keys.</notes>
+      </review>
+    </D-013>
+
+    <D-014 DATE="2026-04-02" STATUS="approved">
+      <summary>Allow docs/technology.xml only as a GRACE compatibility shim, not as a new VIBE core artifact.</summary>
+      <context>
+        <problem>GRACE planning workflows require docs/technology.xml, but VIBE core intentionally does not treat technology.xml as part of its canonical artifact set.</problem>
+        <constraints>The file may exist for tool compatibility, but it must not compete with the canonical VIBE core surfaces or redefine framework semantics.</constraints>
+      </context>
+      <options>
+        <option-1 name="Reintroduce technology.xml as a VIBE core artifact">
+          <description>Treat docs/technology.xml as a first-class canonical VIBE surface again.</description>
+          <pros>Closer alignment with older GRACE tooling assumptions.</pros>
+          <cons>Reopens core artifact scope and weakens the current VIBE boundary design.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Use technology.xml as a compatibility shim only">
+          <description>Keep docs/technology.xml narrowly scoped to GRACE-compatible tooling while preserving the current VIBE core artifact model.</description>
+          <pros>Unlocks GRACE planning flows without changing VIBE core semantics.</pros>
+          <cons>Requires explicit documentation so the shim is not mistaken for a new source of truth.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Use technology.xml as a compatibility shim only</chosen>
+        <rationale>Compatibility should unblock reuse of proven GRACE workflows without silently expanding the VIBE core surface area.</rationale>
+      </decision>
+      <impacts>
+        <module>M-001</module>
+        <module>M-005</module>
+      </impacts>
+      <consequences>
+        <positive>GRACE-compatible planning tools can run without forcing technology.xml back into the VIBE core model.</positive>
+        <negative>Maintainers must keep the shim boundary explicit in docs and verification.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-001" />
+        <ref doc="development-plan.xml" id="M-005" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Applies whenever GRACE tooling is used against a VIBE-core repository.</notes>
+      </review>
+    </D-014>
+  </Decisions>
+
+  <Categories>
+    <category name="architecture">Architectural decisions</category>
+    <category name="technology">Technology choices</category>
+    <category name="process">Process and methodology decisions</category>
+    <category name="security">Security-related decisions</category>
+    <category name="performance">Performance decisions</category>
+  </Categories>
+
+  <Statistics>
+    <total>14</total>
+    <by-status>
+      <proposed>0</proposed>
+      <approved>14</approved>
+      <rejected>0</rejected>
+      <superseded>0</superseded>
+    </by-status>
+    <last-updated>2026-04-02</last-updated>
+  </Statistics>
+  
+</Decisions>

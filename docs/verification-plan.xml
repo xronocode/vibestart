@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VerificationPlan VERSION="2.0.0">
+  
+  <ProjectInfo>
+    <name>VIBE / vibestart</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Strategy>
+    <approach>Artifact integrity first: parseability → cross-link coherence → deterministic projection and routing → macro/governance correctness → bootstrap fit.</approach>
+    <mocking-policy>Prefer deterministic artifact checks and explicit review criteria over speculative prose tests.</mocking-policy>
+    <coverage-target>100% of canonical VIBE surfaces parse cleanly and cross-reference the same contract story.</coverage-target>
+  </Strategy>
+
+  <ModuleChecks>
+    <V-M-001 MODULE="M-001">
+      <contract>
+        <purpose>Verify that framework identity, principles, and the optional role of vibestart are stated coherently.</purpose>
+      </contract>
+      <strategy>
+        <approach>unit</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/requirements.xml</file>
+        <file>docs/decisions.xml</file>
+        <file>docs/technology.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>VIBE is described as a standalone methodology.</scenario-1>
+        <scenario-2>vibestart is described as optional, not mandatory.</scenario-2>
+        <scenario-3>Core principles do not contradict the artifact model.</scenario-3>
+        <scenario-4>If docs/technology.xml exists, it remains a GRACE compatibility shim and does not redefine canonical VIBE core semantics.</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>CrossLinks from identity decisions to the framework and product nodes remain valid.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/requirements.xml'); ET.parse('docs/decisions.xml'); tech=ET.parse('docs/technology.xml').getroot(); assert tech.findtext('Framework')=='VIBE 0.1.0-draft'; assert 'GRACE (Graph-RAG Anchored Code Engineering)' in tech.findtext('CompatibilityMode')"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_PRINCIPLES</block>
+      </critical-blocks>
+    </V-M-001>
+
+    <V-M-002 MODULE="M-002">
+      <contract>
+        <purpose>Verify that the ontology, node stages, and projection invariants are represented consistently.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/knowledge-graph.xml</file>
+        <file>docs/requirements.xml</file>
+        <file>docs/development-plan.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Graph contains the agreed node types and stage model.</scenario-1>
+        <scenario-2>Requirements act as a cleaned projection instead of a raw discovery dump.</scenario-2>
+        <scenario-3>Development plan references the same module and work vocabulary as the graph.</scenario-3>
+        <scenario-4>Ontology defines the maturity and semantic invariants required for deterministic projection.</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>CrossLinks connect framework use cases, modules, and decisions into one navigable graph.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/knowledge-graph.xml'); ET.parse('docs/development-plan.xml')"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_PROJECTIONS</block>
+      </critical-blocks>
+    </V-M-002>
+
+    <V-M-003 MODULE="M-003">
+      <contract>
+        <purpose>Verify that the public macro language is explicit, stable, and aligned with the framework story.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/vibe/macros.toml</file>
+        <file>docs/development-plan.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>discover, refine, deliver, fix, sync, resume, deploy, and vibe are all present.</scenario-1>
+        <scenario-2>calibrate is hidden and expert-oriented.</scenario-2>
+        <scenario-3>Macro defaults and allowed modes match the session decisions.</scenario-3>
+        <scenario-4>Each macro declares reads, writes, entry guards, transitions, and invariants.</scenario-4>
+        <scenario-5>Routing is deterministic and explainable in guided mode.</scenario-5>
+        <scenario-6>Executable projection controls live in refine rather than being split ambiguously across ontology and runtime config.</scenario-6>
+      </scenarios>
+      <traces>
+        <trace-1>The macro registry and the development plan module M-003 tell the same story.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/macros.toml','rb')); assert t['routing']['mode']=='deterministic'; assert 'precedence' in t['routing']; assert 'projection_mode' in t['macros']['refine']; assert 'entry_guard' in t['macros']['discover']; assert 'reads' in t['macros']['deliver']; assert 'writes' in t['macros']['deliver']; assert 'transitions' in t['macros']['deliver']; assert 'invariants' in t['macros']['sync']; assert 'cleanup_guard' in t['macros']['sync']; assert 'verified:done' in t['macros']['fix']['transitions']"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_MACRO_API</block>
+      </critical-blocks>
+    </V-M-003>
+
+    <V-M-004 MODULE="M-004">
+      <contract>
+        <purpose>Verify that adaptive governance is driven by risk and evidence instead of elapsed time.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/vibe/governance.toml</file>
+        <file>docs/development-plan.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Review levels quick, scoped, and full are represented by thresholds and minimums.</scenario-1>
+        <scenario-2>Sync triggers cover deliver, fix, multi-agent waves, deploy, and dependency changes.</scenario-2>
+        <scenario-3>Time is explicitly disabled as a primary signal.</scenario-3>
+        <scenario-4>Governance selection is deterministic with explicit precedence, tie-breaking, and unknown-signal handling.</scenario-4>
+        <scenario-5>sync is split into reconcile and cleanup phases with owned-only cleanup semantics.</scenario-5>
+        <scenario-6>fix can trigger a review-after-fix hook that uses the same risk engine instead of a separate ad hoc rule.</scenario-6>
+        <scenario-7>Recommendation confirmation UX is explicit and minimal.</scenario-7>
+      </scenarios>
+      <traces>
+        <trace-1>The governance file and the development plan for M-004 agree on the policy responsibilities.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/governance.toml','rb')); assert t['decision_function']['mode']=='deterministic'; assert t['decision_function']['tie_break']=='escalate'; assert t['sync']['mode']=='two-phase'; assert t['sync']['unknown_artifacts_policy']=='report-only'; assert t['risk_scoring']['enabled'] is True; assert t['review']['after_fix']['enabled'] is True; assert t['review']['after_fix']['baseline']=='quick'; assert t['recommendations']['confirmation_token']=='v'; assert 'м' in t['recommendations']['confirmation_aliases']; assert t['recommendations']['confirmation_case_sensitive'] is False"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_ESCALATE_REVIEW</block>
+      </critical-blocks>
+    </V-M-004>
+
+    <V-M-005 MODULE="M-005">
+      <contract>
+        <purpose>Verify that configuration, policy documentation, and runtime state are cleanly separated.</purpose>
+      </contract>
+      <strategy>
+        <approach>unit</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>vibe.toml</file>
+        <file>docs/vibe/governance.toml</file>
+        <file>docs/vibe/macros.toml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>vibe.toml references the detailed policy files instead of embedding all details.</scenario-1>
+        <scenario-2>docs/vibe holds human-facing TOML while .vibestart/state remains non-canonical.</scenario-2>
+        <scenario-3>Comments explain the meaning and recommended values of the main settings.</scenario-3>
+        <scenario-4>guided and single remain normative defaults while auto, multi, and calibrate apply are explicitly marked experimental.</scenario-4>
+        <scenario-5>Recommendation confirmation UX can stay short without introducing hidden acceptance semantics.</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>All config files parse and reference each other consistently.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; tmod=__import__(mod); root=tmod.load(open('vibe.toml','rb')); gov=tmod.load(open('docs/vibe/governance.toml','rb')); mac=tmod.load(open('docs/vibe/macros.toml','rb')); assert root['defaults']['autonomy']=='guided'; assert root['defaults']['agents']=='single'; assert 'experimental' in root['stability']; assert mac['macros']['deliver']['default_autonomy']=='guided'; assert mac['macros']['calibrate']['apply_stability']=='experimental'"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_CONFIG_BOUNDARY</block>
+      </critical-blocks>
+    </V-M-005>
+
+    <V-M-006 MODULE="M-006">
+      <contract>
+        <purpose>Verify that vibestart core and deep remain explicit bootstrap profiles rather than new methodologies, and that onboarding and first-run behavior are explicit.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/requirements.xml</file>
+        <file>docs/development-plan.xml</file>
+        <file>vibe.toml</file>
+        <file>docs/vibe/vibestart-contract.md</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Profile choice is explicit and not silently defaulted at install time.</scenario-1>
+        <scenario-2>deep is allowed both from scratch and as an upgrade path.</scenario-2>
+        <scenario-3>vibestart remains optional even when profile semantics are defined.</scenario-3>
+        <scenario-4>core and deep install the same canonical VIBE surfaces while differing in product depth and optional integrations.</scenario-4>
+        <scenario-5>Onboarding states installed surfaces, active defaults, optional extensions, and next-step behavior.</scenario-5>
+        <scenario-6>The first-run contract explicitly covers implicit routing and recommendation confirmation behavior.</scenario-6>
+        <scenario-7>Contract markup and structural labels remain in English.</scenario-7>
+      </scenarios>
+      <traces>
+        <trace-1>Identity, plan, root config, and the vibestart product contract describe the same bootstrap story.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "from pathlib import Path; import re, xml.etree.ElementTree as ET; ET.parse('docs/requirements.xml'); ET.parse('docs/development-plan.xml'); text=Path('docs/vibe/vibestart-contract.md').read_text(); assert 'vibestart --core' in text; assert 'vibestart --deep' in text; assert 'First-Run Contract' in text; assert 'guided' in text; assert 'single' in text; assert '`v`' in text; assert '`м`' in text; headings=[line.strip() for line in text.splitlines() if line.startswith('#')]; assert headings; assert all(not re.search(r'[А-Яа-яЁё]', line) for line in headings); required_labels=['profile','installed_surfaces','active_defaults','optional_surfaces','next_step','recommendation_confirmation']; assert all(label in text for label in required_labels)"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_SELECT_PROFILE</block>
+        <block>BLOCK_FIRST_RUN_CONTRACT</block>
+      </critical-blocks>
+    </V-M-006>
+  </ModuleChecks>
+
+  <VerificationMatrix>
+    <VMX-001 FLOW="DF-001" MODULES="M-002, M-003">
+      <name>RawIntentToKnowledge</name>
+      <success-scenarios>
+        <scenario-1>An ambiguous or changed request becomes a graph node with an explicit stage transition.</scenario-1>
+        <scenario-2>discover updates the graph first and does not write plan artifacts before the projection guard is satisfied.</scenario-2>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario-1>requirements or plan artifacts are mutated before graph maturity allows projection.</scenario-1>
+        <scenario-2>Route selection cannot explain why discover rather than refine or deliver was chosen.</scenario-2>
+      </failure-scenarios>
+      <evidence-types>
+        <deterministic>Graph node and stage assertions, macro guard assertions, and cross-link integrity checks.</deterministic>
+        <trace>Routing trace with selected macro, source signal, and tie-break outcome.</trace>
+      </evidence-types>
+      <verification-levels>
+        <module-level>Graph and macro contract assertions.</module-level>
+        <phase-level>Cross-artifact coherence between graph and requirements.</phase-level>
+      </verification-levels>
+    </VMX-001>
+
+    <VMX-002 FLOW="DF-002" MODULES="M-002, M-003">
+      <name>KnowledgeToExecution</name>
+      <success-scenarios>
+        <scenario-1>Refine performs deterministic, idempotent projection from graph into requirements, development, and verification surfaces.</scenario-1>
+        <scenario-2>Projected artifacts stay linked back to graph nodes, modules, and verification refs.</scenario-2>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario-1>Reverse projection mutates the graph from downstream artifacts without an explicit contract.</scenario-1>
+        <scenario-2>Projection conflict policy is ambiguous or produces non-repeatable results across compliant runtimes.</scenario-2>
+      </failure-scenarios>
+      <evidence-types>
+        <deterministic>Projection guard checks, idempotence checks, and cross-reference assertions.</deterministic>
+        <trace>Projection trace with source-of-truth, conflict policy, and touched target surfaces.</trace>
+      </evidence-types>
+      <verification-levels>
+        <module-level>Projection contract assertions in macro and graph surfaces.</module-level>
+        <phase-level>Plan and verification surfaces remain aligned with the graph.</phase-level>
+      </verification-levels>
+    </VMX-002>
+
+    <VMX-003 FLOW="DF-003" MODULES="M-003, M-004">
+      <name>ExecutionToCoherence</name>
+      <success-scenarios>
+        <scenario-1>deliver and fix choose review levels through deterministic governance rather than ad hoc operator judgment.</scenario-1>
+        <scenario-2>sync runs reconcile before cleanup and cleanup only touches VIBE-owned operational exhaust.</scenario-2>
+        <scenario-3>fix cannot close without review-after-fix when the policy requires it.</scenario-3>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario-1>Cleanup runs without the owned-exhaust guard.</scenario-1>
+        <scenario-2>Unknown artifacts are mutated instead of reported.</scenario-2>
+        <scenario-3>Governance cannot explain the selected review floor or sync phase.</scenario-3>
+      </failure-scenarios>
+      <evidence-types>
+        <deterministic>Governance policy assertions, transition-table assertions, and sync phase ordering checks.</deterministic>
+        <trace>Governance trace with signals, risk score, selected review, sync_required, and sync_phase.</trace>
+      </evidence-types>
+      <verification-levels>
+        <module-level>Macro and governance config assertions.</module-level>
+        <wave-level>Cross-artifact reconcile checks after merged changes.</wave-level>
+        <phase-level>Broader integrity gate before phase completion.</phase-level>
+      </verification-levels>
+    </VMX-003>
+
+    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006">
+      <name>BootstrapToAdoption</name>
+      <success-scenarios>
+        <scenario-1>Profile choice is explicit and never silently defaulted during install.</scenario-1>
+        <scenario-2>core and deep install the same canonical VIBE surfaces while differing only in product depth and optionals.</scenario-2>
+        <scenario-3>The first-run contract states installed surfaces, active defaults, optional surfaces, next step, and recommendation confirmation behavior.</scenario-3>
+      </success-scenarios>
+      <failure-scenarios>
+        <scenario-1>deep changes methodology semantics instead of only product depth.</scenario-1>
+        <scenario-2>Experimental runtime surfaces are silently activated as defaults.</scenario-2>
+      </failure-scenarios>
+      <evidence-types>
+        <deterministic>Contract document assertions, manifest assertions, and config boundary checks.</deterministic>
+        <trace>Bootstrap trace with profile, source, installed surfaces, active defaults, and optional surfaces.</trace>
+      </evidence-types>
+      <verification-levels>
+        <module-level>Document and manifest assertions.</module-level>
+        <phase-level>Bootstrap mapping gate and compatibility review.</phase-level>
+      </verification-levels>
+    </VMX-004>
+  </VerificationMatrix>
+
+  <TelemetryRequirements>
+    <TracePolicy>
+      <log-format>[VIBE][ModuleName][BLOCK_NAME] message</log-format>
+      <deterministic-first>Prefer stable fields and exact assertions over prose-heavy logs.</deterministic-first>
+      <required-fields>module, block, state</required-fields>
+      <required-routing-fields>macro, source, tie_break, autonomy, agents</required-routing-fields>
+      <required-governance-fields>signals, risk_score, selected_review, sync_required, sync_phase</required-governance-fields>
+      <required-bootstrap-fields>profile, installed_surfaces, active_defaults, optional_surfaces</required-bootstrap-fields>
+      <redaction>Never log secrets, credentials, raw high-risk payloads, or hidden reasoning.</redaction>
+    </TracePolicy>
+    <BranchVisibility>
+      <rule-1>Every critical route choice must be reconstructable from explicit routing fields.</rule-1>
+      <rule-2>Every governance escalation must expose the triggering signals and final selected review floor.</rule-2>
+      <rule-3>Every sync run must expose reconcile and cleanup phases separately when both occur.</rule-3>
+      <rule-4>Every bootstrap run must expose explicit profile selection and the first-run contract fields.</rule-4>
+    </BranchVisibility>
+  </TelemetryRequirements>
+
+  <VerificationLevels>
+    <module-level>
+      <purpose>Fast deterministic checks against one module contract or one tightly bounded artifact surface.</purpose>
+      <typical-checks>XML parse, TOML parse, field assertions, guard assertions, and local cross-reference checks.</typical-checks>
+    </module-level>
+    <wave-level>
+      <purpose>Checks only the merged surfaces touched by a bounded execution wave.</purpose>
+      <typical-checks>Cross-artifact coherence, targeted refresh, reconcile-only sync verification, and scoped trace assertions.</typical-checks>
+    </wave-level>
+    <phase-level>
+      <purpose>Broader integrity checks before a planning or implementation phase is considered complete.</purpose>
+      <typical-checks>Phase gates, cross-link integrity, compatibility boundary checks, and broader review audits.</typical-checks>
+    </phase-level>
+  </VerificationLevels>
+
+  <ExecutionReadiness>
+    <summary>Current repository surfaces are planning artifacts and shared canonical documents. They are suitable for guided single-agent work and unsuitable for parallel worker ownership because the write scopes overlap heavily.</summary>
+    <module module="M-001" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Identity surfaces are canonical shared artifacts and must not be edited concurrently.</reason>
+    </module>
+    <module module="M-002" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Ontology and projection invariants are foundational shared truth and need tightly reviewed sequential edits.</reason>
+    </module>
+    <module module="M-003" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Macro contracts define public semantics; experimental auto behavior exists but is not yet normative.</reason>
+    </module>
+    <module module="M-004" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Governance policy is a shared control surface and should not be mutated by parallel workers.</reason>
+    </module>
+    <module module="M-005" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Configuration boundary and defaults are shared and drift-sensitive.</reason>
+    </module>
+    <module module="M-006" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Bootstrap contract is a shared product surface; profile semantics must remain globally coherent.</reason>
+    </module>
+    <repo-level>
+      <sequential-execution>recommended</sequential-execution>
+      <multi-agent-execution>not-recommended-until-future-implementation-modules-have-disjoint-write-scopes</multi-agent-execution>
+    </repo-level>
+  </ExecutionReadiness>
+
+  <PhaseGates>
+    <Phase-Gate-1>
+      <name>Framework Foundation</name>
+      <criteria>
+        <criterion-1>M-001 and M-002 are described consistently across requirements, decisions, and graph.</criterion-1>
+        <criterion-2>The ontology and projection model do not require docs/specs as a side-bridge.</criterion-2>
+        <criterion-3>The projection model is deterministic enough to explain conflicts and idempotence.</criterion-3>
+        <criterion-4>The root and docs-level config boundary is documented.</criterion-4>
+        <criterion-5>If docs/technology.xml is present, it is explicitly treated as a GRACE compatibility shim rather than a new VIBE core artifact.</criterion-5>
+      </criteria>
+      <commands>
+        <verify-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/requirements.xml'); ET.parse('docs/knowledge-graph.xml'); ET.parse('docs/development-plan.xml'); ET.parse('docs/technology.xml')"</verify-command>
+        <lint-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; __import__(mod).load(open('vibe.toml','rb'))"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-1>
+
+    <Phase-Gate-2>
+      <name>Workflow Language</name>
+      <criteria>
+        <criterion-1>Macro vocabulary is complete and stable.</criterion-1>
+        <criterion-2>Macros expose routing guards, reads, writes, transitions, and invariants.</criterion-2>
+        <criterion-3>Governance policy exists with explainable deterministic selection rules.</criterion-3>
+        <criterion-4>Calibrate exists only as an explicit expert path.</criterion-4>
+        <criterion-5>Verification matrix, telemetry requirements, and execution readiness are explicit enough to guide future execute and multi-agent flows.</criterion-5>
+      </criteria>
+      <commands>
+        <verify-command>python3 -c "import importlib.util, xml.etree.ElementTree as ET; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod); t.load(open('docs/vibe/governance.toml','rb')); t.load(open('docs/vibe/macros.toml','rb')); root=ET.parse('docs/verification-plan.xml').getroot(); assert root.find('VerificationMatrix') is not None; assert root.find('TelemetryRequirements') is not None; assert root.find('ExecutionReadiness') is not None"</verify-command>
+        <lint-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/verification-plan.xml')"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-2>
+
+    <Phase-Gate-3>
+      <name>Bootstrap Mapping</name>
+      <criteria>
+        <criterion-1>vibestart core and deep are described as product profiles, not new methodologies.</criterion-1>
+        <criterion-2>vibestart remains optional for baseline VIBE adoption.</criterion-2>
+        <criterion-3>Profile semantics can be mapped into the product implementation without contradicting the framework.</criterion-3>
+        <criterion-4>Onboarding and first-run behavior are explicit and deterministic.</criterion-4>
+      </criteria>
+      <commands>
+        <verify-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/decisions.xml'); ET.parse('docs/development-plan.xml')"</verify-command>
+        <lint-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; __import__(mod).load(open('vibe.toml','rb'))"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-3>
+  </PhaseGates>
+
+  <TraceRequirements>
+    <trace-req module="M-003">
+      <marker>[VIBE][MacroContracts][BLOCK_DEFINE_MACRO_API]</marker>
+      <required-fields>macro, entry_guard, reads, writes, transitions, invariants, default_autonomy, default_agents</required-fields>
+      <assertion>Macro definitions, state-machine contracts, and defaults must remain stable across artifacts.</assertion>
+    </trace-req>
+    <trace-req module="M-002">
+      <marker>[VIBE][KnowledgeOntology][BLOCK_DEFINE_PROJECTIONS]</marker>
+      <required-fields>node_type, stage, projection_source, projection_guard, conflict_policy</required-fields>
+      <assertion>Projection invariants must stay reconstructable from explicit graph and projection fields.</assertion>
+    </trace-req>
+    <trace-req module="M-004">
+      <marker>[VIBE][GovernancePolicy][BLOCK_ESCALATE_REVIEW]</marker>
+      <required-fields>risk_score, selected_review, sync_required, sync_phase, tie_break</required-fields>
+      <assertion>Governance recommendations must be explainable from the chosen signals, thresholds, and deterministic selection rules.</assertion>
+    </trace-req>
+    <trace-req module="M-005">
+      <marker>[VIBE][ConfigurationSurface][BLOCK_DEFINE_CONFIG_BOUNDARY]</marker>
+      <required-fields>bootstrap_profile, autonomy, agents, governance_file, macros_file</required-fields>
+      <assertion>The active config boundary and defaults must remain explicit and reviewable.</assertion>
+    </trace-req>
+    <trace-req module="M-006">
+      <marker>[VIBE][BootstrapProfiles][BLOCK_SELECT_PROFILE]</marker>
+      <required-fields>profile, source, mode, installed_surfaces, active_defaults, optional_surfaces</required-fields>
+      <assertion>Profile selection must always be explicit in the bootstrap path.</assertion>
+    </trace-req>
+    <trace-req module="M-006">
+      <marker>[VIBE][BootstrapProfiles][BLOCK_FIRST_RUN_CONTRACT]</marker>
+      <required-fields>profile, installed_surfaces, active_defaults, optional_surfaces, next_step, recommendation_confirmation</required-fields>
+      <assertion>The first-run contract must explain the installed product surface without hidden defaults.</assertion>
+    </trace-req>
+  </TraceRequirements>
+
+  <Health>
+    <last-updated>2026-04-02</last-updated>
+    <coverage>
+      <modules-covered>6/6</modules-covered>
+      <phase-gates-defined>3/3</phase-gates-defined>
+    </coverage>
+  </Health>
+  
+</VerificationPlan>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TechnologyStack VERSION="0.2.0">
+  <!--
+    Compatibility shim for GRACE (Graph-RAG Anchored Code Engineering) planning workflows.
+    This file exists to satisfy GRACE tool prerequisites for a VIBE-core repository.
+    VIBE core source-of-truth remains the canonical docs/*.xml, vibe.toml, and docs/vibe/*.toml surfaces.
+  -->
+
+  <Runtime>Local shell workspace on macOS-like environment</Runtime>
+  <Language>XML / TOML / Markdown / Python 3.9+</Language>
+  <Framework>VIBE 0.1.0-draft</Framework>
+  <CompatibilityMode>GRACE (Graph-RAG Anchored Code Engineering) planning shim for a VIBE-core repository.</CompatibilityMode>
+
+  <Dependencies>
+    <dep name="python3" version="3.9+" purpose="XML and TOML parsing, lightweight verification commands, and repository-local automation." />
+    <dep name="git" version="2.x+" purpose="Version control, review checkpoints, and future commit boundaries." />
+    <dep name="ripgrep" version="13.x+" purpose="Fast repository search during planning and execution." />
+  </Dependencies>
+
+  <VersionConstraints>
+    <constraint lib="python3" min="3.9.0" max="3.x" reason="Current verification commands rely on Python parsing and optional tomli fallback for TOML support." />
+  </VersionConstraints>
+
+  <Tooling>
+    <tool name="shell" value="zsh" version="workspace-default" />
+    <tool name="vcs" value="git" version="2.x+" />
+    <tool name="search" value="ripgrep" version="13.x+" />
+    <tool name="xml-parse" value="xml.etree.ElementTree" version="python-stdlib" />
+    <tool name="toml-parse" value="tomllib or tomli fallback" version="python-stdlib-or-backport" />
+    <tool name="test-runner" value="python3 inline checks" version="workspace-default" />
+  </Tooling>
+
+  <Testing>
+    <module-level>
+      <command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/requirements.xml'); ET.parse('docs/development-plan.xml'); ET.parse('docs/verification-plan.xml'); ET.parse('docs/knowledge-graph.xml'); ET.parse('docs/decisions.xml'); ET.parse('docs/technology.xml')"</command>
+      <focus>Fast deterministic parsing and structural integrity checks for canonical planning artifacts.</focus>
+    </module-level>
+    <wave-level>
+      <command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod); t.load(open('vibe.toml','rb')); t.load(open('docs/vibe/governance.toml','rb')); t.load(open('docs/vibe/macros.toml','rb'))"</command>
+      <focus>Shared configuration coherence after cross-artifact planning changes.</focus>
+    </wave-level>
+    <phase-level>
+      <command>python3 -c "from pathlib import Path; required=['docs/requirements.xml','docs/development-plan.xml','docs/verification-plan.xml','docs/knowledge-graph.xml','docs/decisions.xml','docs/technology.xml','vibe.toml','docs/vibe/governance.toml','docs/vibe/macros.toml']; missing=[p for p in required if not Path(p).exists()]; assert not missing, missing"</command>
+      <focus>Presence and coherence of the full VIBE planning surface expected by GRACE-compatible workflows.</focus>
+    </phase-level>
+    <mocking-policy>Prefer real artifact parsing and deterministic file-level checks over synthetic mocks for planning surfaces.</mocking-policy>
+  </Testing>
+
+  <Observability>
+    <logger>Stable document and trace markers inside XML, TOML, and Markdown artifacts.</logger>
+    <log-format>[VIBE][ModuleName][BLOCK_NAME] message</log-format>
+    <required-fields>module, block, purpose, state</required-fields>
+    <redaction>Never store secrets, credentials, tokens, or runtime-only sensitive state inside canonical planning artifacts.</redaction>
+  </Observability>
+
+  <DeliveryShape>
+    <shape>Framework and bootstrap-design workspace, not an end-user application runtime.</shape>
+    <notes>vibestart product semantics are defined as core and deep bootstrap profiles over one VIBE methodology.</notes>
+  </DeliveryShape>
+</TechnologyStack>

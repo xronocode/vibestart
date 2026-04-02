@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph VERSION="2.0.0">
+  
+  <ProjectInfo>
+    <name>VIBE / vibestart</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Nodes>
+    <I-001>
+      <name>IntentDrivenEngineeringFramework</name>
+      <type>intent</type>
+      <stage>clarified</stage>
+      <description>Define VIBE as a standalone methodology for intent-driven engineering with graph-first continuity and governed execution.</description>
+      <source>docs/requirements.xml</source>
+      <exports>
+        <export-frameworkIdentity PURPOSE="Expose the core story of VIBE." />
+      </exports>
+    </I-001>
+
+    <F-001>
+      <name>GraphFirstKnowledgeSystem</name>
+      <type>feature</type>
+      <stage>refined</stage>
+      <description>Use the knowledge graph as the primary knowledge spine and project clarified intent into the remaining canonical artifacts through deterministic, idempotent projection rules.</description>
+      <source>docs/knowledge-graph.xml</source>
+      <exports>
+        <export-projectionModel PURPOSE="Explain how graph state projects into requirements, plan, verification, and decisions." />
+      </exports>
+    </F-001>
+
+    <F-002>
+      <name>MacroLanguage</name>
+      <type>feature</type>
+      <stage>refined</stage>
+      <description>Expose discover, refine, deliver, fix, sync, resume, deploy, vibe, and calibrate as the public workflow language with deterministic routing and explicit state transitions.</description>
+      <source>docs/vibe/macros.toml</source>
+      <exports>
+        <export-publicMacros PURPOSE="Provide the stable user-facing API of VIBE." />
+      </exports>
+    </F-002>
+
+    <F-003>
+      <name>OptionalBootstrapProduct</name>
+      <type>feature</type>
+      <stage>refined</stage>
+      <description>Describe vibestart as an optional product that installs and adapts VIBE through explicit core and deep product profiles, onboarding, and a deterministic first-run contract.</description>
+      <source>vibe.toml</source>
+      <exports>
+        <export-bootstrapProfiles PURPOSE="Expose core and deep as product bootstrap profiles." />
+        <export-firstRunContract PURPOSE="Expose the deterministic onboarding and first-run contract." />
+      </exports>
+    </F-003>
+
+    <W-001>
+      <name>DefineMacroContracts</name>
+      <type>work</type>
+      <stage>refined</stage>
+      <status>active</status>
+      <summary>Translate framework principles into stable macro state machines, deterministic routing, and an internal skill layer.</summary>
+    </W-001>
+
+    <W-002>
+      <name>DefineAdaptiveGovernance</name>
+      <type>work</type>
+      <stage>refined</stage>
+      <status>active</status>
+      <summary>Convert review, sync, drift, and calibration ideas into deterministic governance algebra with split sync semantics.</summary>
+    </W-002>
+
+    <W-003>
+      <name>ConservativeRuntimeGuards</name>
+      <type>work</type>
+      <stage>designed</stage>
+      <status>active</status>
+      <summary>Keep guided and single as normative defaults while treating auto, multi, and calibrate apply as experimental until stronger guards exist.</summary>
+    </W-003>
+
+    <M-001>
+      <name>FrameworkIdentity</name>
+      <kind>module</kind>
+      <type>CORE_LOGIC</type>
+      <layer>0</layer>
+      <description>Identity, principles, value proposition, and optional product boundary.</description>
+      <source>docs/requirements.xml</source>
+      <exports>
+        <export-identity PURPOSE="Explain what VIBE is and what vibestart is not." />
+      </exports>
+    </M-001>
+
+    <M-002>
+      <name>KnowledgeOntology</name>
+      <kind>module</kind>
+      <type>CORE_LOGIC</type>
+      <layer>0</layer>
+      <description>Graph-first ontology, lifecycle stages, and the semantic invariants that constrain projection.</description>
+      <source>docs/knowledge-graph.xml</source>
+      <exports>
+        <export-ontology PURPOSE="Expose node types, stages, and edges." />
+      </exports>
+    </M-002>
+
+    <M-003>
+      <name>MacroContracts</name>
+      <kind>module</kind>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Public macro contracts, executable routing and projection controls, and the private skill layer that realizes them.</description>
+      <source>docs/vibe/macros.toml</source>
+      <exports>
+        <export-macroContracts PURPOSE="Define the stable public workflow API." />
+      </exports>
+    </M-003>
+
+    <M-004>
+      <name>GovernancePolicy</name>
+      <kind>module</kind>
+      <type>CORE_LOGIC</type>
+      <layer>1</layer>
+      <description>Adaptive governance rules, review escalation, sync triggers, and policy calibration hooks.</description>
+      <source>docs/vibe/governance.toml</source>
+      <exports>
+        <export-governance PURPOSE="Define review and sync behavior from risk signals." />
+      </exports>
+    </M-004>
+
+    <M-005>
+      <name>ConfigurationSurface</name>
+      <kind>module</kind>
+      <type>UTILITY</type>
+      <layer>1</layer>
+      <description>Boundary between root manifest, docs-level policy config, and runtime state.</description>
+      <source>vibe.toml</source>
+      <exports>
+        <export-configBoundary PURPOSE="Explain where active config, detailed policy, and runtime exhaust live." />
+      </exports>
+    </M-005>
+
+    <M-006>
+      <name>BootstrapProfiles</name>
+      <kind>module</kind>
+      <type>ENTRY_POINT</type>
+      <layer>2</layer>
+      <description>Explicit core and deep bootstrap profiles, onboarding flow, and first-run contract for vibestart.</description>
+      <source>docs/vibe/vibestart-contract.md</source>
+      <exports>
+        <export-profileSelection PURPOSE="Expose explicit bootstrap profile choice." />
+        <export-firstRunContract PURPOSE="Expose the deterministic onboarding and first-run contract." />
+      </exports>
+    </M-006>
+
+    <W-004>
+      <name>DefineBootstrapProductContract</name>
+      <type>work</type>
+      <stage>done</stage>
+      <status>done</status>
+      <summary>Translate the framework into an explicit vibestart core/deep product contract with onboarding and first-run behavior.</summary>
+    </W-004>
+
+    <V-001>
+      <name>VerificationSurface</name>
+      <type>verification</type>
+      <stage>designed</stage>
+      <description>The project-wide verification surface that certifies artifact coherence and policy consistency.</description>
+      <source>docs/verification-plan.xml</source>
+      <exports>
+        <export-phaseGates PURPOSE="Define what must be true before the framework moves forward." />
+      </exports>
+    </V-001>
+
+    <DEP-001>
+      <name>DeployMacroSurface</name>
+      <type>deploy</type>
+      <stage>captured</stage>
+      <description>First-class deployment macro surface for local or quick-cloud deployment guidance.</description>
+      <source>docs/development-plan.xml</source>
+      <exports>
+        <export-deployMacro PURPOSE="Reserve deploy as a first-class workflow surface." />
+      </exports>
+    </DEP-001>
+
+    <D-001>
+      <name>StandaloneMethodologyOptionalProduct</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>VIBE is the methodology; vibestart is optional bootstrap/runtime.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-boundaryDecision PURPOSE="Preserve the methodology-product split." />
+      </exports>
+    </D-001>
+
+    <D-002>
+      <name>GraphFirstCanonicalModel</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>knowledge-graph.xml is primary; docs/specs side-bridge is rejected.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-graphDecision PURPOSE="Protect the graph-first model." />
+      </exports>
+    </D-002>
+
+    <D-003>
+      <name>ConfigBoundary</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>vibe.toml is root manifest, docs/vibe holds detailed policy, and .vibestart/state holds runtime exhaust.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-configDecision PURPOSE="Protect readable configuration and isolate runtime state." />
+      </exports>
+    </D-003>
+
+    <D-004>
+      <name>MacroFirstPublicApi</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Macros are the public workflow language; skills remain lower-level implementation operators.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-macroDecision PURPOSE="Preserve the macro-first public API." />
+      </exports>
+    </D-004>
+
+    <D-005>
+      <name>ImplicitVibeDefault</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Implicit vibe is enabled by default, while guided and single remain the safer starting defaults.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-routingDecision PURPOSE="Preserve the default routing and safe defaults." />
+      </exports>
+    </D-005>
+
+    <D-006>
+      <name>RiskAndEvidenceGovernance</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Adaptive governance is driven by risk and evidence rather than elapsed time, with explicit calibration hooks.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-governanceDecision PURPOSE="Preserve the policy basis and calibration model." />
+      </exports>
+    </D-006>
+
+    <D-007>
+      <name>DeterministicKernelFirst</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Prioritize deterministic routing, projection, and governance algebra before expanding autonomous runtime behavior.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-kernelDecision PURPOSE="Preserve the deterministic kernel-first strategy." />
+      </exports>
+    </D-007>
+
+    <D-008>
+      <name>FormalProjectionAndRoutingContracts</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Projection and routing must be explicit contracts with guards, precedence, and conflict handling, not only narrative descriptions.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-controlDecision PURPOSE="Preserve formal control semantics for projection and routing." />
+      </exports>
+    </D-008>
+
+    <D-009>
+      <name>SplitSyncSemantics</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>sync is a two-phase flow: canonical reconcile first, owned-only cleanup second.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-syncDecision PURPOSE="Preserve safe sync semantics by separating reconcile and cleanup." />
+      </exports>
+    </D-009>
+
+    <D-010>
+      <name>ConservativeRuntimeDefaults</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>guided and single are the normative defaults, while auto, multi, and calibrate apply remain experimental until stronger guards and verification exist.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-runtimeDecision PURPOSE="Preserve conservative normative defaults while allowing guarded experimentation." />
+      </exports>
+    </D-010>
+
+    <D-011>
+      <name>BootstrapProfilesShareOneMethodology</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>vibestart core and deep are product profiles over one VIBE methodology, not separate standards.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-bootstrapDecision PURPOSE="Preserve one methodology across both product profiles." />
+      </exports>
+    </D-011>
+
+    <D-012>
+      <name>DeterministicFirstRunContract</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>vibestart must emit a deterministic first-run contract covering installed surfaces, defaults, optionals, and next-step behavior.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-onboardingDecision PURPOSE="Preserve explicit onboarding and first-run behavior." />
+      </exports>
+    </D-012>
+
+    <D-013>
+      <name>EnglishContractMarkup</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>Canonical contract markup and structural labels remain in English for cross-agent and cross-runtime interoperability.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-languageDecision PURPOSE="Preserve English-only contract markup and structural labels." />
+      </exports>
+    </D-013>
+
+    <D-014>
+      <name>GraceTechnologyCompatibilityShim</name>
+      <type>decision</type>
+      <stage>done</stage>
+      <description>docs/technology.xml may exist to satisfy GRACE-compatible planning workflows, but it remains a compatibility shim rather than a canonical VIBE core artifact.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-compatDecision PURPOSE="Preserve the boundary between GRACE compatibility surfaces and VIBE core semantics." />
+      </exports>
+    </D-014>
+  </Nodes>
+
+  <Edges>
+    <edge from="I-001" to="F-001" type="expands-to" />
+    <edge from="I-001" to="F-002" type="expands-to" />
+    <edge from="I-001" to="F-003" type="expands-to" />
+    <edge from="F-001" to="W-001" type="requires" />
+    <edge from="F-002" to="W-001" type="requires" />
+    <edge from="F-003" to="W-002" type="requires" />
+    <edge from="F-002" to="W-003" type="requires" />
+    <edge from="F-003" to="W-004" type="requires" />
+    <edge from="W-001" to="M-003" type="implemented-by" />
+    <edge from="W-002" to="M-004" type="implemented-by" />
+    <edge from="W-003" to="M-005" type="implemented-by" />
+    <edge from="W-004" to="M-006" type="implemented-by" />
+    <edge from="M-002" to="M-001" type="depends" />
+    <edge from="M-003" to="M-001" type="depends" />
+    <edge from="M-003" to="M-002" type="depends" />
+    <edge from="M-004" to="M-001" type="depends" />
+    <edge from="M-004" to="M-002" type="depends" />
+    <edge from="M-004" to="M-003" type="depends" />
+    <edge from="M-005" to="M-001" type="depends" />
+    <edge from="M-005" to="M-002" type="depends" />
+    <edge from="M-006" to="M-003" type="depends" />
+    <edge from="M-006" to="M-004" type="depends" />
+    <edge from="M-006" to="M-005" type="depends" />
+    <edge from="M-001" to="V-001" type="verified-by" />
+    <edge from="M-002" to="V-001" type="verified-by" />
+    <edge from="M-003" to="V-001" type="verified-by" />
+    <edge from="M-004" to="V-001" type="verified-by" />
+    <edge from="M-005" to="V-001" type="verified-by" />
+    <edge from="M-006" to="V-001" type="verified-by" />
+    <edge from="F-003" to="DEP-001" type="connects" />
+    <edge from="M-001" to="D-001" type="governed-by" />
+    <edge from="M-002" to="D-002" type="governed-by" />
+    <edge from="M-005" to="D-003" type="governed-by" />
+    <edge from="M-003" to="D-004" type="governed-by" />
+    <edge from="M-003" to="D-005" type="governed-by" />
+    <edge from="M-004" to="D-006" type="governed-by" />
+    <edge from="M-002" to="D-007" type="governed-by" />
+    <edge from="M-003" to="D-007" type="governed-by" />
+    <edge from="M-004" to="D-007" type="governed-by" />
+    <edge from="M-002" to="D-008" type="governed-by" />
+    <edge from="M-003" to="D-008" type="governed-by" />
+    <edge from="M-004" to="D-009" type="governed-by" />
+    <edge from="M-005" to="D-010" type="governed-by" />
+    <edge from="M-003" to="D-010" type="governed-by" />
+    <edge from="M-006" to="D-011" type="governed-by" />
+    <edge from="M-006" to="D-012" type="governed-by" />
+    <edge from="M-006" to="D-013" type="governed-by" />
+    <edge from="M-001" to="D-014" type="governed-by" />
+    <edge from="M-005" to="D-014" type="governed-by" />
+  </Edges>
+
+  <CrossLinks>
+    <CrossLink from="I-001" to="UC-001" doc="requirements.xml" />
+    <CrossLink from="F-003" to="UC-002" doc="requirements.xml" />
+    <CrossLink from="F-002" to="UC-003" doc="requirements.xml" />
+    <CrossLink from="F-001" to="UC-004" doc="requirements.xml" />
+    <CrossLink from="W-002" to="UC-005" doc="requirements.xml" />
+    <CrossLink from="W-004" to="UC-006" doc="requirements.xml" />
+    <CrossLink from="M-001" to="V-M-001" doc="verification-plan.xml" />
+    <CrossLink from="M-002" to="V-M-002" doc="verification-plan.xml" />
+    <CrossLink from="M-003" to="V-M-003" doc="verification-plan.xml" />
+    <CrossLink from="M-004" to="V-M-004" doc="verification-plan.xml" />
+    <CrossLink from="M-005" to="V-M-005" doc="verification-plan.xml" />
+    <CrossLink from="M-006" to="V-M-006" doc="verification-plan.xml" />
+    <CrossLink from="M-001" to="D-001" doc="decisions.xml" />
+    <CrossLink from="M-002" to="D-002" doc="decisions.xml" />
+    <CrossLink from="M-005" to="D-003" doc="decisions.xml" />
+    <CrossLink from="M-003" to="D-004" doc="decisions.xml" />
+    <CrossLink from="M-003" to="D-005" doc="decisions.xml" />
+    <CrossLink from="M-004" to="D-006" doc="decisions.xml" />
+    <CrossLink from="M-002" to="D-007" doc="decisions.xml" />
+    <CrossLink from="M-002" to="D-008" doc="decisions.xml" />
+    <CrossLink from="M-003" to="D-008" doc="decisions.xml" />
+    <CrossLink from="M-004" to="D-009" doc="decisions.xml" />
+    <CrossLink from="M-005" to="D-010" doc="decisions.xml" />
+    <CrossLink from="M-006" to="D-011" doc="decisions.xml" />
+    <CrossLink from="M-006" to="D-012" doc="decisions.xml" />
+    <CrossLink from="M-006" to="D-013" doc="decisions.xml" />
+    <CrossLink from="M-001" to="D-014" doc="decisions.xml" />
+    <CrossLink from="M-005" to="D-014" doc="decisions.xml" />
+  </CrossLinks>
+
+  <Layers>
+    <layer-0 count="2" modules="M-001, M-002" />
+    <layer-1 count="3" modules="M-003, M-004, M-005" />
+    <layer-2 count="1" modules="M-006" />
+  </Layers>
+
+  <Health>
+    <last-updated>2026-04-02</last-updated>
+    <integrity-check>
+      <orphaned-nodes>0</orphaned-nodes>
+      <missing-dependencies>0</missing-dependencies>
+      <circular-dependencies>0</circular-dependencies>
+    </integrity-check>
+  </Health>
+  
+</KnowledgeGraph>
