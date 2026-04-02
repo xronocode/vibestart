@@ -57,7 +57,7 @@
         <file>docs/development-plan.xml</file>
       </test-files>
       <scenarios>
-        <scenario-1>Graph contains the agreed node types and stage model.</scenario-1>
+        <scenario-1>Graph contains the agreed node kinds and stage model.</scenario-1>
         <scenario-2>Requirements act as a cleaned projection instead of a raw discovery dump.</scenario-2>
         <scenario-3>Development plan references the same module and work vocabulary as the graph.</scenario-3>
         <scenario-4>Ontology defines the maturity and semantic invariants required for deterministic projection.</scenario-4>
@@ -67,7 +67,7 @@
         <trace-1>CrossLinks connect framework use cases, modules, and decisions into one navigable graph.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import xml.etree.ElementTree as ET; root=ET.parse('docs/knowledge-graph.xml').getroot(); ET.parse('docs/development-plan.xml'); ont=root.find('Ontology'); assert ont is not None; assert ont.find('FieldSemantics') is not None; assert ont.find('NodeTypes') is not None; assert ont.find('ModuleTaxonomy') is not None; assert ont.find('LifecycleStages') is not None; assert ont.find('ProjectionInvariants') is not None; fields=[f.attrib['name'] for f in ont.find('FieldSemantics')]; assert all(name in fields for name in ['type','kind','stage','status']); node_types=[n.attrib['name'] for n in ont.find('NodeTypes')]; assert all(name in node_types for name in ['intent','feature','work','verification','decision','deploy']); stages=[s.attrib['name'] for s in ont.find('LifecycleStages')]; assert all(name in stages for name in ['captured','clarified','designed','refined','ready','in_progress','verified','done'])"</test-command>
+        <test-command>python3 -c "import xml.etree.ElementTree as ET; root=ET.parse('docs/knowledge-graph.xml').getroot(); ET.parse('docs/development-plan.xml'); ont=root.find('Ontology'); assert ont is not None; assert ont.find('FieldSemantics') is not None; assert ont.find('NodeKinds') is not None; assert ont.find('ModuleTaxonomy') is not None; assert ont.find('LifecycleStages') is not None; assert ont.find('ProjectionInvariants') is not None; fields=[f.attrib['name'] for f in ont.find('FieldSemantics')]; assert all(name in fields for name in ['type','kind','stage','status']); node_kinds=[n.attrib['name'] for n in ont.find('NodeKinds')]; assert all(name in node_kinds for name in ['intent','feature','work','verification','decision','deploy']); stages=[s.attrib['name'] for s in ont.find('LifecycleStages')]; assert all(name in stages for name in ['captured','clarified','designed','refined','ready','in_progress','verified','done'])"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_PROJECTIONS</block>
@@ -133,7 +133,7 @@
         <trace-1>The governance file and the development plan for M-004 agree on the policy responsibilities.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/governance.toml','rb')); assert t['decision_function']['mode']=='deterministic'; assert t['decision_function']['tie_break']=='escalate'; assert t['sync']['mode']=='two-phase'; assert t['sync']['unknown_artifacts_policy']=='report-only'; assert t['risk_scoring']['enabled'] is True; assert t['review']['after_fix']['enabled'] is True; assert t['review']['after_fix']['baseline']=='quick'; assert t['calibration']['supported_modes']==['analyze','suggest','apply']; assert t['calibration']['apply_requires_explicit_user_intent'] is True; assert t['calibration']['apply_expert_only'] is True; assert t['outputs']['normalized_bundle'] is True; assert t['outputs']['required_fields']==['signals','risk_score','selected_review','sync_required','sync_phase']; assert t['outputs']['review_levels']==['quick','scoped','full']; assert t['outputs']['sync_phase_values']==['none','reconcile','cleanup']; assert t['outputs']['cleanup_requires_reconcile'] is True; assert t['recommendations']['confirmation_token']=='v'; assert 'м' in t['recommendations']['confirmation_aliases']; assert t['recommendations']['confirmation_case_sensitive'] is False"</test-command>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/governance.toml','rb')); assert t['decision_function']['mode']=='deterministic'; assert t['decision_function']['tie_break']=='escalate'; assert t['sync']['mode']=='two-phase'; assert t['sync']['unknown_artifacts_policy']=='report-only'; assert t['risk_scoring']['enabled'] is True; assert t['review']['after_fix']['enabled'] is True; assert t['review']['after_fix']['default_level']=='quick'; assert t['calibration']['supported_modes']==['analyze','suggest','apply']; assert t['calibration']['apply_requires_explicit_user_intent'] is True; assert t['calibration']['apply_expert_only'] is True; assert t['outputs']['normalized_bundle'] is True; assert t['outputs']['required_fields']==['signals','risk_score','selected_review','sync_required','sync_phase','decision_reason']; assert t['outputs']['review_levels']==['quick','scoped','full']; assert t['outputs']['sync_phase_values']==['none','reconcile','cleanup']; assert t['outputs']['cleanup_requires_reconcile'] is True; assert t['recommendations']['confirmation_token']=='v'; assert 'м' in t['recommendations']['confirmation_aliases']; assert t['recommendations']['confirmation_case_sensitive'] is False"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_ESCALATE_REVIEW</block>
@@ -165,7 +165,7 @@
         <trace-1>All config files parse and reference each other consistently.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; tmod=__import__(mod); root=tmod.load(open('vibe.toml','rb')); gov=tmod.load(open('docs/vibe/governance.toml','rb')); mac=tmod.load(open('docs/vibe/macros.toml','rb')); assert root['defaults']['autonomy']=='guided'; assert root['defaults']['agents']=='single'; assert 'experimental' in root['stability']; assert mac['macros']['deliver']['default_autonomy']=='guided'; assert mac['macros']['calibrate']['apply_stability']=='experimental'; assert root['boundary']['canonical_docs_root']=='docs'; assert root['boundary']['policy_docs_root']=='docs/vibe'; assert root['boundary']['runtime_state_root']=='.vibestart/state'; assert root['boundary']['runtime_state_canonical'] is False"</test-command>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; tmod=__import__(mod); root=tmod.load(open('vibe.toml','rb')); gov=tmod.load(open('docs/vibe/governance.toml','rb')); mac=tmod.load(open('docs/vibe/macros.toml','rb')); assert root['execution']['autonomy']=='guided'; assert root['execution']['agents']=='single'; assert 'experimental' in root['execution_policy']; assert root['bootstrap']['profile']=='core'; assert root['contracts']['governance_file']=='docs/vibe/governance.toml'; assert root['contracts']['macros_file']=='docs/vibe/macros.toml'; assert root['capabilities']['external_integrations'] is False; assert mac['macros']['deliver']['default_autonomy']=='guided'; assert mac['macros']['calibrate']['apply_stability']=='experimental'; assert root['boundary']['canonical_docs_root']=='docs'; assert root['boundary']['policy_docs_root']=='docs/vibe'; assert root['boundary']['runtime_state_root']=='.vibestart/state'; assert root['boundary']['runtime_state_canonical'] is False; assert root['overrides']['override_files']==[]"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_CONFIG_BOUNDARY</block>
@@ -420,7 +420,7 @@
     </trace-req>
     <trace-req module="M-005">
       <marker>[VIBE][ConfigurationSurface][BLOCK_DEFINE_CONFIG_BOUNDARY]</marker>
-      <required-fields>bootstrap_profile, autonomy, agents, governance_file, macros_file, canonical_docs_root, policy_docs_root, runtime_state_root, runtime_state_canonical</required-fields>
+      <required-fields>profile, autonomy, agents, governance_file, macros_file, canonical_docs_root, policy_docs_root, runtime_state_root, runtime_state_canonical, override_files</required-fields>
       <assertion>The active config boundary and defaults must remain explicit and reviewable.</assertion>
     </trace-req>
     <trace-req module="M-006">

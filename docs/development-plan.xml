@@ -59,7 +59,7 @@
         </errors>
       </contract>
       <interface>
-        <export-ontology PURPOSE="Specify node types, stages, edges, and the semantic invariants required for deterministic projection." />
+        <export-ontology PURPOSE="Specify node kinds, module taxonomy, stages, edges, and the semantic invariants required for deterministic projection." />
       </interface>
       <depends>M-001</depends>
       <target>

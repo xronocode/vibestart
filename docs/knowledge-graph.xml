@@ -8,22 +8,25 @@
 
   <Ontology>
     <FieldSemantics>
-      <field name="type">For non-module nodes, type is the ontological class: intent, feature, work, verification, decision, or deploy.</field>
-      <field name="kind">When present and equal to module, type is interpreted through the module taxonomy instead of the non-module ontology classes.</field>
+      <field name="kind">Universal node family discriminator: intent, feature, work, verification, decision, deploy, or module.</field>
+      <field name="type">Optional subtype or taxonomy field. In v1 it is used only for module taxonomy values such as CORE_LOGIC, UTILITY, or ENTRY_POINT.</field>
       <field name="stage">Lifecycle maturity uses the ordered values captured, clarified, designed, refined, ready, in_progress, verified, and done.</field>
-      <field name="status">Optional execution posture for work-tracking nodes uses active, blocked, deferred, dropped, or done.</field>
+      <field name="status">Optional execution posture for work-like nodes uses active, blocked, deferred, dropped, or done.</field>
     </FieldSemantics>
 
-    <NodeTypes>
-      <node-type name="intent">Represents a user or project intent before and during structured refinement.</node-type>
-      <node-type name="feature">Represents a stable capability or framework feature derived from intent.</node-type>
-      <node-type name="work">Represents active implementation or framework-definition work tracked over time.</node-type>
-      <node-type name="verification">Represents verification surfaces, phase gates, and proof obligations.</node-type>
-      <node-type name="decision">Represents an approved architectural or process decision.</node-type>
-      <node-type name="deploy">Represents deploy-facing workflow surfaces and readiness concerns.</node-type>
-    </NodeTypes>
+    <NodeKinds>
+      <node-kind name="intent">Represents a user or project intent before and during structured refinement.</node-kind>
+      <node-kind name="feature">Represents a stable capability or framework feature derived from intent.</node-kind>
+      <node-kind name="work">Represents active implementation or framework-definition work tracked over time.</node-kind>
+      <node-kind name="verification">Represents verification surfaces, phase gates, and proof obligations.</node-kind>
+      <node-kind name="decision">Represents an approved architectural or process decision.</node-kind>
+      <node-kind name="deploy">Represents deploy-facing workflow surfaces and readiness concerns.</node-kind>
+    </NodeKinds>
 
     <ModuleTaxonomy>
+      <!-- Active in v0.1: CORE_LOGIC, UTILITY, ENTRY_POINT.
+           DATA_LAYER, UI_COMPONENT, and INTEGRATION are reserved placeholders for future expansion
+           and must not be assumed present in the current framework architecture. -->
       <module-type name="ENTRY_POINT">Execution begins here for a product surface such as vibestart profile selection.</module-type>
       <module-type name="CORE_LOGIC">Owns framework semantics, graph rules, macro contracts, or governance behavior.</module-type>
       <module-type name="DATA_LAYER">Reserved for future persistence or storage-oriented surfaces.</module-type>
@@ -73,9 +76,9 @@
   <Nodes>
     <I-001>
       <name>IntentDrivenEngineeringFramework</name>
-      <type>intent</type>
+      <kind>intent</kind>
       <stage>clarified</stage>
-      <description>Define VIBE as a standalone methodology for intent-driven engineering with graph-first continuity and governed execution.</description>
+      <description>Define VIBE as Verified Intent-Based Engineering: a standalone methodology for intent-driven engineering with graph-first continuity, macro-driven goal closure, governed execution, and calibrated adaptive autonomy.</description>
       <source>docs/requirements.xml</source>
       <exports>
         <export-frameworkIdentity PURPOSE="Expose the core story of VIBE." />
@@ -84,7 +87,7 @@
 
     <F-001>
       <name>GraphFirstKnowledgeSystem</name>
-      <type>feature</type>
+      <kind>feature</kind>
       <stage>refined</stage>
       <description>Use the knowledge graph as the primary knowledge spine and project clarified intent into the remaining canonical artifacts through deterministic, idempotent projection rules.</description>
       <source>docs/knowledge-graph.xml</source>
@@ -95,9 +98,9 @@
 
     <F-002>
       <name>MacroLanguage</name>
-      <type>feature</type>
+      <kind>feature</kind>
       <stage>refined</stage>
-      <description>Expose discover, refine, deliver, fix, sync, resume, deploy, vibe, and calibrate as the public workflow language with deterministic routing and explicit state transitions.</description>
+      <description>Expose discover, refine, deliver, fix, sync, resume, deploy, and vibe as the public workflow language, with calibrate retained as an expert macro and all paths governed by deterministic routing and explicit state transitions.</description>
       <source>docs/vibe/macros.toml</source>
       <exports>
         <export-publicMacros PURPOSE="Provide the stable user-facing API of VIBE." />
@@ -106,10 +109,10 @@
 
     <F-003>
       <name>OptionalBootstrapProduct</name>
-      <type>feature</type>
+      <kind>feature</kind>
       <stage>refined</stage>
       <description>Describe vibestart as an optional product that installs and adapts VIBE through explicit core and deep product profiles, onboarding, and a deterministic first-run contract.</description>
-      <source>vibe.toml</source>
+      <source>docs/vibe/vibestart-contract.md</source>
       <exports>
         <export-bootstrapProfiles PURPOSE="Expose core and deep as product bootstrap profiles." />
         <export-firstRunContract PURPOSE="Expose the deterministic onboarding and first-run contract." />
@@ -118,25 +121,25 @@
 
     <W-001>
       <name>DefineMacroContracts</name>
-      <type>work</type>
-      <stage>refined</stage>
-      <status>active</status>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
       <summary>Translate framework principles into stable macro state machines, deterministic routing, and an internal skill layer.</summary>
     </W-001>
 
     <W-002>
       <name>DefineAdaptiveGovernance</name>
-      <type>work</type>
-      <stage>refined</stage>
-      <status>active</status>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
       <summary>Convert review, sync, drift, and calibration ideas into deterministic governance algebra with split sync semantics.</summary>
     </W-002>
 
     <W-003>
       <name>ConservativeRuntimeGuards</name>
-      <type>work</type>
-      <stage>designed</stage>
-      <status>active</status>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
       <summary>Keep guided and single as normative defaults while treating auto, multi, and calibrate apply as experimental until stronger guards exist.</summary>
     </W-003>
 
@@ -160,7 +163,7 @@
       <description>Graph-first ontology, lifecycle stages, and the semantic invariants that constrain projection.</description>
       <source>docs/knowledge-graph.xml</source>
       <exports>
-        <export-ontology PURPOSE="Expose node types, stages, and edges." />
+        <export-ontology PURPOSE="Expose node kinds, module taxonomy, stages, and edges." />
       </exports>
     </M-002>
 
@@ -215,7 +218,7 @@
 
     <W-004>
       <name>DefineBootstrapProductContract</name>
-      <type>work</type>
+      <kind>work</kind>
       <stage>done</stage>
       <status>done</status>
       <summary>Translate the framework into an explicit vibestart core/deep product contract with onboarding and first-run behavior.</summary>
@@ -223,7 +226,7 @@
 
     <V-001>
       <name>VerificationSurface</name>
-      <type>verification</type>
+      <kind>verification</kind>
       <stage>designed</stage>
       <description>The project-wide verification surface that certifies artifact coherence and policy consistency.</description>
       <source>docs/verification-plan.xml</source>
@@ -234,7 +237,7 @@
 
     <DEP-001>
       <name>DeployMacroSurface</name>
-      <type>deploy</type>
+      <kind>deploy</kind>
       <stage>captured</stage>
       <description>First-class deployment macro surface for local or quick-cloud deployment guidance.</description>
       <source>docs/development-plan.xml</source>
@@ -245,7 +248,7 @@
 
     <D-001>
       <name>StandaloneMethodologyOptionalProduct</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>VIBE is the methodology; vibestart is optional bootstrap/runtime.</description>
       <source>docs/decisions.xml</source>
@@ -256,7 +259,7 @@
 
     <D-002>
       <name>GraphFirstCanonicalModel</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>knowledge-graph.xml is primary; docs/specs side-bridge is rejected.</description>
       <source>docs/decisions.xml</source>
@@ -267,7 +270,7 @@
 
     <D-003>
       <name>ConfigBoundary</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>vibe.toml is root manifest, docs/vibe holds detailed policy, and .vibestart/state holds runtime exhaust.</description>
       <source>docs/decisions.xml</source>
@@ -278,7 +281,7 @@
 
     <D-004>
       <name>MacroFirstPublicApi</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Macros are the public workflow language; skills remain lower-level implementation operators.</description>
       <source>docs/decisions.xml</source>
@@ -289,7 +292,7 @@
 
     <D-005>
       <name>ImplicitVibeDefault</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Implicit vibe is enabled by default, while guided and single remain the safer starting defaults.</description>
       <source>docs/decisions.xml</source>
@@ -300,7 +303,7 @@
 
     <D-006>
       <name>RiskAndEvidenceGovernance</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Adaptive governance is driven by risk and evidence rather than elapsed time, with explicit calibration hooks.</description>
       <source>docs/decisions.xml</source>
@@ -311,7 +314,7 @@
 
     <D-007>
       <name>DeterministicKernelFirst</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Prioritize deterministic routing, projection, and governance algebra before expanding autonomous runtime behavior.</description>
       <source>docs/decisions.xml</source>
@@ -322,7 +325,7 @@
 
     <D-008>
       <name>FormalProjectionAndRoutingContracts</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Projection and routing must be explicit contracts with guards, precedence, and conflict handling, not only narrative descriptions.</description>
       <source>docs/decisions.xml</source>
@@ -333,7 +336,7 @@
 
     <D-009>
       <name>SplitSyncSemantics</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>sync is a two-phase flow: canonical reconcile first, owned-only cleanup second.</description>
       <source>docs/decisions.xml</source>
@@ -344,7 +347,7 @@
 
     <D-010>
       <name>ConservativeRuntimeDefaults</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>guided and single are the normative defaults, while auto, multi, and calibrate apply remain experimental until stronger guards and verification exist.</description>
       <source>docs/decisions.xml</source>
@@ -355,7 +358,7 @@
 
     <D-011>
       <name>BootstrapProfilesShareOneMethodology</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>vibestart core and deep are product profiles over one VIBE methodology, not separate standards.</description>
       <source>docs/decisions.xml</source>
@@ -366,7 +369,7 @@
 
     <D-012>
       <name>DeterministicFirstRunContract</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>vibestart must emit a deterministic first-run contract covering installed surfaces, defaults, optionals, and next-step behavior.</description>
       <source>docs/decisions.xml</source>
@@ -377,7 +380,7 @@
 
     <D-013>
       <name>EnglishContractMarkup</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>Canonical contract markup and structural labels remain in English for cross-agent and cross-runtime interoperability.</description>
       <source>docs/decisions.xml</source>
@@ -388,7 +391,7 @@
 
     <D-014>
       <name>GraceTechnologyCompatibilityShim</name>
-      <type>decision</type>
+      <kind>decision</kind>
       <stage>done</stage>
       <description>docs/technology.xml may exist to satisfy GRACE-compatible planning workflows, but it remains a compatibility shim rather than a canonical VIBE core artifact.</description>
       <source>docs/decisions.xml</source>
@@ -470,9 +473,12 @@
     <CrossLink from="M-003" to="D-005" doc="decisions.xml" />
     <CrossLink from="M-004" to="D-006" doc="decisions.xml" />
     <CrossLink from="M-002" to="D-007" doc="decisions.xml" />
+    <CrossLink from="M-003" to="D-007" doc="decisions.xml" />
+    <CrossLink from="M-004" to="D-007" doc="decisions.xml" />
     <CrossLink from="M-002" to="D-008" doc="decisions.xml" />
     <CrossLink from="M-003" to="D-008" doc="decisions.xml" />
     <CrossLink from="M-004" to="D-009" doc="decisions.xml" />
+    <CrossLink from="M-003" to="D-010" doc="decisions.xml" />
     <CrossLink from="M-005" to="D-010" doc="decisions.xml" />
     <CrossLink from="M-006" to="D-011" doc="decisions.xml" />
     <CrossLink from="M-006" to="D-012" doc="decisions.xml" />

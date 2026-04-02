@@ -59,7 +59,7 @@ Provide a low-friction path to:
 ### What core installs
 
 - the shared install surface
-- the root manifest with `bootstrap_profile = "core"`
+- the root manifest with `[bootstrap].profile = "core"`
 - minimal runtime state directory
 - profile-safe onboarding and first-run explanation
 - environment adaptation required to operate the canonical VIBE surfaces in the current agent shell
@@ -97,7 +97,7 @@ Provide a longer-lived operating contour for projects that are ready to invest m
 ### What deep installs
 
 - everything from `core`
-- the root manifest with `bootstrap_profile = "deep"`
+- the root manifest with `[bootstrap].profile = "deep"`
 - expanded configuration comments and extension-ready surfaces
 - placeholders or adapters for richer integrations when the current environment supports them
 - deeper onboarding that explains what is now available beyond the core baseline
@@ -113,7 +113,7 @@ Normative defaults remain:
 What changes is product depth, not methodology semantics.
 
 `deep` is allowed to prepare or expose richer optional surfaces such as:
-- docs integrations
+- external integrations
 - richer memory backends
 - stronger multi-agent preparation
 - deeper deployment-related setup
@@ -147,7 +147,7 @@ Experimental surfaces currently include:
 
 Even after installation, these remain optional:
 - `vibestart` itself, because VIBE can still be used directly through its canonical files
-- external docs integrations
+- external integrations
 - non-XML memory backends
 - environment-specific multi-agent capabilities
 - deeper deployment surfaces
@@ -226,7 +226,7 @@ Active defaults:
 - agents = single
 
 Optional:
-- docs integrations
+- external integrations
 - richer memory backends
 - multi-agent runtime surfaces
 - experimental surfaces: auto, multi, calibrate-apply

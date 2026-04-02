@@ -7,6 +7,17 @@
     <annotation>Define the VIBE framework and the optional vibestart bootstrap/runtime product as a coherent, agent-agnostic engineering system.</annotation>
   </ProjectInfo>
 
+  <Identity>
+    <definition>VIBE stands for Verified Intent-Based Engineering. It is an agent-agnostic methodology for intent-driven engineering.</definition>
+    <purpose>VIBE exists to reduce drift between engineering intent, canonical knowledge artifacts, implementation, verification, and runtime control behavior.</purpose>
+    <lineage>VIBE is not a zero-based invention. It preserves and extends proven practices from GRACE and adjacent agentic workflow tooling: graph-first continuity, contract-first planning, verification as architecture, structured repair, session continuity, and controlled multi-agent execution.</lineage>
+    <macro-model>VIBE exposes a stable public macro language: discover, refine, deliver, fix, sync, resume, deploy, and vibe. These macros reduce the need for manual phase orchestration by letting the operator work from the engineering goal while the system selects and executes the appropriate workflow path toward closure.</macro-model>
+    <adaptive-autonomy>VIBE includes built-in hooks for adaptive development. With a strong enough model, runtime harness, observability, and verification surface, the same methodology can safely calibrate autonomy, review sensitivity, sync behavior, and single versus multi-agent execution instead of remaining permanently locked in a conservative mode.</adaptive-autonomy>
+    <surface-model>VIBE separates semantic knowledge from operating contracts. Canonical knowledge lives in XML artifacts under docs/, while active operating contracts live in vibe.toml and detailed TOML surfaces under docs/vibe/. Runtime state, logs, and operational exhaust are isolated under .vibestart/state/ and must not compete with canonical truth.</surface-model>
+    <product-boundary>vibestart is an optional bootstrap/runtime product for VIBE. It does not redefine the methodology; it installs and adapts it in concrete repositories and environments.</product-boundary>
+    <profiles>vibestart exposes two product profiles over one VIBE methodology: core and deep. Core provides the lighter and more conservative operating baseline, while deep is intended for a richer operational contour and stronger adaptive agentic development.</profiles>
+  </Identity>
+
   <Principles>
     <principle-1 name="Intent Awareness">Understand the actual engineering intent behind a request instead of merely obeying the literal wording.</principle-1>
     <principle-2 name="Context Awareness">Use project state, prior decisions, active work, drift signals, and verification posture as first-class context.</principle-2>

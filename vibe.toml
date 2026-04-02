@@ -2,25 +2,33 @@
 # This file stores the active project-level VIBE configuration.
 # Keep this file short and stable. Put detailed policy tuning into docs/vibe/*.toml.
 
-# Manifest schema version.
-# Recommended: bump only for breaking config changes.
-version = "1"
+# Root manifest metadata for the active VIBE configuration.
+# Recommended: keep this section stable and change it only for manifest-level evolution.
+[manifest]
+# Schema version for vibe.toml itself, not the framework, product, or release version.
+# Recommended: bump only for breaking manifest changes.
+schema_version = "1"
+
+# Semantic role of this file inside the VIBE configuration system.
+# Recommended: keep as "root-active-config" for the canonical root manifest.
+role = "root-active-config"
 
 [project]
-# Human-readable project name.
-# Recommended: stable repository or product name.
-name = "vibe-framework"
+# Human-readable workspace name for this repository.
+# Recommended: keep aligned with canonical identity surfaces.
+name = "VIBE / vibestart"
 
 # Short annotation used in status, onboarding, and generated surfaces.
-# Recommended: one sentence describing the project scope.
-annotation = "Design workspace for the VIBE framework and the vibestart bootstrap/runtime product."
+# Recommended: describe the repository as a design and implementation workspace.
+annotation = "Design workspace for the VIBE framework and the optional vibestart bootstrap/runtime product."
 
-# Active vibestart bootstrap profile for this repository.
+[bootstrap]
+# Active vibestart bootstrap profile for this repository when the product layer is in scope.
 # Allowed: "core" | "deep"
 # Recommended: "core" while the methodology and product surface are still evolving.
-bootstrap_profile = "core"
+profile = "core"
 
-[defaults]
+[execution]
 # When true, plain engineering requests are routed through the VIBE macro layer
 # as if the user had invoked the top-level `vibe` macro explicitly.
 # Recommended: true
@@ -36,7 +44,10 @@ autonomy = "guided"
 # Recommended: "single" until the plan shape and environment clearly support parallel work.
 agents = "single"
 
-[stability]
+[execution_policy]
+# These values intentionally repeat the execution baseline so policy tooling can
+# distinguish normative defaults from merely active local defaults.
+
 # Normative framework default for autonomy.
 # Recommended: "guided"
 normative_autonomy = "guided"
@@ -49,24 +60,15 @@ normative_agents = "single"
 # Recommended: keep explicit to avoid silent autonomy inflation.
 experimental = ["auto", "multi", "calibrate-apply"]
 
-[profiles]
-# Active governance profile name.
-# Recommended: use a small set of memorable profiles and tune details in docs/vibe/governance.toml.
-governance = "balanced"
-
-# Active macro behavior profile name.
-# Recommended: "default" unless the project adopts custom macro semantics.
-macros = "default"
-
-[features]
+[capabilities]
 # Primary memory surface for the project.
 # Allowed: "xml" | "db"
 # Recommended: "xml" for methodology-first work; switch to "db" only when long-lived memory is needed.
 memory = "xml"
 
-# Enables optional external docs/tool integrations.
+# Enables optional external integration surfaces.
 # Recommended: false until the core framework surface is stable.
-docs_integrations = false
+external_integrations = false
 
 # Enables deployment planning as a first-class capability in the project.
 # Recommended: true because deploy is part of the VIBE macro vocabulary.
@@ -76,7 +78,7 @@ deployment = true
 # Recommended: true
 calibration_hooks = true
 
-[policy]
+[contracts]
 # Detailed governance policy file.
 # Recommended: keep the active project policy in docs/vibe/governance.toml.
 governance_file = "docs/vibe/governance.toml"
@@ -86,6 +88,10 @@ governance_file = "docs/vibe/governance.toml"
 macros_file = "docs/vibe/macros.toml"
 
 [boundary]
+# Future refactor note:
+# If this section grows materially, consider splitting it into [boundary.paths]
+# and [boundary.roles]. Keep it flat in v1 to avoid premature schema fragmentation.
+
 # Canonical documentation root for VIBE project knowledge.
 # Recommended: "docs"
 canonical_docs_root = "docs"
@@ -115,6 +121,6 @@ runtime_state_role = "runtime-exhaust"
 runtime_state_canonical = false
 
 [overrides]
-# Optional additional policy fragments, loaded after the primary policy files.
+# Optional additional contract/config fragments, loaded after the primary policy files.
 # Recommended: leave empty unless a repository-specific exception is truly needed.
-policy_files = []
+override_files = []

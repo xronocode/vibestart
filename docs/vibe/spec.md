@@ -24,6 +24,14 @@ If this document and the canonical surfaces disagree, the canonical surfaces win
 
 VIBE is an agent-agnostic methodology for intent-driven engineering. Its purpose is to reduce drift between user intent, canonical artifacts, code, verification, and runtime control behavior.
 
+VIBE is not a zero-based invention. It preserves and extends proven practices from GRACE and adjacent agentic workflow tooling:
+- graph-first continuity
+- contract-first planning
+- verification as architecture
+- structured repair and synchronization
+- session continuity and safe resume
+- controlled parallel and multi-agent execution
+
 VIBE does not define one shell, one model vendor, or one runtime. It defines a stable engineering grammar:
 - a graph-first knowledge model
 - deterministic projection rules
@@ -31,7 +39,25 @@ VIBE does not define one shell, one model vendor, or one runtime. It defines a s
 - risk-and-evidence governance
 - traceable autonomous execution
 
+The macro layer is critical. VIBE exposes `discover`, `refine`, `deliver`, `fix`, `sync`, `resume`, `deploy`, and `vibe` as public workflow contracts so the operator does not need to manually orchestrate isolated phases to achieve an engineering goal. The system routes from the goal shape toward the appropriate path and drives the work toward closure instead of stopping at one low-level step.
+
+VIBE also includes hooks for adaptive development. When the model, runtime harness, observability, and verification surface are strong enough, the same methodology can safely calibrate:
+- `guided` toward `auto`
+- `single` toward `multi`
+- review sensitivity
+- sync behavior
+- policy tuning through controlled calibration
+
+The operating surface is split deliberately:
+- XML artifacts under `docs/` hold canonical knowledge
+- `vibe.toml` and `docs/vibe/*.toml` hold active operating contracts and policy
+- `.vibestart/state/` holds runtime state and operational exhaust only
+
 `vibestart` is an optional bootstrap/runtime product that installs and adapts VIBE in a concrete repository and agent environment.
+
+`vibestart` exposes two product profiles over one VIBE methodology:
+- `core` for the lighter and more conservative operating baseline
+- `deep` for a richer operational contour and stronger adaptive agentic development
 
 ## 2. Core Principles
 

@@ -56,6 +56,7 @@ allow_override = true
 
 # Allow disabling canonical macros.
 # Recommended: true only if accompanied by an explicit warning.
+# Disabling canonical macros weakens VIBE compatibility guarantees and should be treated as an exceptional choice.
 allow_disable = true
 
 # Emit warnings when a canonical macro is disabled and compatibility may be reduced.
@@ -65,19 +66,6 @@ warn_on_disable = true
 # Require an explicit acknowledgement when disabling canonical macros.
 # Recommended: true
 require_disable_acknowledgement = true
-
-[stability]
-# Normative framework default for autonomy.
-# Recommended: "guided"
-normative_autonomy = "guided"
-
-# Normative framework default for agent count.
-# Recommended: "single"
-normative_agents = "single"
-
-# Non-normative but permitted surfaces while the deterministic kernel is still being hardened.
-# Recommended: keep explicit.
-experimental = ["auto", "multi", "calibrate-apply"]
 
 [skills]
 # Internal operators used to realize the public macro contracts.
@@ -91,6 +79,11 @@ public = false
 # Macro contracts are the compatibility surface; skill names are lower-level implementation details.
 # Recommended: "macro-semantics-first"
 compatibility_contract = "macro-semantics-first"
+
+# Per-macro operator mappings.
+# These lists describe the core internal operators that realize each macro.
+# They are semantic realization sets, not a replacement for the macro-level contract,
+# guards, transitions, or invariants defined below.
 
 [skills.mapping.discover]
 # Core internal operators that realize discover.
@@ -170,6 +163,8 @@ requirements_projection_min_stage = "clarified"
 reads = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml", "project-context"]
 
 # Canonical write set for discover.
+# decisions.xml is included only for committed choices that emerge during clarification;
+# discover must not turn exploratory ambiguity into premature decisions.
 writes = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml"]
 
 # Entry guard for discover.
@@ -201,6 +196,9 @@ min_input_stage = "designed"
 projection_mode = "deterministic"
 projection_source_of_truth = "knowledge-graph"
 projection_idempotent = true
+
+# Lower bound for requirements projection preserved by refine.
+# discover may already project clarified intent into requirements; refine must not violate the same floor.
 requirements_projection_min_stage = "clarified"
 plan_projection_min_stage = "designed"
 verification_projection_min_stage = "designed"
@@ -208,6 +206,7 @@ projection_conflict_policy = "graph-first-until-committed"
 reverse_projection_allowed = false
 
 reads = ["docs/knowledge-graph.xml", "docs/requirements.xml", "docs/decisions.xml"]
+# decisions.xml is written only when refinement produces an actual committed engineering choice.
 writes = ["docs/development-plan.xml", "docs/verification-plan.xml", "docs/knowledge-graph.xml", "docs/decisions.xml"]
 entry_guard = "designed_or_more_mature_graph_state_present"
 transitions = ["designed:refined", "refined:ready"]
@@ -226,10 +225,15 @@ default_autonomy = "guided"
 # Recommended: "single" as default, with optional multi when supported.
 default_agents = "single"
 allow_auto = true
+
+# Allow deliver to accept multi mode when the environment, plan shape, and write scopes support it.
+# Recommended: true
 allow_multi = true
 auto_stability = "experimental"
 multi_stability = "experimental"
 reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "docs/decisions.xml", "codebase"]
+
+# decisions.xml is written only when implementation forces or confirms a committed engineering choice.
 writes = ["codebase", "docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "docs/decisions.xml"]
 entry_guard = "ready_work_and_verification_surface_present"
 transitions = ["ready:in_progress", "in_progress:verified", "verified:done"]
@@ -242,10 +246,15 @@ lineage = ["grace:fix", "vibe:drift-aware-repair"]
 default_autonomy = "guided"
 default_agents = "single"
 allow_auto = true
+
+# Allow fix to accept multi mode only for decomposable repairs; most fixes should still remain single-agent.
+# Recommended: true
 allow_multi = true
 auto_stability = "experimental"
 multi_stability = "experimental"
 reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "codebase", "runtime-evidence"]
+
+# Graph, plan, and verification surfaces are written only when the repair exposes structural or verification drift.
 writes = ["codebase", "docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml"]
 entry_guard = "failing_evidence_or_drift_signal_present"
 transitions = ["done:in_progress", "in_progress:verified", "verified:done"]
@@ -253,7 +262,7 @@ invariants = ["repair_explains_mismatch", "artifact_updates_only_when_structure_
 
 [macros.sync]
 enabled = true
-purpose = "Reconcile canonical artifacts with code and normalize VIBE-owned operational exhaust."
+purpose = "Reconcile graph, requirements, plan, and verification surfaces with code, then normalize VIBE-owned operational exhaust."
 lineage = ["grace:status", "grace:refresh", "g-drift", "vibe:ownership-cleanup"]
 default_autonomy = "guided"
 default_agents = "single"
@@ -279,6 +288,7 @@ auto_stability = "experimental"
 reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", ".vibestart/state/*"]
 writes = [".vibestart/state/*"]
 entry_guard = "interrupted_or_returning_session_present"
+# resume expresses a control-flow re-entry into active work, not a new product-maturity projection.
 transitions = ["resume:in_progress"]
 invariants = ["current_position_explained", "next_safe_step_recommended"]
 
@@ -292,7 +302,8 @@ allow_auto = true
 allow_multi = false
 auto_stability = "experimental"
 reads = ["docs/knowledge-graph.xml", "docs/development-plan.xml", "docs/verification-plan.xml", "project-config"]
-writes = ["deployment-config", "docs/knowledge-graph.xml", "docs/decisions.xml", ".vibestart/state/*"]
+# decisions.xml is written only when deployment setup introduces a committed engineering or operational choice.
+writes = ["deploy-scaffold", "docs/knowledge-graph.xml", "docs/decisions.xml", ".vibestart/state/*"]
 entry_guard = "verified_work_or_explicit_deploy_request_present"
 transitions = ["verified:done"]
 invariants = ["reconcile_before_deploy", "deploy_path_explained_or_executed"]
@@ -307,10 +318,15 @@ lineage = ["vibe:native-orchestrator"]
 default_autonomy = "guided"
 default_agents = "single"
 allow_auto = true
+
+# Allow the top-level orchestrator to select macro paths that may use multi mode downstream.
+# Recommended: true
 allow_multi = true
 auto_stability = "experimental"
 multi_stability = "experimental"
 reads = ["docs/*.xml", "vibe.toml", "docs/vibe/*.toml", "codebase", ".vibestart/state/*"]
+
+# vibe does not define an independent write surface; writes are delegated to the selected macro contract.
 writes = ["delegated-to-selected-macro"]
 entry_guard = "ordinary_engineering_intent_present"
 transitions = ["route:discover", "route:refine", "route:deliver", "route:fix", "route:sync", "route:resume", "route:deploy"]
@@ -339,6 +355,7 @@ actions = ["analyze", "suggest", "apply"]
 apply_requires_explicit_confirmation = true
 
 # Apply remains experimental until the deterministic kernel and governance verification are stronger.
+# Even when present here, apply may still be disabled by the active governance policy.
 # Recommended: "experimental"
 apply_stability = "experimental"
 

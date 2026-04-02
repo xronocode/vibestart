@@ -2,7 +2,7 @@
 # This file defines how review, sync, and risk escalation behave.
 # The standard defines which signals exist. This file tunes their thresholds.
 
-[policy]
+[preflight]
 # Emit governance recommendations before a macro proceeds.
 # Recommended: true
 preflight_recommendations = true
@@ -22,9 +22,13 @@ use_time_as_primary_signal = false
 
 [decision_function]
 # Use an explicit and reproducible selection model for review and sync decisions.
-# Allowed: "deterministic" | "heuristic"
+# Allowed: "deterministic"
 # Recommended: "deterministic"
 mode = "deterministic"
+
+# Future note:
+# A heuristic mode may exist in non-canonical experiments, but it is not part of the
+# normative VIBE governance contract.
 
 # Ordered precedence for deciding the minimum review floor before scale bands are applied.
 # Recommended: keep this stable so compliant runtimes converge on the same decision.
@@ -40,7 +44,7 @@ tie_break = "escalate"
 # Recommended: "escalate"
 unknown_signal_policy = "escalate"
 
-# Deterministic order for scale comparison when multiple scale signals exist.
+# Deterministic order for evaluating scale-based escalation once precedence reaches the scale-threshold layer.
 # Recommended: "modules_then_files_then_lines"
 scale_driver = "modules_then_files_then_lines"
 
@@ -53,7 +57,9 @@ files_changed = true
 # Recommended: true
 modules_touched = true
 
-# Track how many lines changed. This is secondary to module and file scope.
+# Track how many lines changed.
+# Secondary signal only: this may refine a scale decision, but it must never outweigh
+# module scope, contract changes, drift, or verification gaps.
 # Recommended: true
 lines_changed = true
 
@@ -103,6 +109,10 @@ scoped_max_modules = 3
 # Recommended: 4
 full_min_modules = 4
 
+# Review-history thresholds.
+# These are intentionally kept here in v1, even though they model accumulated review debt
+# rather than current change scale. Split into a dedicated streak/debt section if this grows.
+
 # Consecutive quick reviews allowed before the next change should escalate to scoped.
 # Recommended: 3
 quick_streak_before_scoped = 3
@@ -118,6 +128,8 @@ scoped_streak_before_full = 2
 contract_change_min_review = "scoped"
 
 # Minimum review level when deployment behavior changes.
+# Deployment keeps an explicit floor because release-path errors are operationally visible and costly.
+# Dependency-only changes still escalate through the main signal and scoring model unless a stricter floor is added later.
 # Recommended: "scoped"
 deploy_change_min_review = "scoped"
 
@@ -134,10 +146,10 @@ multi_agent_wave_min_review = "scoped"
 # Recommended: true
 enabled = true
 
-# Baseline review level after fix when no higher-risk signal dominates.
+# Default review level after fix when no higher-risk signal dominates.
 # Allowed: "quick" | "scoped" | "full"
 # Recommended: "quick"
-baseline = "quick"
+default_level = "quick"
 
 # Reuse the same governance engine for review-after-fix escalation instead of inventing a separate rule tree.
 # Recommended: true
@@ -149,6 +161,8 @@ required_before_close = true
 
 [risk_scoring]
 # Enable explicit risk scoring as an explainability aid for governance traces.
+# Risk scoring is subordinate to hard review floors, deterministic precedence rules,
+# and explicit policy minimums. It must refine decisions, not silently replace them.
 # Recommended: true
 enabled = true
 
@@ -188,6 +202,8 @@ multi_agent_complexity_weight = 2
 # Recommended: 4 because drift directly threatens predictability.
 artifact_drift_weight = 4
 
+# Score-band mapping refines review selection only after hard floors and precedence rules are applied.
+
 # Score band ceiling still considered quick by score alone.
 # Recommended: 3
 quick_max_score = 3
@@ -219,6 +235,12 @@ canonical_phase_first = true
 unknown_artifacts_policy = "report-only"
 
 [sync.reconcile]
+# Trigger families kept together in v1:
+# - post-action triggers
+# - pre-action gates
+# - structural-change triggers
+# Split only if reconcile trigger logic grows materially.
+
 # Trigger reconcile after deliver when code and artifacts are both in play.
 # Recommended: true
 after_deliver = true
@@ -265,6 +287,9 @@ canonical_docs_read_only = true
 run_only_when_owned_exhaust_present = true
 
 [drift]
+# Minimal drift-check baseline for a compliant VIBE governance surface.
+# These checks may be extended, but turning them off weakens the anti-drift contract materially.
+
 # Check graph, plan, and code for structural disagreement.
 # Recommended: true
 check_graph_plan_code = true
@@ -290,6 +315,9 @@ allow_suggest = true
 # Recommended: false until the deterministic kernel and stronger verification are mature.
 allow_apply = false
 
+# Supported modes describe the calibration contract surface.
+# A mode may be part of the contract while still being disabled in the active project policy.
+
 # Supported calibration modes in ascending order of impact.
 # Recommended: keep all three stable so tooling can discover the contract even when apply stays disabled.
 supported_modes = ["analyze", "suggest", "apply"]
@@ -309,7 +337,7 @@ normalized_bundle = true
 
 # Required fields that must appear in a governance trace or recommendation bundle.
 # Recommended: keep stable for interoperability across shells and runtimes.
-required_fields = ["signals", "risk_score", "selected_review", "sync_required", "sync_phase"]
+required_fields = ["signals", "risk_score", "selected_review", "sync_required", "sync_phase", "decision_reason"]
 
 # Include the winning decision reason so guided mode can explain the chosen escalation path.
 # Recommended: true
