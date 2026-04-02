@@ -248,7 +248,7 @@
   </DataFlow>
 
   <ImplementationOrder>
-    <Phase-1 name="Framework Foundation" status="in-progress">
+    <Phase-1 name="Framework Foundation" status="done">
       <goal>Lock the identity, ontology, and configuration boundaries before deeper product work begins.</goal>
       <step-1 module="M-001" status="done" verification="V-M-001">Define framework identity, principles, and value boundaries.</step-1>
       <step-2 module="M-002" status="done" verification="V-M-002">Define the graph-first ontology and artifact projection algebra.</step-2>
