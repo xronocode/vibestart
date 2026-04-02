@@ -156,12 +156,13 @@
         <scenario-3>Comments explain the meaning and recommended values of the main settings.</scenario-3>
         <scenario-4>guided and single remain normative defaults while auto, multi, and calibrate apply are explicitly marked experimental.</scenario-4>
         <scenario-5>Recommendation confirmation UX can stay short without introducing hidden acceptance semantics.</scenario-5>
+        <scenario-6>The root manifest declares the canonical docs root, policy docs root, and runtime state root explicitly enough for tooling to enforce the boundary.</scenario-6>
       </scenarios>
       <traces>
         <trace-1>All config files parse and reference each other consistently.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; tmod=__import__(mod); root=tmod.load(open('vibe.toml','rb')); gov=tmod.load(open('docs/vibe/governance.toml','rb')); mac=tmod.load(open('docs/vibe/macros.toml','rb')); assert root['defaults']['autonomy']=='guided'; assert root['defaults']['agents']=='single'; assert 'experimental' in root['stability']; assert mac['macros']['deliver']['default_autonomy']=='guided'; assert mac['macros']['calibrate']['apply_stability']=='experimental'"</test-command>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; tmod=__import__(mod); root=tmod.load(open('vibe.toml','rb')); gov=tmod.load(open('docs/vibe/governance.toml','rb')); mac=tmod.load(open('docs/vibe/macros.toml','rb')); assert root['defaults']['autonomy']=='guided'; assert root['defaults']['agents']=='single'; assert 'experimental' in root['stability']; assert mac['macros']['deliver']['default_autonomy']=='guided'; assert mac['macros']['calibrate']['apply_stability']=='experimental'; assert root['boundary']['canonical_docs_root']=='docs'; assert root['boundary']['policy_docs_root']=='docs/vibe'; assert root['boundary']['runtime_state_root']=='.vibestart/state'; assert root['boundary']['runtime_state_canonical'] is False"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_CONFIG_BOUNDARY</block>
@@ -416,7 +417,7 @@
     </trace-req>
     <trace-req module="M-005">
       <marker>[VIBE][ConfigurationSurface][BLOCK_DEFINE_CONFIG_BOUNDARY]</marker>
-      <required-fields>bootstrap_profile, autonomy, agents, governance_file, macros_file</required-fields>
+      <required-fields>bootstrap_profile, autonomy, agents, governance_file, macros_file, canonical_docs_root, policy_docs_root, runtime_state_root, runtime_state_canonical</required-fields>
       <assertion>The active config boundary and defaults must remain explicit and reviewable.</assertion>
     </trace-req>
     <trace-req module="M-006">
