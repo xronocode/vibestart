@@ -126,12 +126,14 @@
         <scenario-5>sync is split into reconcile and cleanup phases with owned-only cleanup semantics.</scenario-5>
         <scenario-6>fix can trigger a review-after-fix hook that uses the same risk engine instead of a separate ad hoc rule.</scenario-6>
         <scenario-7>Recommendation confirmation UX is explicit and minimal.</scenario-7>
+        <scenario-8>Governance emits a normalized recommendation bundle with explicit review ordering and sync phase values.</scenario-8>
+        <scenario-9>Calibration hooks expose analyze, suggest, and apply modes, while apply remains explicitly gated.</scenario-9>
       </scenarios>
       <traces>
         <trace-1>The governance file and the development plan for M-004 agree on the policy responsibilities.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/governance.toml','rb')); assert t['decision_function']['mode']=='deterministic'; assert t['decision_function']['tie_break']=='escalate'; assert t['sync']['mode']=='two-phase'; assert t['sync']['unknown_artifacts_policy']=='report-only'; assert t['risk_scoring']['enabled'] is True; assert t['review']['after_fix']['enabled'] is True; assert t['review']['after_fix']['baseline']=='quick'; assert t['recommendations']['confirmation_token']=='v'; assert 'м' in t['recommendations']['confirmation_aliases']; assert t['recommendations']['confirmation_case_sensitive'] is False"</test-command>
+        <test-command>python3 -c "import importlib.util; mod='tomllib' if importlib.util.find_spec('tomllib') else 'tomli'; t=__import__(mod).load(open('docs/vibe/governance.toml','rb')); assert t['decision_function']['mode']=='deterministic'; assert t['decision_function']['tie_break']=='escalate'; assert t['sync']['mode']=='two-phase'; assert t['sync']['unknown_artifacts_policy']=='report-only'; assert t['risk_scoring']['enabled'] is True; assert t['review']['after_fix']['enabled'] is True; assert t['review']['after_fix']['baseline']=='quick'; assert t['calibration']['supported_modes']==['analyze','suggest','apply']; assert t['calibration']['apply_requires_explicit_user_intent'] is True; assert t['calibration']['apply_expert_only'] is True; assert t['outputs']['normalized_bundle'] is True; assert t['outputs']['required_fields']==['signals','risk_score','selected_review','sync_required','sync_phase']; assert t['outputs']['review_levels']==['quick','scoped','full']; assert t['outputs']['sync_phase_values']==['none','reconcile','cleanup']; assert t['outputs']['cleanup_requires_reconcile'] is True; assert t['recommendations']['confirmation_token']=='v'; assert 'м' in t['recommendations']['confirmation_aliases']; assert t['recommendations']['confirmation_case_sensitive'] is False"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_ESCALATE_REVIEW</block>
@@ -413,7 +415,7 @@
     </trace-req>
     <trace-req module="M-004">
       <marker>[VIBE][GovernancePolicy][BLOCK_ESCALATE_REVIEW]</marker>
-      <required-fields>risk_score, selected_review, sync_required, sync_phase, tie_break</required-fields>
+      <required-fields>risk_score, selected_review, sync_required, sync_phase, tie_break, required_fields, review_levels, sync_phase_values, supported_modes</required-fields>
       <assertion>Governance recommendations must be explainable from the chosen signals, thresholds, and deterministic selection rules.</assertion>
     </trace-req>
     <trace-req module="M-005">

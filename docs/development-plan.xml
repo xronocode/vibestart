@@ -110,7 +110,7 @@
       </notes>
     </M-003>
 
-    <M-004 NAME="GovernancePolicy" TYPE="CORE_LOGIC" LAYER="1" ORDER="2" STATUS="in-progress">
+    <M-004 NAME="GovernancePolicy" TYPE="CORE_LOGIC" LAYER="1" ORDER="2" STATUS="done">
       <contract>
         <purpose>Define adaptive governance as a deterministic review-selection and sync-selection algebra with explicit calibration hooks.</purpose>
         <inputs>
@@ -258,7 +258,7 @@
     <Phase-2 name="Workflow Language" status="in-progress">
       <goal>Lock the public macro API and the first governance semantics.</goal>
       <step-1 module="M-003" status="done" verification="V-M-003">Define macro contracts, routing guards, and state-machine transitions.</step-1>
-      <step-2 module="M-004" status="in-progress" verification="V-M-004">Define adaptive governance algebra, sync split, thresholds, and calibration hooks.</step-2>
+      <step-2 module="M-004" status="done" verification="V-M-004">Define adaptive governance algebra, sync split, thresholds, and calibration hooks.</step-2>
     </Phase-2>
 
     <Phase-3 name="Bootstrap Product Mapping" status="done">
