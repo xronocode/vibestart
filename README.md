@@ -4,7 +4,7 @@
 
 It is an agent-agnostic methodology for intent-driven engineering, designed to reduce drift between engineering intent, canonical knowledge artifacts, implementation, verification, and runtime control behavior.
 
-## What this repository currently contains
+## Public root surface
 
 The clean methodology surface:
 - `vibe.toml`
@@ -37,20 +37,20 @@ It is intended to install and adapt one VIBE methodology through two product pro
 At the methodology level, `VIBE` remains one standard.
 `core` and `deep` are product profiles, not separate frameworks.
 
-## Current draft status
+## Repository structure
 
-This repository is still in an active draft-and-separation phase:
-- the methodology surface is being hardened
-- the old vibestart v3 runtime/toolkit is being quarantined out of the clean release surface
-- compatibility material is being kept explicit instead of being mixed into core semantics
+- repository root, `vibe.toml`, and `docs/` form the clean VIBE working and release surface
+- `docs/technology.xml` is compatibility-only material kept for GRACE-compatible flows
+- `internal/` holds project-internal reviews, inventory, and migration notes
+- `legacy/vibestart-v3/` holds the quarantined vibestart v3 package
 
 ## Legacy package
 
-The previous vibestart v3 product/runtime materials are being moved into:
+The previous vibestart v3 product/runtime materials are preserved under:
 
 - `legacy/vibestart-v3/`
 
-That package is preserved for reference and phased extraction, but it is no longer the canonical description of the new VIBE methodology surface.
+That package is preserved for reference and phased extraction, but it is no longer the canonical description of the new VIBE methodology or product surface.
 
 ## Internal working materials
 
@@ -59,3 +59,11 @@ Project-internal audits and inventory reports live under:
 - `internal/`
 
 They are useful during development and migration, but they are not part of the clean public methodology contract.
+
+## Current working rule
+
+New VIBE and vibestart product/workspace work happens only on the clean root surface.
+
+- treat `legacy/` as reference-only unless a deliberate extraction or migration task requires it
+- keep compatibility artifacts explicit instead of letting them leak into VIBE core semantics
+- keep internal reports out of the public contract surface
