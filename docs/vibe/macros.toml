@@ -79,6 +79,55 @@ normative_agents = "single"
 # Recommended: keep explicit.
 experimental = ["auto", "multi", "calibrate-apply"]
 
+[skills]
+# Internal operators used to realize the public macro contracts.
+# Recommended: keep this layer private and evolve it without renaming the public macros.
+internal = ["route-intent", "clarify-intent", "update-graph", "project-requirements", "decompose-work", "design-verification", "implement-scope", "review-scope", "sync-artifacts", "restore-context", "prepare-deploy", "calibrate-policy"]
+
+# Public users should interact with macros, not these operators directly.
+# Recommended: false
+public = false
+
+# Macro contracts are the compatibility surface; skill names are lower-level implementation details.
+# Recommended: "macro-semantics-first"
+compatibility_contract = "macro-semantics-first"
+
+[skills.mapping.discover]
+# Core internal operators that realize discover.
+operators = ["route-intent", "clarify-intent", "update-graph", "project-requirements"]
+
+[skills.mapping.refine]
+# Core internal operators that realize refine.
+operators = ["decompose-work", "design-verification", "update-graph"]
+
+[skills.mapping.deliver]
+# Core internal operators that realize deliver.
+operators = ["implement-scope", "review-scope", "sync-artifacts"]
+
+[skills.mapping.fix]
+# Core internal operators that realize fix.
+operators = ["implement-scope", "review-scope", "sync-artifacts"]
+
+[skills.mapping.sync]
+# Core internal operators that realize sync.
+operators = ["sync-artifacts"]
+
+[skills.mapping.resume]
+# Core internal operators that realize resume.
+operators = ["restore-context", "route-intent"]
+
+[skills.mapping.deploy]
+# Core internal operators that realize deploy.
+operators = ["prepare-deploy", "sync-artifacts"]
+
+[skills.mapping.vibe]
+# The top-level orchestrator starts with routing and then delegates to the selected macro path.
+operators = ["route-intent"]
+
+[skills.mapping.calibrate]
+# Core internal operators that realize calibrate.
+operators = ["calibrate-policy"]
+
 [macros.discover]
 # Keep discover enabled. It is the entry point for structured clarification.
 enabled = true
