@@ -143,6 +143,14 @@
       <summary>Keep guided and single as normative defaults while treating auto, multi, and calibrate apply as experimental until stronger guards exist.</summary>
     </W-003>
 
+    <W-005>
+      <name>DefineWorkspaceBoundary</name>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
+      <summary>Lock the clean public root workspace so future VIBE and vibestart work does not drift back into compatibility, internal, or legacy surfaces.</summary>
+    </W-005>
+
     <M-001>
       <name>FrameworkIdentity</name>
       <kind>module</kind>
@@ -223,6 +231,18 @@
       <status>done</status>
       <summary>Translate the framework into an explicit vibestart core/deep product contract with onboarding and first-run behavior.</summary>
     </W-004>
+
+    <M-007>
+      <name>WorkspaceBoundary</name>
+      <kind>module</kind>
+      <type>UTILITY</type>
+      <layer>2</layer>
+      <description>Clean public root workspace boundary that keeps compatibility, internal, and legacy surfaces explicit and non-canonical.</description>
+      <source>README.md</source>
+      <exports>
+        <export-workspaceBoundary PURPOSE="Explain the clean public root surface and the boundaries around compatibility, internal, and legacy materials." />
+      </exports>
+    </M-007>
 
     <V-001>
       <name>VerificationSurface</name>
@@ -399,6 +419,17 @@
         <export-compatDecision PURPOSE="Preserve the boundary between GRACE compatibility surfaces and VIBE core semantics." />
       </exports>
     </D-014>
+
+    <D-015>
+      <name>CleanRootWorkspaceBoundary</name>
+      <kind>decision</kind>
+      <stage>done</stage>
+      <description>The repository root is the clean public VIBE workspace, while compatibility, internal, and legacy materials remain explicit bounded surfaces rather than active product truth.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-workspaceDecision PURPOSE="Preserve the post-quarantine repository boundary and keep new work on the clean root surface." />
+      </exports>
+    </D-015>
   </Nodes>
 
   <Edges>
@@ -410,10 +441,12 @@
     <edge from="F-003" to="W-002" type="requires" />
     <edge from="F-002" to="W-003" type="requires" />
     <edge from="F-003" to="W-004" type="requires" />
+    <edge from="F-003" to="W-005" type="requires" />
     <edge from="W-001" to="M-003" type="implemented-by" />
     <edge from="W-002" to="M-004" type="implemented-by" />
     <edge from="W-003" to="M-005" type="implemented-by" />
     <edge from="W-004" to="M-006" type="implemented-by" />
+    <edge from="W-005" to="M-007" type="implemented-by" />
     <edge from="M-002" to="M-001" type="depends" />
     <edge from="M-003" to="M-001" type="depends" />
     <edge from="M-003" to="M-002" type="depends" />
@@ -425,12 +458,16 @@
     <edge from="M-006" to="M-003" type="depends" />
     <edge from="M-006" to="M-004" type="depends" />
     <edge from="M-006" to="M-005" type="depends" />
+    <edge from="M-007" to="M-001" type="depends" />
+    <edge from="M-007" to="M-005" type="depends" />
+    <edge from="M-007" to="M-006" type="depends" />
     <edge from="M-001" to="V-001" type="verified-by" />
     <edge from="M-002" to="V-001" type="verified-by" />
     <edge from="M-003" to="V-001" type="verified-by" />
     <edge from="M-004" to="V-001" type="verified-by" />
     <edge from="M-005" to="V-001" type="verified-by" />
     <edge from="M-006" to="V-001" type="verified-by" />
+    <edge from="M-007" to="V-001" type="verified-by" />
     <edge from="F-003" to="DEP-001" type="connects" />
     <edge from="M-001" to="D-001" type="governed-by" />
     <edge from="M-002" to="D-002" type="governed-by" />
@@ -451,6 +488,8 @@
     <edge from="M-006" to="D-013" type="governed-by" />
     <edge from="M-001" to="D-014" type="governed-by" />
     <edge from="M-005" to="D-014" type="governed-by" />
+    <edge from="M-007" to="D-014" type="governed-by" />
+    <edge from="M-007" to="D-015" type="governed-by" />
   </Edges>
 
   <CrossLinks>
@@ -466,6 +505,7 @@
     <CrossLink from="M-004" to="V-M-004" doc="verification-plan.xml" />
     <CrossLink from="M-005" to="V-M-005" doc="verification-plan.xml" />
     <CrossLink from="M-006" to="V-M-006" doc="verification-plan.xml" />
+    <CrossLink from="M-007" to="V-M-007" doc="verification-plan.xml" />
     <CrossLink from="M-001" to="D-001" doc="decisions.xml" />
     <CrossLink from="M-002" to="D-002" doc="decisions.xml" />
     <CrossLink from="M-005" to="D-003" doc="decisions.xml" />
@@ -485,12 +525,14 @@
     <CrossLink from="M-006" to="D-013" doc="decisions.xml" />
     <CrossLink from="M-001" to="D-014" doc="decisions.xml" />
     <CrossLink from="M-005" to="D-014" doc="decisions.xml" />
+    <CrossLink from="M-007" to="D-014" doc="decisions.xml" />
+    <CrossLink from="M-007" to="D-015" doc="decisions.xml" />
   </CrossLinks>
 
   <Layers>
     <layer-0 count="2" modules="M-001, M-002" />
     <layer-1 count="3" modules="M-003, M-004, M-005" />
-    <layer-2 count="1" modules="M-006" />
+    <layer-2 count="2" modules="M-006, M-007" />
   </Layers>
 
   <Health>

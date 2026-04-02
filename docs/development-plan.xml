@@ -10,6 +10,7 @@
     <risk-4>Allowing implicit routing or projection semantics to remain heuristic would make the anti-drift claim non-reproducible across runtimes.</risk-4>
     <risk-5>Using one sync action for both canonical reconciliation and operational cleanup would couple transactions with different safety properties.</risk-5>
     <risk-6>Letting a GRACE compatibility shim silently become a new VIBE core source of truth would reintroduce artifact drift through boundary confusion.</risk-6>
+    <risk-7>Allowing new product work to spill back into internal or legacy surfaces would blur the public root contract and reintroduce release drift.</risk-7>
   </ArchitectureNotes>
 
   <Modules>
@@ -214,6 +215,41 @@
         <note-3>Contract markup and structural labels stay in English even when surrounding explanatory prose may vary by locale.</note-3>
       </notes>
     </M-006>
+
+    <M-007 NAME="WorkspaceBoundary" TYPE="UTILITY" LAYER="2" ORDER="2" STATUS="done">
+      <contract>
+        <purpose>Define the clean public root workspace for new VIBE and vibestart work, while keeping compatibility, internal, and legacy surfaces explicit and non-canonical.</purpose>
+        <inputs>
+          <param name="framework-boundary" type="M-001" />
+          <param name="config-boundary" type="M-005" />
+          <param name="bootstrap-boundary" type="M-006" />
+        </inputs>
+        <outputs>
+          <param name="workspace-surface" type="public-root-boundary" />
+        </outputs>
+        <errors>
+          <error code="ERR_WORKSPACE_BOUNDARY_DRIFT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-workspaceBoundary PURPOSE="Explain which repository surfaces are public root contract, compatibility-only, internal-only, or legacy-only." />
+      </interface>
+      <depends>M-001, M-005, M-006</depends>
+      <target>
+        <source>README.md</source>
+        <tests>docs/verification-plan.xml</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][WorkspaceBoundary]</log-prefix>
+        <critical-block>BLOCK_DEFINE_WORKSPACE_BOUNDARY</critical-block>
+      </observability>
+      <verification-ref>V-M-007</verification-ref>
+      <notes>
+        <note-1>New VIBE and vibestart work must land on the clean root surface instead of drifting back into legacy or internal paths.</note-1>
+        <note-2>docs/technology.xml remains compatibility-only even when it stays in the repository.</note-2>
+        <note-3>legacy and internal surfaces may remain in git history and local workflows, but they are not part of the clean release archive surface.</note-3>
+      </notes>
+    </M-007>
   </Modules>
 
   <DataFlow>
@@ -265,13 +301,18 @@
       <goal>Map the framework cleanly onto vibestart core and deep profiles.</goal>
       <step-1 module="M-006" status="done" verification="V-M-006">Translate the framework surfaces into an explicit bootstrap product contract.</step-1>
     </Phase-3>
+
+    <Phase-4 name="Clean Workspace Activation" status="done">
+      <goal>Lock the post-quarantine root workspace so future VIBE and vibestart work happens on one explicit public surface.</goal>
+      <step-1 module="M-007" status="done" verification="V-M-007">Define the clean root workspace boundary across public, compatibility, internal, and legacy surfaces.</step-1>
+    </Phase-4>
   </ImplementationOrder>
 
   <ExecutionPolicy>
     <default-profile>guided-single</default-profile>
     <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
     <experimental-guard>Experimental surfaces are allowed but non-normative until deterministic guards and stronger verification are in place.</experimental-guard>
-    <controller-owns>docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
+    <controller-owns>README.md, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
     <worker-owns>Scoped implementation surfaces inside the approved write scope; no worker owns the canonical shared artifacts globally.</worker-owns>
   </ExecutionPolicy>
   

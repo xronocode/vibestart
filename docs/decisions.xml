@@ -594,6 +594,7 @@
       <impacts>
         <module>M-001</module>
         <module>M-005</module>
+        <module>M-007</module>
       </impacts>
       <consequences>
         <positive>GRACE-compatible planning tools can run without forcing technology.xml back into the VIBE core model.</positive>
@@ -602,6 +603,7 @@
       <links>
         <ref doc="development-plan.xml" id="M-001" />
         <ref doc="development-plan.xml" id="M-005" />
+        <ref doc="development-plan.xml" id="M-007" />
       </links>
       <review>
         <date>2026-04-02</date>
@@ -609,6 +611,47 @@
         <notes>Applies whenever GRACE tooling is used against a VIBE-core repository.</notes>
       </review>
     </D-014>
+
+    <D-015 DATE="2026-04-02" STATUS="approved">
+      <summary>Keep the repository root as the clean public VIBE workspace and quarantine internal and legacy surfaces explicitly.</summary>
+      <context>
+        <problem>After the old vibestart v3 package was quarantined, the repository still needed an explicit root-boundary rule so new product work would not leak back into legacy or internal surfaces.</problem>
+        <constraints>The public root surface must stay small, agent-agnostic, and releaseable; compatibility artifacts may remain in the repo, but they must stay explicit.</constraints>
+      </context>
+      <options>
+        <option-1 name="Soft boundary by team habit">
+          <description>Rely on maintainers to remember which surfaces are clean, internal, compatibility-only, or legacy-only.</description>
+          <pros>Minimal documentation change.</pros>
+          <cons>Boundary drift returns quickly and archive/release surfaces become ambiguous again.</cons>
+          <score>3/10</score>
+        </option-1>
+        <option-2 name="Explicit clean-root workspace boundary">
+          <description>Define the repository root as the public VIBE workspace, keep internal and legacy surfaces explicit, and exclude them from the clean release archive.</description>
+          <pros>Creates a stable public working surface and protects future product work from drifting back into quarantined paths.</pros>
+          <cons>Requires repo-level boundary documentation and verification.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Explicit clean-root workspace boundary</chosen>
+        <rationale>The repository now needs a formal workspace contract, not just a one-time migration move, so future VIBE and vibestart work lands on one public root surface.</rationale>
+      </decision>
+      <impacts>
+        <module>M-007</module>
+      </impacts>
+      <consequences>
+        <positive>New public work has one explicit home and release packaging becomes more predictable.</positive>
+        <negative>Maintainers must keep README and archive policy aligned with the actual repository layout.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-007" />
+      </links>
+      <review>
+        <date>2026-04-02</date>
+        <outcome>still-valid</outcome>
+        <notes>Also keeps the compatibility shim and quarantined legacy package from being mistaken for active product surfaces.</notes>
+      </review>
+    </D-015>
   </Decisions>
 
   <Categories>
@@ -620,10 +663,10 @@
   </Categories>
 
   <Statistics>
-    <total>14</total>
+    <total>15</total>
     <by-status>
       <proposed>0</proposed>
-      <approved>14</approved>
+      <approved>15</approved>
       <rejected>0</rejected>
       <superseded>0</superseded>
     </by-status>

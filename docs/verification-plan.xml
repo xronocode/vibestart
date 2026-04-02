@@ -7,7 +7,7 @@
   </ProjectInfo>
 
   <Strategy>
-    <approach>Artifact integrity first: parseability → cross-link coherence → deterministic projection and routing → macro/governance correctness → bootstrap fit.</approach>
+    <approach>Artifact integrity first: parseability → cross-link coherence → deterministic projection and routing → macro/governance correctness → bootstrap fit → workspace boundary fit.</approach>
     <mocking-policy>Prefer deterministic artifact checks and explicit review criteria over speculative prose tests.</mocking-policy>
     <coverage-target>100% of canonical VIBE surfaces parse cleanly and cross-reference the same contract story.</coverage-target>
   </Strategy>
@@ -206,6 +206,37 @@
         <block>BLOCK_FIRST_RUN_CONTRACT</block>
       </critical-blocks>
     </V-M-006>
+
+    <V-M-007 MODULE="M-007">
+      <contract>
+        <purpose>Verify that the repository root remains the clean public VIBE workspace while compatibility, internal, and legacy surfaces stay explicitly bounded.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>README.md</file>
+        <file>.gitattributes</file>
+        <file>docs/technology.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>The root README describes the clean public root surface explicitly.</scenario-1>
+        <scenario-2>legacy and internal surfaces are named as non-canonical and non-public-working surfaces.</scenario-2>
+        <scenario-3>docs/technology.xml remains compatibility-only rather than part of the clean VIBE core release surface.</scenario-3>
+        <scenario-4>Archive rules exclude internal, legacy, and compatibility-only surfaces from the clean release archive.</scenario-4>
+        <scenario-5>The old v3 runtime no longer appears at the repository root as an active product surface.</scenario-5>
+      </scenarios>
+      <traces>
+        <trace-1>The root README, archive policy, and development plan module M-007 describe the same workspace boundary.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "from pathlib import Path; import subprocess; text=Path('README.md').read_text(); assert 'clean VIBE working and release surface' in text; assert 'docs/technology.xml' in text; assert 'internal/' in text; assert 'legacy/vibestart-v3/' in text; assert 'Current working rule' in text; assert not Path('vs-init').exists(); assert not Path('lib').exists(); assert not Path('profiles').exists(); assert not Path('tests').exists(); out=subprocess.check_output(['git','check-attr','export-ignore','--','internal/README.md','legacy/README.md','docs/technology.xml'], text=True); assert out.count('set')==3"</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_WORKSPACE_BOUNDARY</block>
+      </critical-blocks>
+    </V-M-007>
   </ModuleChecks>
 
   <VerificationMatrix>
@@ -347,6 +378,9 @@
     <module module="M-006" autonomous-safe="guided-single" multi-agent-safe="no">
       <reason>Bootstrap contract is a shared product surface; profile semantics must remain globally coherent.</reason>
     </module>
+    <module module="M-007" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Workspace boundary and release-surface policy are shared repo-level contracts and should change only through deliberate sequential edits.</reason>
+    </module>
     <repo-level>
       <sequential-execution>recommended</sequential-execution>
       <multi-agent-execution>not-recommended-until-future-implementation-modules-have-disjoint-write-scopes</multi-agent-execution>
@@ -400,6 +434,21 @@
       </commands>
       <sign-off required="true" />
     </Phase-Gate-3>
+
+    <Phase-Gate-4>
+      <name>Clean Workspace Activation</name>
+      <criteria>
+        <criterion-1>The repository root is described as the clean VIBE working and release surface.</criterion-1>
+        <criterion-2>Legacy and internal surfaces are explicitly bounded away from the public contract surface.</criterion-2>
+        <criterion-3>The GRACE compatibility shim remains explicit and excluded from the clean release archive.</criterion-3>
+        <criterion-4>The old vibestart v3 runtime no longer sits at the repository root as the active product surface.</criterion-4>
+      </criteria>
+      <commands>
+        <verify-command>python3 -c "from pathlib import Path; import subprocess; text=Path('README.md').read_text(); assert 'clean VIBE working and release surface' in text; assert 'legacy/vibestart-v3/' in text; assert 'internal/' in text; assert 'docs/technology.xml' in text; assert not Path('vs-init').exists(); out=subprocess.check_output(['git','check-attr','export-ignore','--','internal/README.md','legacy/README.md','docs/technology.xml'], text=True); assert out.count('set')==3"</verify-command>
+        <lint-command>python3 -c "import xml.etree.ElementTree as ET; ET.parse('docs/development-plan.xml'); ET.parse('docs/verification-plan.xml'); ET.parse('docs/knowledge-graph.xml'); ET.parse('docs/decisions.xml')"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-4>
   </PhaseGates>
 
   <TraceRequirements>
@@ -433,13 +482,18 @@
       <required-fields>profile, installed_surfaces, active_defaults, optional_surfaces, next_step, recommendation_confirmation</required-fields>
       <assertion>The first-run contract must explain the installed product surface without hidden defaults.</assertion>
     </trace-req>
+    <trace-req module="M-007">
+      <marker>[VIBE][WorkspaceBoundary][BLOCK_DEFINE_WORKSPACE_BOUNDARY]</marker>
+      <required-fields>public_root_surface, compatibility_surface, internal_surface, legacy_surface, archive_exclusions, working_rule</required-fields>
+      <assertion>The repository boundary between clean root, compatibility, internal, and legacy surfaces must remain explicit and reviewable.</assertion>
+    </trace-req>
   </TraceRequirements>
 
   <Health>
     <last-updated>2026-04-02</last-updated>
     <coverage>
-      <modules-covered>6/6</modules-covered>
-      <phase-gates-defined>3/3</phase-gates-defined>
+      <modules-covered>7/7</modules-covered>
+      <phase-gates-defined>4/4</phase-gates-defined>
     </coverage>
   </Health>
   
