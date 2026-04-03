@@ -738,6 +738,47 @@
         <notes>Also constrains beta messaging to keep deep explicit but not overclaimed while the richer adapter layer is still future work.</notes>
       </review>
     </D-017>
+
+    <D-018 DATE="2026-04-03" STATUS="approved">
+      <summary>Make target-repo-first git acquisition the supported prerelease bootstrap path instead of requiring a separate long-lived framework checkout as the main user workflow.</summary>
+      <context>
+        <problem>The working root bootstrap entrypoint already exists, but the main user story would still force adopters to keep a separate framework checkout around if there were no supported git acquisition wrapper.</problem>
+        <constraints>The acquisition path must keep git source, ref, profile, and target path explicit, and it must remain a thin wrapper over the existing deterministic bootstrap contract rather than becoming a second methodology surface.</constraints>
+      </context>
+      <options>
+        <option-1 name="Keep separate local checkout as the main path">
+          <description>Require users to clone or install the framework repo first, then invoke vibestart from that checkout into a target repository.</description>
+          <pros>Minimal extra implementation work.</pros>
+          <cons>Adds friction, weakens the target-repo-first mental model, and makes adoption feel tool-centric instead of project-centric.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Support target-repo-first git acquisition">
+          <description>Let users enter the target repository, fetch vibestart from git, and bootstrap in place through a thin acquisition wrapper.</description>
+          <pros>Matches the intended adoption UX and keeps the target repository as the active working context.</pros>
+          <cons>Introduces one more entrypoint surface that must stay aligned with the main bootstrap contract.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Support target-repo-first git acquisition</chosen>
+        <rationale>The main prerelease bootstrap path should be project-centric. A thin wrapper around the existing bootstrap command is enough to support that path without splitting the product semantics.</rationale>
+      </decision>
+      <impacts>
+        <module>M-010</module>
+      </impacts>
+      <consequences>
+        <positive>Users can bootstrap directly from inside a target repository using a git source and ref.</positive>
+        <negative>Maintainers must keep the acquisition wrapper aligned with the main bootstrap contract and release docs.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-010" />
+      </links>
+      <review>
+        <date>2026-04-03</date>
+        <outcome>still-valid</outcome>
+        <notes>Also keeps the acquisition story tied to explicit prerelease refs instead of vague latest-from-main behavior.</notes>
+      </review>
+    </D-018>
   </Decisions>
 
   <Categories>
@@ -749,10 +790,10 @@
   </Categories>
 
   <Statistics>
-    <total>17</total>
+    <total>18</total>
     <by-status>
       <proposed>0</proposed>
-      <approved>17</approved>
+      <approved>18</approved>
       <rejected>0</rejected>
       <superseded>0</superseded>
     </by-status>

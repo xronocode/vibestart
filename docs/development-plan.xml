@@ -14,6 +14,7 @@
     <risk-8>Copying repository-specific framework truth into a bootstrapped project instead of generating project-generic starting surfaces would install the wrong semantic center.</risk-8>
     <risk-9>Claiming beta usability without VIBE-native operator guidance would push adopters back toward quarantined legacy GRACE playbooks.</risk-9>
     <risk-10>Leaving bootstrap scaffolds too skeletal would keep the product path documentary instead of making it usable for the first real project loop.</risk-10>
+    <risk-11>Requiring a separate long-lived framework checkout as the main adoption path would add friction and weaken the target-repo-first bootstrap model.</risk-11>
   </ArchitectureNotes>
 
   <Modules>
@@ -328,6 +329,41 @@
         <note-4>The git-visible prerelease path and human-readable changelog must stay aligned with the current beta scope.</note-4>
       </notes>
     </M-009>
+
+    <M-010 NAME="GitBootstrapAcquisition" TYPE="ENTRY_POINT" LAYER="2" ORDER="5" STATUS="done">
+      <contract>
+        <purpose>Provide a target-repo-first wrapper that fetches vibestart from git and runs bootstrap against the current or specified repository without requiring a separate long-lived local framework checkout as the main user path.</purpose>
+        <inputs>
+          <param name="git-source" type="repo-url-or-path" />
+          <param name="bootstrap-entrypoint" type="M-008" />
+        </inputs>
+        <outputs>
+          <param name="git-bootstrap-wrapper" type="target-repo-first-bootstrap-entry" />
+        </outputs>
+        <errors>
+          <error code="ERR_GIT_SOURCE_REQUIRED" />
+          <error code="ERR_GIT_FETCH_FAILED" />
+          <error code="ERR_TARGET_REPO_CONTEXT_DRIFT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-gitBootstrap PURPOSE="Expose a target-repo-first bootstrap path that acquires vibestart from git and applies it to the active repository." />
+      </interface>
+      <depends>M-008, M-009</depends>
+      <target>
+        <source>bootstrap-from-git.sh</source>
+        <tests>tests/test_bootstrap_from_git.py</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][GitBootstrapAcquisition]</log-prefix>
+        <critical-block>BLOCK_FETCH_AND_BOOTSTRAP</critical-block>
+      </observability>
+      <verification-ref>V-M-010</verification-ref>
+      <notes>
+        <note-1>The intended adoption UX is target-repo-first: enter the new repository, fetch vibestart from git, and bootstrap in place.</note-1>
+        <note-2>The wrapper may remain thin, but it must keep git ref selection, source identity, and target path explicit.</note-2>
+      </notes>
+    </M-010>
   </Modules>
 
   <DataFlow>
@@ -394,13 +430,18 @@
       <goal>Make the core path usable for one real project through explicit beta scope, operator guidance, and stronger generated starting surfaces.</goal>
       <step-1 module="M-009" status="done" verification="V-M-009">Define the beta boundary, publish the operator loop, and confirm that the generated scaffolds support the first real project slice.</step-1>
     </Phase-6>
+
+    <Phase-7 name="Git Bootstrap Acquisition" status="done">
+      <goal>Make target-repo-first bootstrap practical by fetching vibestart from git and applying it directly to the active repository.</goal>
+      <step-1 module="M-010" status="done" verification="V-M-010">Implement the git acquisition wrapper and verify that a target repository can bootstrap from a git source without a separate long-lived framework checkout.</step-1>
+    </Phase-7>
   </ImplementationOrder>
 
   <ExecutionPolicy>
     <default-profile>guided-single</default-profile>
     <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
     <experimental-guard>Experimental surfaces are allowed but non-normative until deterministic guards and stronger verification are in place.</experimental-guard>
-    <controller-owns>README.md, CHANGELOG.md, vibestart, tests/test_vibestart.py, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml, docs/vibe/beta-readiness.md, docs/vibe/operator-guide.md, docs/vibe/release-path.md</controller-owns>
+    <controller-owns>README.md, CHANGELOG.md, bootstrap-from-git.sh, vibestart, tests/test_vibestart.py, tests/test_bootstrap_from_git.py, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml, docs/vibe/beta-readiness.md, docs/vibe/operator-guide.md, docs/vibe/release-path.md</controller-owns>
     <worker-owns>Scoped implementation surfaces inside the approved write scope; no worker owns the canonical shared artifacts globally.</worker-owns>
   </ExecutionPolicy>
   

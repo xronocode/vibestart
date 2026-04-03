@@ -167,6 +167,14 @@
       <summary>Define the core-first beta boundary, operator loop, and minimum bootstrap richness needed to use VIBE in one real project without relying on legacy GRACE procedure as the active surface.</summary>
     </W-007>
 
+    <W-008>
+      <name>EnableGitBootstrapAcquisition</name>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
+      <summary>Support target-repo-first bootstrap by fetching vibestart from git and applying it to the active repository.</summary>
+    </W-008>
+
     <M-001>
       <name>FrameworkIdentity</name>
       <kind>module</kind>
@@ -284,6 +292,18 @@
         <export-operatorLoop PURPOSE="Explain the normal first project loop after vibestart bootstrap." />
       </exports>
     </M-009>
+
+    <M-010>
+      <name>GitBootstrapAcquisition</name>
+      <kind>module</kind>
+      <type>ENTRY_POINT</type>
+      <layer>2</layer>
+      <description>Target-repo-first wrapper that fetches vibestart from git and bootstraps the active repository in place.</description>
+      <source>bootstrap-from-git.sh</source>
+      <exports>
+        <export-gitBootstrap PURPOSE="Expose the git acquisition path for target-repo-first bootstrap." />
+      </exports>
+    </M-010>
 
     <V-001>
       <name>VerificationSurface</name>
@@ -493,6 +513,17 @@
         <export-coreBetaDecision PURPOSE="Preserve the core-first beta boundary and keep adoption claims honest." />
       </exports>
     </D-017>
+
+    <D-018>
+      <name>TargetRepoFirstGitBootstrap</name>
+      <kind>decision</kind>
+      <stage>done</stage>
+      <description>Make target-repo-first git acquisition the supported prerelease bootstrap path instead of requiring a separate long-lived framework checkout as the main user workflow.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-gitBootstrapDecision PURPOSE="Preserve the target-repo-first bootstrap model." />
+      </exports>
+    </D-018>
   </Nodes>
 
   <Edges>
@@ -507,6 +538,7 @@
     <edge from="F-003" to="W-005" type="requires" />
     <edge from="F-003" to="W-006" type="requires" />
     <edge from="F-003" to="W-007" type="requires" />
+    <edge from="F-003" to="W-008" type="requires" />
     <edge from="W-001" to="M-003" type="implemented-by" />
     <edge from="W-002" to="M-004" type="implemented-by" />
     <edge from="W-003" to="M-005" type="implemented-by" />
@@ -514,6 +546,7 @@
     <edge from="W-005" to="M-007" type="implemented-by" />
     <edge from="W-006" to="M-008" type="implemented-by" />
     <edge from="W-007" to="M-009" type="implemented-by" />
+    <edge from="W-008" to="M-010" type="implemented-by" />
     <edge from="M-002" to="M-001" type="depends" />
     <edge from="M-003" to="M-001" type="depends" />
     <edge from="M-003" to="M-002" type="depends" />
@@ -533,6 +566,8 @@
     <edge from="M-008" to="M-007" type="depends" />
     <edge from="M-009" to="M-006" type="depends" />
     <edge from="M-009" to="M-008" type="depends" />
+    <edge from="M-010" to="M-008" type="depends" />
+    <edge from="M-010" to="M-009" type="depends" />
     <edge from="M-001" to="V-001" type="verified-by" />
     <edge from="M-002" to="V-001" type="verified-by" />
     <edge from="M-003" to="V-001" type="verified-by" />
@@ -542,6 +577,7 @@
     <edge from="M-007" to="V-001" type="verified-by" />
     <edge from="M-008" to="V-001" type="verified-by" />
     <edge from="M-009" to="V-001" type="verified-by" />
+    <edge from="M-010" to="V-001" type="verified-by" />
     <edge from="F-003" to="DEP-001" type="connects" />
     <edge from="M-001" to="D-001" type="governed-by" />
     <edge from="M-002" to="D-002" type="governed-by" />
@@ -572,6 +608,8 @@
     <edge from="M-008" to="D-016" type="governed-by" />
     <edge from="M-009" to="D-016" type="governed-by" />
     <edge from="M-009" to="D-017" type="governed-by" />
+    <edge from="M-010" to="D-017" type="governed-by" />
+    <edge from="M-010" to="D-018" type="governed-by" />
   </Edges>
 
   <CrossLinks>
@@ -590,6 +628,7 @@
     <CrossLink from="M-007" to="V-M-007" doc="verification-plan.xml" />
     <CrossLink from="M-008" to="V-M-008" doc="verification-plan.xml" />
     <CrossLink from="M-009" to="V-M-009" doc="verification-plan.xml" />
+    <CrossLink from="M-010" to="V-M-010" doc="verification-plan.xml" />
     <CrossLink from="M-001" to="D-001" doc="decisions.xml" />
     <CrossLink from="M-002" to="D-002" doc="decisions.xml" />
     <CrossLink from="M-005" to="D-003" doc="decisions.xml" />
@@ -619,12 +658,14 @@
     <CrossLink from="M-008" to="D-016" doc="decisions.xml" />
     <CrossLink from="M-009" to="D-016" doc="decisions.xml" />
     <CrossLink from="M-009" to="D-017" doc="decisions.xml" />
+    <CrossLink from="M-010" to="D-017" doc="decisions.xml" />
+    <CrossLink from="M-010" to="D-018" doc="decisions.xml" />
   </CrossLinks>
 
   <Layers>
     <layer-0 count="2" modules="M-001, M-002" />
     <layer-1 count="3" modules="M-003, M-004, M-005" />
-    <layer-2 count="4" modules="M-006, M-007, M-008, M-009" />
+    <layer-2 count="5" modules="M-006, M-007, M-008, M-009, M-010" />
   </Layers>
 
   <Health>

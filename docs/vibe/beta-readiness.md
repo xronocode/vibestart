@@ -2,7 +2,7 @@
 
 ## Status
 
-Current prerelease target: `0.1.0-beta.1`.
+Current prerelease target: `0.1.0-beta.2`.
 
 `core`: beta-candidate for one-project adoption.  
 `deep`: draft product profile, explicit and safe but not yet richly differentiated.
@@ -11,6 +11,7 @@ Current prerelease target: `0.1.0-beta.1`.
 
 - one clean public root surface for VIBE and vibestart
 - one active `vibestart` bootstrap entrypoint
+- one git-acquisition wrapper for target-repo-first bootstrap
 - explicit `--core` and `--deep` profile selection
 - deterministic first-run contract
 - parseable XML and TOML shared install surface
@@ -29,6 +30,7 @@ Current prerelease target: `0.1.0-beta.1`.
 The current beta recommendation is:
 
 - use `vibestart --core`
+- prefer target-repo-first bootstrap by fetching vibestart from git into the current repository context
 - treat `deep` as an explicit future-facing profile, not as the main beta path
 - use the clean root VIBE docs as the active methodology source
 - use the quarantined GRACE skill corpus only as reference material when a detailed legacy playbook is still useful

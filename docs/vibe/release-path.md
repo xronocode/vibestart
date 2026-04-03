@@ -9,6 +9,7 @@ Define the git-visible prerelease path for the clean VIBE / vibestart root surfa
 The current clean-root line starts at:
 
 - `0.1.0-beta.1`
+- `0.1.0-beta.2`
 
 This line is separate from the quarantined legacy vibestart v3 tags.
 
@@ -60,6 +61,7 @@ Each prerelease should describe:
 - which profile is recommended
 - known limits
 - whether legacy material is still needed as reference
+- whether target-repo-first git acquisition is part of the supported bootstrap path
 
 ## Current Recommendation
 

@@ -11,6 +11,20 @@ This guide describes the normal operating loop for a project that has been boots
 3. Define the first project module and its verification obligation.
 4. Treat the generated XML as a starting surface, not as finished project truth.
 
+## Target-Repo-First Bootstrap
+
+The intended beta UX is:
+
+1. create or enter the target repository
+2. fetch vibestart from git
+3. run bootstrap against the current repository
+
+Practical shape:
+
+`bootstrap-from-git.sh --repo <git-url> --ref v0.1.0-beta.2 --core --target .`
+
+This keeps the target repository as the active working context instead of requiring a separate long-lived framework checkout first.
+
 ## Normal Operating Loop
 
 - use `discover` when intent is new, ambiguous, or changed

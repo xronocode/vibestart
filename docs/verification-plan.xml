@@ -302,13 +302,42 @@
         <trace-1>The beta-readiness note, operator guide, development plan module M-009, and bootstrap behavior describe the same core-first adoption boundary.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta and 'draft' in beta; assert 'GRACE' in beta and 'not yet' in beta; assert 'First Day After `vibestart --core`' in guide; assert 'discover' in guide and 'refine' in guide and 'deliver' in guide and 'sync' in guide; assert '`v`' in guide and '`м`' in guide; assert 'core-first' in beta; assert 'v0.1.0-beta.1' in rel; assert '0.1.0-beta.1' in cl"</test-command>
+        <test-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta and 'draft' in beta; assert 'GRACE' in beta and 'not yet' in beta; assert 'First Day After `vibestart --core`' in guide; assert 'discover' in guide and 'refine' in guide and 'deliver' in guide and 'sync' in guide; assert '`v`' in guide and '`м`' in guide; assert 'core-first' in beta; assert 'v0.1.0-beta.2' in rel; assert '0.1.0-beta.2' in cl"</test-command>
         <smoke-command>python3 -m unittest tests/test_vibestart.py</smoke-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_BETA_BOUNDARY</block>
       </critical-blocks>
     </V-M-009>
+
+    <V-M-010 MODULE="M-010">
+      <contract>
+        <purpose>Verify that a target repository can fetch vibestart from git and bootstrap in place through the git acquisition wrapper.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>bootstrap-from-git.sh</file>
+        <file>tests/test_bootstrap_from_git.py</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>The wrapper requires an explicit git source.</scenario-1>
+        <scenario-2>The wrapper keeps profile choice explicit.</scenario-2>
+        <scenario-3>A target repository can bootstrap from a git source without a separate long-lived local framework checkout as the main path.</scenario-3>
+        <scenario-4>The wrapper passes through bootstrap output and produces the same shared surface in the target repository.</scenario-4>
+      </scenarios>
+      <traces>
+        <trace-1>The release docs, development plan module M-010, and wrapper behavior describe the same target-repo-first bootstrap path.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -m unittest tests/test_bootstrap_from_git.py</test-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_FETCH_AND_BOOTSTRAP</block>
+      </critical-blocks>
+    </V-M-010>
   </ModuleChecks>
 
   <VerificationMatrix>
@@ -375,7 +404,7 @@
       </verification-levels>
     </VMX-003>
 
-    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006, M-008, M-009">
+    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006, M-008, M-009, M-010">
       <name>BootstrapToAdoption</name>
       <success-scenarios>
         <scenario-1>Profile choice is explicit and never silently defaulted during install.</scenario-1>
@@ -383,12 +412,14 @@
         <scenario-3>The first-run contract states installed surfaces, active defaults, optional surfaces, next step, and recommendation confirmation behavior.</scenario-3>
         <scenario-4>The active vibestart entrypoint can realize the shared install surface without copying framework-specific XML truth into the target project.</scenario-4>
         <scenario-5>The generated starting surfaces make the first project loop explicit enough for one-project core beta use.</scenario-5>
+        <scenario-6>The target repository can acquire vibestart directly from git and bootstrap in place.</scenario-6>
       </success-scenarios>
       <failure-scenarios>
         <scenario-1>deep changes methodology semantics instead of only product depth.</scenario-1>
         <scenario-2>Experimental runtime surfaces are silently activated as defaults.</scenario-2>
         <scenario-3>The bootstrap command overwrites an existing project surface without an explicit force path.</scenario-3>
         <scenario-4>Adopters have to fall back to the quarantined GRACE legacy package because the clean root beta surface gives no usable operator loop.</scenario-4>
+        <scenario-5>The main bootstrap story still requires a separate framework checkout instead of supporting a target-repo-first path.</scenario-5>
       </failure-scenarios>
       <evidence-types>
         <deterministic>Contract document assertions, manifest assertions, and config boundary checks.</deterministic>
@@ -462,6 +493,9 @@
     </module>
     <module module="M-009" autonomous-safe="guided-single" multi-agent-safe="no">
       <reason>Beta boundary and operator guidance are shared adoption surfaces and should remain globally coherent.</reason>
+    </module>
+    <module module="M-010" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>The git acquisition wrapper is a shared entrypoint and must keep source, ref, and target path semantics deterministic.</reason>
     </module>
     <repo-level>
       <sequential-execution>recommended</sequential-execution>
@@ -559,11 +593,25 @@
         <criterion-6>The prerelease git path and changelog describe the same beta line and scope.</criterion-6>
       </criteria>
       <commands>
-        <verify-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta; assert 'GRACE' in beta; assert 'Normal Operating Loop' in guide; assert 'v0.1.0-beta.1' in rel; assert '0.1.0-beta.1' in cl"</verify-command>
+        <verify-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta; assert 'GRACE' in beta; assert 'Normal Operating Loop' in guide; assert 'v0.1.0-beta.2' in rel; assert '0.1.0-beta.2' in cl"</verify-command>
         <lint-command>python3 -m unittest tests/test_vibestart.py</lint-command>
       </commands>
       <sign-off required="true" />
     </Phase-Gate-6>
+
+    <Phase-Gate-7>
+      <name>Git Bootstrap Acquisition</name>
+      <criteria>
+        <criterion-1>A target repository can fetch vibestart from git and bootstrap in place.</criterion-1>
+        <criterion-2>The wrapper keeps source, ref, profile, and target explicit.</criterion-2>
+        <criterion-3>The target-repo-first path is documented as part of the supported prerelease story.</criterion-3>
+      </criteria>
+      <commands>
+        <verify-command>python3 -m unittest tests/test_bootstrap_from_git.py</verify-command>
+        <lint-command>python3 -c "from pathlib import Path; assert Path('bootstrap-from-git.sh').exists(); assert Path('tests/test_bootstrap_from_git.py').exists()"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-7>
   </PhaseGates>
 
   <TraceRequirements>
@@ -612,13 +660,18 @@
       <required-fields>beta_scope, recommended_profile, draft_surfaces, operator_loop, legacy_boundary</required-fields>
       <assertion>The beta adoption story must say what is ready now, what remains draft, and how the first project loop works without relying on hidden legacy procedure.</assertion>
     </trace-req>
+    <trace-req module="M-010">
+      <marker>[VIBE][GitBootstrapAcquisition][BLOCK_FETCH_AND_BOOTSTRAP]</marker>
+      <required-fields>git_source, ref, profile, target, acquisition_mode</required-fields>
+      <assertion>The git acquisition wrapper must keep the target-repo-first bootstrap path explicit and reproducible.</assertion>
+    </trace-req>
   </TraceRequirements>
 
   <Health>
     <last-updated>2026-04-03</last-updated>
     <coverage>
-      <modules-covered>9/9</modules-covered>
-      <phase-gates-defined>6/6</phase-gates-defined>
+      <modules-covered>10/10</modules-covered>
+      <phase-gates-defined>7/7</phase-gates-defined>
     </coverage>
   </Health>
   
