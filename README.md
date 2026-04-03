@@ -4,6 +4,19 @@
 
 It is an agent-agnostic methodology for intent-driven engineering, designed to reduce drift between engineering intent, canonical knowledge artifacts, implementation, verification, and runtime control behavior.
 
+`v4` is a major redesign of the previous vibestart line, not a small incremental update. It deliberately combines and re-expresses strong ideas from [osovv/grace-marketplace](https://github.com/osovv/grace-marketplace) and [aka-NameRec/ai-standards](https://github.com/aka-NameRec/ai-standards) into one clean methodology-first product surface.
+
+## What v4 unifies
+
+| Dimension | [grace-marketplace](https://github.com/osovv/grace-marketplace) | [ai-standards](https://github.com/aka-NameRec/ai-standards) | `VIBE / vibestart v4` |
+| --- | --- | --- | --- |
+| Main contribution | graph-anchored code engineering, contracts, verification-first execution, controller-managed skills | centralized AI instruction infrastructure, manifest-driven composition, reusable fragments, project-local overrides | one methodology-first root surface that combines graph/contract rigor with explicit policy/config composition and bootstrap |
+| Public operating model | skill-driven workflow such as `grace-init`, `grace-plan`, `grace-execute`, `grace-reviewer` | manifest and renderer flow for project-specific `AGENTS.md` generation | macro-first workflow language: `discover`, `refine`, `deliver`, `fix`, `sync`, `resume`, `deploy`, `vibe` |
+| Core artifacts | XML planning, graph, verification, semantic execution flow | `ai.project.toml`, fragment registry, generated `AGENTS.md`, local overrides | canonical XML knowledge surfaces plus TOML operating contracts and explicit runtime-state boundary |
+| Configuration style | methodology and skill corpus shipped together | manifest-only dependency declaration for instruction features and stacks | explicit root manifest, governance policy, macro contracts, and profile-aware bootstrap through `core` and `deep` |
+| Execution control | controller-managed sequential or multi-agent implementation | policy composition and activation guidance | deterministic governance, review/sync selection by risk and evidence, traceable and calibratable autonomy |
+| What v4 changes | keeps the graph/contract/verification depth | keeps explicit composition and project-scoped policy discipline | unifies both approaches into a target-repo-first bootstrap and a clean public VIBE root surface |
+
 ## Public root surface
 
 The clean methodology surface:
