@@ -695,6 +695,49 @@
         <notes>Also constrains the generated project surfaces to remain generic project scaffolding instead of copies of framework-repository truth.</notes>
       </review>
     </D-016>
+
+    <D-017 DATE="2026-04-03" STATUS="approved">
+      <summary>Treat core as the explicit beta boundary now, and close adoption gaps with operator guidance and richer generic scaffolds before promising full legacy GRACE procedural parity.</summary>
+      <context>
+        <problem>The repository now has strong methodology contracts and one active bootstrap path, but one-project adoption would still lean too heavily on implicit maintainer knowledge or the quarantined GRACE legacy corpus if beta scope and operator guidance stayed vague.</problem>
+        <constraints>The beta story must keep one VIBE methodology, keep deep explicit without overstating its current richness, and avoid copying framework-repository semantics into project-specific starting artifacts.</constraints>
+      </context>
+      <options>
+        <option-1 name="Wait for full legacy parity before any beta claim">
+          <description>Delay beta positioning until every detailed GRACE operational mechanic and a richer deep differentiation layer have been fully re-expressed on the clean root surface.</description>
+          <pros>A more feature-complete future beta message.</pros>
+          <cons>Delays real pilot usage and blocks feedback on the current working core path even though the root bootstrap and contracts already exist.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Declare a core-first beta boundary now">
+          <description>Recommend core as the current beta path, publish VIBE-native operator guidance, and harden generic starting scaffolds so one-project adoption becomes practical now while deeper legacy parity remains future work.</description>
+          <pros>Keeps the beta claim honest, makes pilot adoption practical, and reduces dependency on the quarantined GRACE package as an active procedure surface.</pros>
+          <cons>Maintainers still need to port or reinvent richer procedural mechanics later if they want a deeper operational layer in the clean root surface.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Declare a core-first beta boundary now</chosen>
+        <rationale>The project is strong enough for one real pilot if it clearly says what is beta-ready now and supports that claim with operator guidance and richer generic scaffolds. Waiting for total legacy parity would delay useful feedback without improving the current core path proportionally.</rationale>
+      </decision>
+      <impacts>
+        <module>M-008</module>
+        <module>M-009</module>
+      </impacts>
+      <consequences>
+        <positive>One-project beta adoption becomes practical now through the clean root surface.</positive>
+        <negative>The team must still port or redesign richer procedural mechanics later if it wants full clean-root operational depth beyond the core beta boundary.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-008" />
+        <ref doc="development-plan.xml" id="M-009" />
+      </links>
+      <review>
+        <date>2026-04-03</date>
+        <outcome>still-valid</outcome>
+        <notes>Also constrains beta messaging to keep deep explicit but not overclaimed while the richer adapter layer is still future work.</notes>
+      </review>
+    </D-017>
   </Decisions>
 
   <Categories>
@@ -706,14 +749,14 @@
   </Categories>
 
   <Statistics>
-    <total>16</total>
+    <total>17</total>
     <by-status>
       <proposed>0</proposed>
-      <approved>16</approved>
+      <approved>17</approved>
       <rejected>0</rejected>
       <superseded>0</superseded>
     </by-status>
-    <last-updated>2026-04-02</last-updated>
+    <last-updated>2026-04-03</last-updated>
   </Statistics>
   
 </Decisions>

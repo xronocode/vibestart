@@ -231,7 +231,7 @@
         <trace-1>The root README, archive policy, and development plan module M-007 describe the same workspace boundary.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "from pathlib import Path; import subprocess; text=Path('README.md').read_text(); assert 'clean VIBE working and release surface' in text; assert 'docs/technology.xml' in text; assert 'internal/' in text; assert 'legacy/vibestart-v3/' in text; assert 'Current working rule' in text; assert not Path('vs-init').exists(); assert not Path('lib').exists(); assert not Path('profiles').exists(); assert not Path('tests').exists(); out=subprocess.check_output(['git','check-attr','export-ignore','--','internal/README.md','legacy/README.md','docs/technology.xml'], text=True); assert out.count('set')==3"</test-command>
+        <test-command>python3 -c "from pathlib import Path; import subprocess; text=Path('README.md').read_text(); assert 'clean VIBE working and release surface' in text; assert 'docs/technology.xml' in text; assert 'internal/' in text; assert 'legacy/vibestart-v3/' in text; assert 'Current working rule' in text; assert Path('tests/test_vibestart.py').exists(); assert not Path('vs-init').exists(); assert not Path('lib').exists(); assert not Path('profiles').exists(); out=subprocess.check_output(['git','check-attr','export-ignore','--','internal/README.md','legacy/README.md','docs/technology.xml'], text=True); assert out.count('set')==3"</test-command>
       </commands>
       <critical-blocks>
         <block>BLOCK_DEFINE_WORKSPACE_BOUNDARY</block>
@@ -240,7 +240,7 @@
 
     <V-M-008 MODULE="M-008">
       <contract>
-        <purpose>Verify that the active vibestart entrypoint installs a deterministic shared surface with explicit profile selection and safe write behavior.</purpose>
+        <purpose>Verify that the active vibestart entrypoint installs a deterministic shared surface with explicit profile selection, safe write behavior, and usable first-project scaffolding.</purpose>
       </contract>
       <strategy>
         <approach>integration</approach>
@@ -261,6 +261,7 @@
         <scenario-5>Existing target surfaces are not overwritten without an explicit force flag.</scenario-5>
         <scenario-6>The first-run output contains the required contract sections and recommendation confirmation behavior.</scenario-6>
         <scenario-7>Generated XML and TOML surfaces parse cleanly as a bootstrap starting point.</scenario-7>
+        <scenario-8>Generated project scaffolds expose a usable first project loop instead of only empty placeholders.</scenario-8>
       </scenarios>
       <traces>
         <trace-1>The active entrypoint, the product contract, and the development plan module M-008 describe the same shared install surface and first-run behavior.</trace-1>
@@ -273,6 +274,41 @@
         <block>BLOCK_RUN_BOOTSTRAP</block>
       </critical-blocks>
     </V-M-008>
+
+    <V-M-009 MODULE="M-009">
+      <contract>
+        <purpose>Verify that the core beta boundary, operator guidance, and adoption story are explicit enough for one-project use without falsely claiming full legacy-mechanics parity.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/vibe/beta-readiness.md</file>
+        <file>docs/vibe/operator-guide.md</file>
+        <file>docs/vibe/release-path.md</file>
+        <file>CHANGELOG.md</file>
+        <file>tests/test_vibestart.py</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>core is stated as the recommended beta path for one-project adoption.</scenario-1>
+        <scenario-2>deep remains explicit and supported but is not falsely presented as fully differentiated yet.</scenario-2>
+        <scenario-3>The operator guide explains the first day after bootstrap and the normal macro loop.</scenario-3>
+        <scenario-4>The beta boundary explicitly says that the full detailed GRACE operational mechanics have not yet been fully re-expressed in the clean root surface.</scenario-4>
+        <scenario-5>The bootstrap tests prove that generated starting surfaces expose the first real project loop.</scenario-5>
+        <scenario-6>The git-visible prerelease path and changelog describe the same current beta line and scope.</scenario-6>
+      </scenarios>
+      <traces>
+        <trace-1>The beta-readiness note, operator guide, development plan module M-009, and bootstrap behavior describe the same core-first adoption boundary.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta and 'draft' in beta; assert 'GRACE' in beta and 'not yet' in beta; assert 'First Day After `vibestart --core`' in guide; assert 'discover' in guide and 'refine' in guide and 'deliver' in guide and 'sync' in guide; assert '`v`' in guide and '`м`' in guide; assert 'core-first' in beta; assert 'v0.1.0-beta.1' in rel; assert '0.1.0-beta.1' in cl"</test-command>
+        <smoke-command>python3 -m unittest tests/test_vibestart.py</smoke-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_DEFINE_BETA_BOUNDARY</block>
+      </critical-blocks>
+    </V-M-009>
   </ModuleChecks>
 
   <VerificationMatrix>
@@ -339,18 +375,20 @@
       </verification-levels>
     </VMX-003>
 
-    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006, M-008">
+    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006, M-008, M-009">
       <name>BootstrapToAdoption</name>
       <success-scenarios>
         <scenario-1>Profile choice is explicit and never silently defaulted during install.</scenario-1>
         <scenario-2>core and deep install the same canonical VIBE surfaces while differing only in product depth and optionals.</scenario-2>
         <scenario-3>The first-run contract states installed surfaces, active defaults, optional surfaces, next step, and recommendation confirmation behavior.</scenario-3>
         <scenario-4>The active vibestart entrypoint can realize the shared install surface without copying framework-specific XML truth into the target project.</scenario-4>
+        <scenario-5>The generated starting surfaces make the first project loop explicit enough for one-project core beta use.</scenario-5>
       </success-scenarios>
       <failure-scenarios>
         <scenario-1>deep changes methodology semantics instead of only product depth.</scenario-1>
         <scenario-2>Experimental runtime surfaces are silently activated as defaults.</scenario-2>
         <scenario-3>The bootstrap command overwrites an existing project surface without an explicit force path.</scenario-3>
+        <scenario-4>Adopters have to fall back to the quarantined GRACE legacy package because the clean root beta surface gives no usable operator loop.</scenario-4>
       </failure-scenarios>
       <evidence-types>
         <deterministic>Contract document assertions, manifest assertions, and config boundary checks.</deterministic>
@@ -421,6 +459,9 @@
     </module>
     <module module="M-008" autonomous-safe="guided-single" multi-agent-safe="no">
       <reason>The active bootstrap entrypoint writes shared root surfaces and must remain deterministic and sequential until richer product adapters exist.</reason>
+    </module>
+    <module module="M-009" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>Beta boundary and operator guidance are shared adoption surfaces and should remain globally coherent.</reason>
     </module>
     <repo-level>
       <sequential-execution>recommended</sequential-execution>
@@ -506,6 +547,23 @@
       </commands>
       <sign-off required="true" />
     </Phase-Gate-5>
+
+    <Phase-Gate-6>
+      <name>Core Beta Adoption</name>
+      <criteria>
+        <criterion-1>core is the explicit recommended beta path for one-project use.</criterion-1>
+        <criterion-2>deep remains explicit and safe without being overstated as fully differentiated.</criterion-2>
+        <criterion-3>A VIBE-native operator guide explains the first project loop after bootstrap.</criterion-3>
+        <criterion-4>Generated starting surfaces support the first real project slice instead of only empty placeholders.</criterion-4>
+        <criterion-5>The clean root surface does not falsely claim full parity with the quarantined GRACE legacy mechanics yet.</criterion-5>
+        <criterion-6>The prerelease git path and changelog describe the same beta line and scope.</criterion-6>
+      </criteria>
+      <commands>
+        <verify-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta; assert 'GRACE' in beta; assert 'Normal Operating Loop' in guide; assert 'v0.1.0-beta.1' in rel; assert '0.1.0-beta.1' in cl"</verify-command>
+        <lint-command>python3 -m unittest tests/test_vibestart.py</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-6>
   </PhaseGates>
 
   <TraceRequirements>
@@ -549,13 +607,18 @@
       <required-fields>profile, target, installed_surfaces, active_defaults, optional_surfaces, dry_run, overwrite_policy</required-fields>
       <assertion>The active bootstrap entrypoint must keep profile selection, shared install surface, and first-run behavior explicit and reviewable.</assertion>
     </trace-req>
+    <trace-req module="M-009">
+      <marker>[VIBE][CoreBetaAdoption][BLOCK_DEFINE_BETA_BOUNDARY]</marker>
+      <required-fields>beta_scope, recommended_profile, draft_surfaces, operator_loop, legacy_boundary</required-fields>
+      <assertion>The beta adoption story must say what is ready now, what remains draft, and how the first project loop works without relying on hidden legacy procedure.</assertion>
+    </trace-req>
   </TraceRequirements>
 
   <Health>
-    <last-updated>2026-04-02</last-updated>
+    <last-updated>2026-04-03</last-updated>
     <coverage>
-      <modules-covered>8/8</modules-covered>
-      <phase-gates-defined>5/5</phase-gates-defined>
+      <modules-covered>9/9</modules-covered>
+      <phase-gates-defined>6/6</phase-gates-defined>
     </coverage>
   </Health>
   

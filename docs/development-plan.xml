@@ -12,6 +12,8 @@
     <risk-6>Letting a GRACE compatibility shim silently become a new VIBE core source of truth would reintroduce artifact drift through boundary confusion.</risk-6>
     <risk-7>Allowing new product work to spill back into internal or legacy surfaces would blur the public root contract and reintroduce release drift.</risk-7>
     <risk-8>Copying repository-specific framework truth into a bootstrapped project instead of generating project-generic starting surfaces would install the wrong semantic center.</risk-8>
+    <risk-9>Claiming beta usability without VIBE-native operator guidance would push adopters back toward quarantined legacy GRACE playbooks.</risk-9>
+    <risk-10>Leaving bootstrap scaffolds too skeletal would keep the product path documentary instead of making it usable for the first real project loop.</risk-10>
   </ArchitectureNotes>
 
   <Modules>
@@ -254,7 +256,7 @@
 
     <M-008 NAME="CoreBootstrapEntry" TYPE="ENTRY_POINT" LAYER="2" ORDER="3" STATUS="done">
       <contract>
-        <purpose>Implement the active root vibestart entrypoint for explicit profile selection, generic project-surface installation, overwrite safety, dry-run behavior, and deterministic first-run output.</purpose>
+        <purpose>Implement the active root vibestart entrypoint for explicit profile selection, generic project-surface installation, overwrite safety, dry-run behavior, deterministic first-run output, and usable first-project scaffolding.</purpose>
         <inputs>
           <param name="config-boundary" type="M-005" />
           <param name="bootstrap-contract" type="M-006" />
@@ -286,8 +288,46 @@
         <note-1>The active entrypoint must generate project-generic XML starting surfaces instead of copying this repository's framework-specific XML truth verbatim.</note-1>
         <note-2>deep remains explicit and supported, but its richer adapters may initially be placeholders while core establishes the first working product path.</note-2>
         <note-3>Dry-run and overwrite checks are part of the product contract, not optional convenience features.</note-3>
+        <note-4>The generated starting surfaces must expose a usable first project loop instead of only empty placeholders.</note-4>
       </notes>
     </M-008>
+
+    <M-009 NAME="CoreBetaAdoption" TYPE="UTILITY" LAYER="2" ORDER="4" STATUS="done">
+      <contract>
+        <purpose>Define the core-first beta boundary, operator guidance, and adoption expectations required to use VIBE in one real project without depending on the quarantined GRACE legacy playbooks as the active source of procedure.</purpose>
+        <inputs>
+          <param name="bootstrap-contract" type="M-006" />
+          <param name="bootstrap-entrypoint" type="M-008" />
+        </inputs>
+        <outputs>
+          <param name="beta-adoption-surface" type="operator-guide-and-beta-boundary" />
+        </outputs>
+        <errors>
+          <error code="ERR_BETA_SCOPE_DRIFT" />
+          <error code="ERR_OPERATOR_GUIDE_GAP" />
+        </errors>
+      </contract>
+      <interface>
+        <export-betaBoundary PURPOSE="Expose what is genuinely beta-ready now and what remains draft-level." />
+        <export-operatorLoop PURPOSE="Explain the first project loop after vibestart bootstrap in VIBE-native terms." />
+      </interface>
+      <depends>M-006, M-008</depends>
+      <target>
+        <source>docs/vibe/beta-readiness.md</source>
+        <tests>docs/vibe/operator-guide.md, docs/vibe/release-path.md, CHANGELOG.md, tests/test_vibestart.py</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][CoreBetaAdoption]</log-prefix>
+        <critical-block>BLOCK_DEFINE_BETA_BOUNDARY</critical-block>
+      </observability>
+      <verification-ref>V-M-009</verification-ref>
+      <notes>
+        <note-1>The recommended beta path is core-first one-project adoption, not full legacy-mechanics parity.</note-1>
+        <note-2>deep remains explicit and supported, but richer adapters still remain future work.</note-2>
+        <note-3>Operator guidance should describe the first project loop in VIBE-native terms instead of assuming the old GRACE skill corpus is the active procedural surface.</note-3>
+        <note-4>The git-visible prerelease path and human-readable changelog must stay aligned with the current beta scope.</note-4>
+      </notes>
+    </M-009>
   </Modules>
 
   <DataFlow>
@@ -349,13 +389,18 @@
       <goal>Ship the first working root vibestart entrypoint for explicit profile selection and deterministic shared-surface installation.</goal>
       <step-1 module="M-008" status="done" verification="V-M-008">Implement the active vibestart bootstrap command with safe writes, dry-run support, and first-run output.</step-1>
     </Phase-5>
+
+    <Phase-6 name="Core Beta Adoption" status="done">
+      <goal>Make the core path usable for one real project through explicit beta scope, operator guidance, and stronger generated starting surfaces.</goal>
+      <step-1 module="M-009" status="done" verification="V-M-009">Define the beta boundary, publish the operator loop, and confirm that the generated scaffolds support the first real project slice.</step-1>
+    </Phase-6>
   </ImplementationOrder>
 
   <ExecutionPolicy>
     <default-profile>guided-single</default-profile>
     <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
     <experimental-guard>Experimental surfaces are allowed but non-normative until deterministic guards and stronger verification are in place.</experimental-guard>
-    <controller-owns>README.md, vibestart, tests/test_vibestart.py, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
+    <controller-owns>README.md, CHANGELOG.md, vibestart, tests/test_vibestart.py, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml, docs/vibe/beta-readiness.md, docs/vibe/operator-guide.md, docs/vibe/release-path.md</controller-owns>
     <worker-owns>Scoped implementation surfaces inside the approved write scope; no worker owns the canonical shared artifacts globally.</worker-owns>
   </ExecutionPolicy>
   

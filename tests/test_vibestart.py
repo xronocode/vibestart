@@ -66,6 +66,7 @@ class VibestartBootstrapTests(unittest.TestCase):
         self.assertIn("Optional:", result.stdout)
         self.assertIn("Interaction model:", result.stdout)
         self.assertIn("type v or м to accept the current recommendation bundle", result.stdout)
+        self.assertIn("discover -> refine -> deliver/fix -> sync", result.stdout)
 
     def test_deep_bootstrap_sets_profile_and_preserves_safe_defaults(self) -> None:
         target = self.tmpdir / "deep-project"
@@ -107,6 +108,36 @@ class VibestartBootstrapTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Refusing to overwrite existing VIBE surfaces without --force", result.stderr)
+
+    def test_generated_scaffolds_define_a_usable_first_project_loop(self) -> None:
+        target = self.tmpdir / "loop-project"
+        target.mkdir()
+
+        self.run_cli("--core", "--target", str(target))
+
+        requirements = ET.parse(target / "docs/requirements.xml").getroot()
+        self.assertIsNotNone(requirements.find("./UseCases/UC-001"))
+        self.assertIsNotNone(requirements.find("./UseCases/UC-002"))
+        self.assertIsNotNone(requirements.find("./UseCases/UC-003"))
+        self.assertEqual(requirements.findtext("./OperatingLoop/step-2"), "Use discover and refine before treating the first slice as implementation-ready.")
+
+        plan = ET.parse(target / "docs/development-plan.xml").getroot()
+        initial_module = plan.find("./Modules/M-001")
+        self.assertIsNotNone(initial_module)
+        self.assertEqual(initial_module.attrib["NAME"], "InitialProjectSlice")
+        self.assertEqual(plan.findtext("./ImplementationOrder/Phase-1/step-1"), "Clarify the first stable project slice in the graph and project it into the initial module contract.")
+
+        verification = ET.parse(target / "docs/verification-plan.xml").getroot()
+        self.assertIsNotNone(verification.find("./ModuleChecks/V-M-001"))
+        self.assertEqual(verification.findtext("./PhaseGates/Phase-Gate-2/name"), "First Slice Ready")
+
+        graph = ET.parse(target / "docs/knowledge-graph.xml").getroot()
+        self.assertEqual(graph.findtext("./Nodes/M-001/type"), "CORE_LOGIC")
+        self.assertIsNotNone(graph.find("./Edges/edge[@from='W-001'][@to='M-001'][@type='implemented-by']"))
+        self.assertIsNotNone(graph.find("./CrossLinks/CrossLink[@from='M-001'][@to='V-M-001'][@doc='verification-plan.xml']"))
+
+        decisions = ET.parse(target / "docs/decisions.xml").getroot()
+        self.assertIn("Do not copy framework-repository decisions into this project", decisions.findtext("./BootstrapGuidance/note-2"))
 
 
 if __name__ == "__main__":

@@ -125,6 +125,7 @@ def render_requirements_xml(project_name: str, profile: str) -> str:
     <definition>This project adopts VIBE (Verified Intent-Based Engineering) as its engineering methodology.</definition>
     <purpose>Use explicit artifacts, macros, verification, and governance to reduce drift between intent, execution, and runtime control behavior.</purpose>
     <surface-model>Canonical project knowledge lives in docs/*.xml, operating contracts live in vibe.toml and docs/vibe/*.toml, and runtime exhaust lives in .vibestart/state/.</surface-model>
+    <beta-posture>Bootstrapped through vibestart ({profile}) with a core-first beta operating baseline.</beta-posture>
   </Identity>
 
   <UseCases>
@@ -140,17 +141,50 @@ def render_requirements_xml(project_name: str, profile: str) -> str:
       <priority>P0</priority>
       <status>planned</status>
     </UC-001>
+    <UC-002>
+      <title>Define the first implementation slice</title>
+      <actor>Project operator</actor>
+      <precondition>The initial intent has been clarified enough to project into a first real project module.</precondition>
+      <flow>
+        <step-1>Define the first project slice in the knowledge graph.</step-1>
+        <step-2>Project that slice into the development and verification surfaces through refine.</step-2>
+      </flow>
+      <postcondition>The project has one explicit work slice that can move toward implementation and verification.</postcondition>
+      <priority>P0</priority>
+      <status>planned</status>
+    </UC-002>
+    <UC-003>
+      <title>Close the first slice with verification and sync</title>
+      <actor>Project operator</actor>
+      <precondition>The first slice is ready for implementation or repair.</precondition>
+      <flow>
+        <step-1>Implement through deliver or repair through fix.</step-1>
+        <step-2>Run the required verification and review path.</step-2>
+        <step-3>Run sync when drift needs reconcile or owned runtime exhaust needs cleanup.</step-3>
+      </flow>
+      <postcondition>The first slice reaches verified continuity instead of code-only completion.</postcondition>
+      <priority>P1</priority>
+      <status>planned</status>
+    </UC-003>
   </UseCases>
 
   <Constraints>
     <technical>
       <constraint-1>Keep the knowledge graph as the primary semantic spine.</constraint-1>
       <constraint-2>Keep operating contracts readable and reviewable in version control.</constraint-2>
+      <constraint-3>Do not treat runtime state as canonical project truth.</constraint-3>
     </technical>
     <business>
       <constraint-1>guided and single remain the normative starting defaults.</constraint-1>
+      <constraint-2>Use core as the default beta operating profile unless the project deliberately needs deeper product depth.</constraint-2>
     </business>
   </Constraints>
+
+  <OperatingLoop>
+    <step-1>Start from intent and record it in the graph.</step-1>
+    <step-2>Use discover and refine before treating the first slice as implementation-ready.</step-2>
+    <step-3>Close implementation through deliver or fix, then verify and sync explicitly.</step-3>
+  </OperatingLoop>
 
   <Glossary>
     <term name="VIBE">Verified Intent-Based Engineering.</term>
@@ -174,17 +208,43 @@ def render_development_plan_xml(project_name: str) -> str:
   <ArchitectureNotes>
     <objective>Provide a clean bootstrap starting point for project-specific VIBE modules, verification, and workflow contracts.</objective>
     <non-goal>Do not treat this initial plan as a finished architecture.</non-goal>
+    <note-1>Replace these bootstrap placeholders with project-specific modules as soon as the first real slice is clarified.</note-1>
   </ArchitectureNotes>
 
   <Modules>
+    <M-001 NAME="InitialProjectSlice" TYPE="CORE_LOGIC" LAYER="0" ORDER="1" STATUS="planned">
+      <contract>
+        <purpose>Hold the first real project slice after bootstrap so the repository moves quickly from placeholder intent to explicit executable work.</purpose>
+        <inputs>
+          <param name="initial-intent" type="graph-node" />
+        </inputs>
+        <outputs>
+          <param name="first-slice" type="project-module-definition" />
+        </outputs>
+      </contract>
+      <target>
+        <source>replace-with-project-source</source>
+        <tests>replace-with-project-tests</tests>
+      </target>
+      <verification-ref>V-M-001</verification-ref>
+      <notes>
+        <note-1>Rename and split this placeholder once the project's real module boundaries are known.</note-1>
+      </notes>
+    </M-001>
   </Modules>
 
   <DataFlow>
+    <DF-001 NAME="IntentToFirstSlice" TRIGGER="discover | refine">
+      <step-1>Capture and clarify the first stable project intent in the graph.</step-1>
+      <step-2>Project that intent into the first real module and verification obligation.</step-2>
+      <evidence>Graph node, first module contract, and first verification reference all describe the same slice.</evidence>
+    </DF-001>
   </DataFlow>
 
   <ImplementationOrder>
     <Phase-1 name="Bootstrap Follow-Up" status="planned">
-      <goal>Define the first project-specific modules and verification obligations.</goal>
+      <goal>Replace bootstrap placeholders with the first real project slice and its verification path.</goal>
+      <step-1 module="M-001" status="planned" verification="V-M-001">Clarify the first stable project slice in the graph and project it into the initial module contract.</step-1>
     </Phase-1>
   </ImplementationOrder>
 
@@ -214,6 +274,25 @@ def render_verification_plan_xml(project_name: str) -> str:
   </Strategy>
 
   <ModuleChecks>
+    <V-M-001 MODULE="M-001">
+      <contract>
+        <purpose>Verify that the first project slice is defined coherently across graph, requirements, development, and verification surfaces.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>docs/requirements.xml</file>
+        <file>docs/development-plan.xml</file>
+        <file>docs/verification-plan.xml</file>
+        <file>docs/knowledge-graph.xml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>The first project slice replaces the bootstrap placeholder before implementation expands.</scenario-1>
+        <scenario-2>The graph, plan, and verification surfaces all point at the same first slice.</scenario-2>
+      </scenarios>
+    </V-M-001>
   </ModuleChecks>
 
   <PhaseGates>
@@ -224,6 +303,13 @@ def render_verification_plan_xml(project_name: str) -> str:
         <criterion-2>The project fills in the first real modules before treating the plan as implementation-ready.</criterion-2>
       </criteria>
     </Phase-Gate-1>
+    <Phase-Gate-2>
+      <name>First Slice Ready</name>
+      <criteria>
+        <criterion-1>The first real project slice has replaced the bootstrap placeholder module.</criterion-1>
+        <criterion-2>The first slice has an explicit verification path before broader implementation expands.</criterion-2>
+      </criteria>
+    </Phase-Gate-2>
   </PhaseGates>
   
 </VerificationPlan>
@@ -279,12 +365,40 @@ def render_knowledge_graph_xml(project_name: str) -> str:
       <description>Replace this placeholder with the first stable project intent after bootstrap.</description>
       <source>docs/requirements.xml</source>
     </I-001>
+    <W-001>
+      <name>DefineFirstProjectSlice</name>
+      <kind>work</kind>
+      <stage>designed</stage>
+      <status>active</status>
+      <summary>Turn the bootstrap placeholder into the first real project slice with explicit implementation and verification ownership.</summary>
+    </W-001>
+    <M-001>
+      <name>InitialProjectSlice</name>
+      <kind>module</kind>
+      <type>CORE_LOGIC</type>
+      <layer>0</layer>
+      <description>Bootstrap placeholder for the first real project slice. Rename and split it once the project-specific architecture becomes clear.</description>
+      <source>docs/development-plan.xml</source>
+    </M-001>
+    <V-001>
+      <name>ProjectVerificationSurface</name>
+      <kind>verification</kind>
+      <stage>designed</stage>
+      <description>The initial verification surface for the first real project slice.</description>
+      <source>docs/verification-plan.xml</source>
+    </V-001>
   </Nodes>
 
   <Edges>
+    <edge from="I-001" to="W-001" type="expands-to" />
+    <edge from="W-001" to="M-001" type="implemented-by" />
+    <edge from="M-001" to="V-001" type="verified-by" />
   </Edges>
 
   <CrossLinks>
+    <CrossLink from="I-001" to="UC-001" doc="requirements.xml" />
+    <CrossLink from="W-001" to="UC-002" doc="requirements.xml" />
+    <CrossLink from="M-001" to="V-M-001" doc="verification-plan.xml" />
   </CrossLinks>
   
 </KnowledgeGraph>
@@ -299,6 +413,11 @@ def render_decisions_xml(project_name: str) -> str:
     <name>{xml_escape(project_name)}</name>
     <version>0.1.0-draft</version>
   </ProjectInfo>
+
+  <BootstrapGuidance>
+    <note-1>Add decisions only for committed project-specific choices with architectural, process, or operational impact.</note-1>
+    <note-2>Do not copy framework-repository decisions into this project. Record only decisions that are genuinely project-specific.</note-2>
+  </BootstrapGuidance>
 
   <Decisions>
   </Decisions>
@@ -376,7 +495,7 @@ Interaction model:
 - type v or м to accept the current recommendation bundle
 
 Next step:
-- replace the placeholder intent in docs/knowledge-graph.xml and define the first real project modules
+- replace the placeholder intent in docs/knowledge-graph.xml, define the first real project slice, and drive it through discover -> refine -> deliver/fix -> sync
 """
 
 

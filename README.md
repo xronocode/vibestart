@@ -7,6 +7,7 @@ It is an agent-agnostic methodology for intent-driven engineering, designed to r
 ## Public root surface
 
 The clean methodology surface:
+- `CHANGELOG.md`
 - `vibestart`
 - `tests/test_vibestart.py`
 - `vibe.toml`
@@ -20,6 +21,9 @@ The clean methodology surface:
 - `docs/vibe/spec.md`
 - `docs/vibe/grace-mapping.md`
 - `docs/vibe/vibestart-contract.md`
+- `docs/vibe/beta-readiness.md`
+- `docs/vibe/operator-guide.md`
+- `docs/vibe/release-path.md`
 
 These files define the current VIBE draft:
 - graph-first knowledge continuity
@@ -28,6 +32,7 @@ These files define the current VIBE draft:
 - deterministic governance
 - traceable and calibratable autonomy
 - a working root bootstrap entrypoint for explicit `core` and `deep` profile selection
+- a core-first beta adoption path for one-project use
 
 ## vibestart
 
@@ -44,6 +49,13 @@ Current active entrypoint:
 
 - `./vibestart --core --target /path/to/project`
 - `./vibestart --deep --target /path/to/project`
+
+Current beta posture:
+
+- `core` is the recommended beta path for one-project adoption
+- `deep` remains explicit and supported, but its richer adapters are still draft-level
+- `docs/vibe/operator-guide.md` describes the normal first project loop after bootstrap
+- prerelease git path starts at `v0.1.0-beta.1`
 
 ## Repository structure
 
