@@ -7,6 +7,8 @@ It is an agent-agnostic methodology for intent-driven engineering, designed to r
 ## Public root surface
 
 The clean methodology surface:
+- `vibestart`
+- `tests/test_vibestart.py`
 - `vibe.toml`
 - `docs/requirements.xml`
 - `docs/development-plan.xml`
@@ -25,6 +27,7 @@ These files define the current VIBE draft:
 - macro-first workflow language
 - deterministic governance
 - traceable and calibratable autonomy
+- a working root bootstrap entrypoint for explicit `core` and `deep` profile selection
 
 ## vibestart
 
@@ -36,6 +39,11 @@ It is intended to install and adapt one VIBE methodology through two product pro
 
 At the methodology level, `VIBE` remains one standard.
 `core` and `deep` are product profiles, not separate frameworks.
+
+Current active entrypoint:
+
+- `./vibestart --core --target /path/to/project`
+- `./vibestart --deep --target /path/to/project`
 
 ## Repository structure
 

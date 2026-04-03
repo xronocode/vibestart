@@ -11,6 +11,7 @@
     <risk-5>Using one sync action for both canonical reconciliation and operational cleanup would couple transactions with different safety properties.</risk-5>
     <risk-6>Letting a GRACE compatibility shim silently become a new VIBE core source of truth would reintroduce artifact drift through boundary confusion.</risk-6>
     <risk-7>Allowing new product work to spill back into internal or legacy surfaces would blur the public root contract and reintroduce release drift.</risk-7>
+    <risk-8>Copying repository-specific framework truth into a bootstrapped project instead of generating project-generic starting surfaces would install the wrong semantic center.</risk-8>
   </ArchitectureNotes>
 
   <Modules>
@@ -250,6 +251,43 @@
         <note-3>legacy and internal surfaces may remain in git history and local workflows, but they are not part of the clean release archive surface.</note-3>
       </notes>
     </M-007>
+
+    <M-008 NAME="CoreBootstrapEntry" TYPE="ENTRY_POINT" LAYER="2" ORDER="3" STATUS="done">
+      <contract>
+        <purpose>Implement the active root vibestart entrypoint for explicit profile selection, generic project-surface installation, overwrite safety, dry-run behavior, and deterministic first-run output.</purpose>
+        <inputs>
+          <param name="config-boundary" type="M-005" />
+          <param name="bootstrap-contract" type="M-006" />
+          <param name="workspace-boundary" type="M-007" />
+        </inputs>
+        <outputs>
+          <param name="bootstrap-runtime-entrypoint" type="executable-bootstrap-surface" />
+        </outputs>
+        <errors>
+          <error code="ERR_PROFILE_REQUIRED" />
+          <error code="ERR_OVERWRITE_CONFLICT" />
+          <error code="ERR_BOOTSTRAP_TEMPLATE_DRIFT" />
+        </errors>
+      </contract>
+      <interface>
+        <export-bootstrapEntry PURPOSE="Expose a working vibestart command that installs the shared VIBE surface into a target repository." />
+      </interface>
+      <depends>M-005, M-006, M-007</depends>
+      <target>
+        <source>vibestart</source>
+        <tests>tests/test_vibestart.py</tests>
+      </target>
+      <observability>
+        <log-prefix>[VIBE][CoreBootstrapEntry]</log-prefix>
+        <critical-block>BLOCK_RUN_BOOTSTRAP</critical-block>
+      </observability>
+      <verification-ref>V-M-008</verification-ref>
+      <notes>
+        <note-1>The active entrypoint must generate project-generic XML starting surfaces instead of copying this repository's framework-specific XML truth verbatim.</note-1>
+        <note-2>deep remains explicit and supported, but its richer adapters may initially be placeholders while core establishes the first working product path.</note-2>
+        <note-3>Dry-run and overwrite checks are part of the product contract, not optional convenience features.</note-3>
+      </notes>
+    </M-008>
   </Modules>
 
   <DataFlow>
@@ -306,13 +344,18 @@
       <goal>Lock the post-quarantine root workspace so future VIBE and vibestart work happens on one explicit public surface.</goal>
       <step-1 module="M-007" status="done" verification="V-M-007">Define the clean root workspace boundary across public, compatibility, internal, and legacy surfaces.</step-1>
     </Phase-4>
+
+    <Phase-5 name="Core Bootstrap Implementation" status="done">
+      <goal>Ship the first working root vibestart entrypoint for explicit profile selection and deterministic shared-surface installation.</goal>
+      <step-1 module="M-008" status="done" verification="V-M-008">Implement the active vibestart bootstrap command with safe writes, dry-run support, and first-run output.</step-1>
+    </Phase-5>
   </ImplementationOrder>
 
   <ExecutionPolicy>
     <default-profile>guided-single</default-profile>
     <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
     <experimental-guard>Experimental surfaces are allowed but non-normative until deterministic guards and stronger verification are in place.</experimental-guard>
-    <controller-owns>README.md, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
+    <controller-owns>README.md, vibestart, tests/test_vibestart.py, docs/requirements.xml, docs/development-plan.xml, docs/verification-plan.xml, docs/knowledge-graph.xml, docs/decisions.xml, docs/technology.xml, vibe.toml, docs/vibe/*.toml</controller-owns>
     <worker-owns>Scoped implementation surfaces inside the approved write scope; no worker owns the canonical shared artifacts globally.</worker-owns>
   </ExecutionPolicy>
   

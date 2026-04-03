@@ -1,0 +1,411 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+SHARED_SURFACES = [
+    "docs/requirements.xml",
+    "docs/development-plan.xml",
+    "docs/verification-plan.xml",
+    "docs/knowledge-graph.xml",
+    "docs/decisions.xml",
+    "vibe.toml",
+    "docs/vibe/governance.toml",
+    "docs/vibe/macros.toml",
+    ".vibestart/state/.gitkeep",
+]
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="vibestart",
+        description="Bootstrap a clean VIBE workspace with explicit core or deep profile selection.",
+    )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--core", action="store_true", help="Bootstrap the core product profile.")
+    group.add_argument("--deep", action="store_true", help="Bootstrap the deep product profile.")
+    parser.add_argument(
+        "--target",
+        default=".",
+        help="Target directory to bootstrap. Defaults to the current working directory.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be installed without writing files.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing VIBE surfaces in the target.",
+    )
+    return parser
+
+
+def resolve_profile(args: argparse.Namespace) -> str:
+    if args.core:
+        return "core"
+    if args.deep:
+        return "deep"
+    if not sys.stdin.isatty():
+        raise SystemExit("Explicit profile selection is required. Use --core or --deep.")
+
+    while True:
+        choice = input("Select vibestart profile [core/deep]: ").strip().lower()
+        if choice in {"core", "deep"}:
+            return choice
+        print("Please enter core or deep.", file=sys.stderr)
+
+
+def target_paths(target: Path) -> list[Path]:
+    return [target / relative for relative in SHARED_SURFACES]
+
+
+def ensure_safe_target(target: Path, force: bool) -> None:
+    conflicts = [path for path in target_paths(target) if path.exists()]
+    if conflicts and not force:
+        conflict_list = "\n".join(f"- {path}" for path in conflicts)
+        raise SystemExit(
+            "Refusing to overwrite existing VIBE surfaces without --force:\n"
+            f"{conflict_list}"
+        )
+
+
+def read_canonical(relative_path: str) -> str:
+    return (ROOT / relative_path).read_text(encoding="utf-8")
+
+
+def render_vibe_toml(project_name: str, profile: str) -> str:
+    text = read_canonical("vibe.toml")
+    text = text.replace("for this repository", "for this project", 1)
+    text = re.sub(r'^name = ".*"$', f'name = "{project_name}"', text, count=1, flags=re.M)
+    text = re.sub(
+        r'^annotation = ".*"$',
+        'annotation = "Active project workspace bootstrapped with VIBE through the optional vibestart product."',
+        text,
+        count=1,
+        flags=re.M,
+    )
+    text = re.sub(
+        r'^profile = "(core|deep)"$',
+        f'profile = "{profile}"',
+        text,
+        count=1,
+        flags=re.M,
+    )
+    return text
+
+
+def render_governance_toml() -> str:
+    text = read_canonical("docs/vibe/governance.toml")
+    return text.replace("for this repository", "for this project", 1)
+
+
+def render_macros_toml() -> str:
+    text = read_canonical("docs/vibe/macros.toml")
+    return text.replace("for this repository", "for this project", 1)
+
+
+def render_requirements_xml(project_name: str, profile: str) -> str:
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<Requirements VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>{xml_escape(project_name)}</name>
+    <version>0.1.0-draft</version>
+    <annotation>Project workspace bootstrapped by vibestart ({profile}) on top of VIBE.</annotation>
+  </ProjectInfo>
+
+  <Identity>
+    <definition>This project adopts VIBE (Verified Intent-Based Engineering) as its engineering methodology.</definition>
+    <purpose>Use explicit artifacts, macros, verification, and governance to reduce drift between intent, execution, and runtime control behavior.</purpose>
+    <surface-model>Canonical project knowledge lives in docs/*.xml, operating contracts live in vibe.toml and docs/vibe/*.toml, and runtime exhaust lives in .vibestart/state/.</surface-model>
+  </Identity>
+
+  <UseCases>
+    <UC-001>
+      <title>Capture the first stable project intent</title>
+      <actor>Project operator</actor>
+      <precondition>The repository has been bootstrapped but project-specific intent has not yet been written down.</precondition>
+      <flow>
+        <step-1>Record the first stable intent in docs/knowledge-graph.xml.</step-1>
+        <step-2>Project clarified intent into requirements, plan, and verification surfaces.</step-2>
+      </flow>
+      <postcondition>The project has a usable canonical starting point instead of relying on chat memory alone.</postcondition>
+      <priority>P0</priority>
+      <status>planned</status>
+    </UC-001>
+  </UseCases>
+
+  <Constraints>
+    <technical>
+      <constraint-1>Keep the knowledge graph as the primary semantic spine.</constraint-1>
+      <constraint-2>Keep operating contracts readable and reviewable in version control.</constraint-2>
+    </technical>
+    <business>
+      <constraint-1>guided and single remain the normative starting defaults.</constraint-1>
+    </business>
+  </Constraints>
+
+  <Glossary>
+    <term name="VIBE">Verified Intent-Based Engineering.</term>
+    <term name="Core">The lighter vibestart bootstrap profile.</term>
+    <term name="Deep">The richer vibestart bootstrap profile.</term>
+  </Glossary>
+  
+</Requirements>
+"""
+
+
+def render_development_plan_xml(project_name: str) -> str:
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<DevelopmentPlan VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>{xml_escape(project_name)}</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <ArchitectureNotes>
+    <objective>Provide a clean bootstrap starting point for project-specific VIBE modules, verification, and workflow contracts.</objective>
+    <non-goal>Do not treat this initial plan as a finished architecture.</non-goal>
+  </ArchitectureNotes>
+
+  <Modules>
+  </Modules>
+
+  <DataFlow>
+  </DataFlow>
+
+  <ImplementationOrder>
+    <Phase-1 name="Bootstrap Follow-Up" status="planned">
+      <goal>Define the first project-specific modules and verification obligations.</goal>
+    </Phase-1>
+  </ImplementationOrder>
+
+  <ExecutionPolicy>
+    <default-profile>guided-single</default-profile>
+    <experimental-surfaces>auto, multi, calibrate-apply</experimental-surfaces>
+    <experimental-guard>Experimental surfaces are allowed but non-normative until the project adds stronger guards and verification.</experimental-guard>
+  </ExecutionPolicy>
+  
+</DevelopmentPlan>
+"""
+
+
+def render_verification_plan_xml(project_name: str) -> str:
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<VerificationPlan VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>{xml_escape(project_name)}</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Strategy>
+    <approach>Artifact integrity first: parseability, coherence, verification, then broader execution trust.</approach>
+    <mocking-policy>Prefer deterministic artifact checks and explicit review criteria.</mocking-policy>
+    <coverage-target>100% of active canonical project surfaces parse cleanly and tell one contract story.</coverage-target>
+  </Strategy>
+
+  <ModuleChecks>
+  </ModuleChecks>
+
+  <PhaseGates>
+    <Phase-Gate-1>
+      <name>Bootstrap Integrity</name>
+      <criteria>
+        <criterion-1>All installed XML and TOML surfaces parse cleanly.</criterion-1>
+        <criterion-2>The project fills in the first real modules before treating the plan as implementation-ready.</criterion-2>
+      </criteria>
+    </Phase-Gate-1>
+  </PhaseGates>
+  
+</VerificationPlan>
+"""
+
+
+def render_knowledge_graph_xml(project_name: str) -> str:
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>{xml_escape(project_name)}</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Ontology>
+    <FieldSemantics>
+      <field name="kind">Universal node family discriminator: intent, feature, work, verification, decision, deploy, or module.</field>
+      <field name="type">Optional subtype or taxonomy field. In v1 it is used only for module taxonomy values such as CORE_LOGIC, UTILITY, or ENTRY_POINT.</field>
+      <field name="stage">Lifecycle maturity uses the ordered values captured, clarified, designed, refined, ready, in_progress, verified, and done.</field>
+      <field name="status">Optional execution posture for work-like nodes uses active, blocked, deferred, dropped, or done.</field>
+    </FieldSemantics>
+    <NodeKinds>
+      <node-kind name="intent">Represents a user or project intent before and during structured refinement.</node-kind>
+      <node-kind name="feature">Represents a stable capability derived from intent.</node-kind>
+      <node-kind name="work">Represents active implementation or framework-definition work tracked over time.</node-kind>
+      <node-kind name="verification">Represents verification surfaces, phase gates, and proof obligations.</node-kind>
+      <node-kind name="decision">Represents an approved architectural or process decision.</node-kind>
+      <node-kind name="deploy">Represents deploy-facing workflow surfaces and readiness concerns.</node-kind>
+    </NodeKinds>
+    <ModuleTaxonomy>
+      <module-type name="ENTRY_POINT">Execution begins here for an explicit workflow or product surface.</module-type>
+      <module-type name="CORE_LOGIC">Owns framework or project semantics.</module-type>
+      <module-type name="UTILITY">Owns shared helpers or support behavior.</module-type>
+    </ModuleTaxonomy>
+    <LifecycleStages>
+      <stage name="captured" order="1">Knowledge has been captured but is still raw.</stage>
+      <stage name="clarified" order="2">Intent is clear enough to relate to existing project knowledge.</stage>
+      <stage name="designed" order="3">The shape of the solution is defined well enough for structured projection.</stage>
+      <stage name="refined" order="4">Execution and verification implications have been decomposed.</stage>
+      <stage name="ready" order="5">The work is mature enough for implementation.</stage>
+      <stage name="in_progress" order="6">Implementation or repair is underway.</stage>
+      <stage name="verified" order="7">Required verification and review obligations have been satisfied.</stage>
+      <stage name="done" order="8">The item is complete in the current project context.</stage>
+    </LifecycleStages>
+  </Ontology>
+
+  <Nodes>
+    <I-001>
+      <name>InitialProjectIntent</name>
+      <kind>intent</kind>
+      <stage>captured</stage>
+      <description>Replace this placeholder with the first stable project intent after bootstrap.</description>
+      <source>docs/requirements.xml</source>
+    </I-001>
+  </Nodes>
+
+  <Edges>
+  </Edges>
+
+  <CrossLinks>
+  </CrossLinks>
+  
+</KnowledgeGraph>
+"""
+
+
+def render_decisions_xml(project_name: str) -> str:
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<Decisions VERSION="1.0.0">
+  
+  <ProjectInfo>
+    <name>{xml_escape(project_name)}</name>
+    <version>0.1.0-draft</version>
+  </ProjectInfo>
+
+  <Decisions>
+  </Decisions>
+
+  <Categories>
+    <category name="architecture">Architectural decisions</category>
+    <category name="technology">Technology choices</category>
+    <category name="process">Process and methodology decisions</category>
+  </Categories>
+  
+</Decisions>
+"""
+
+
+def xml_escape(value: str) -> str:
+    return (
+        value.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+    )
+
+
+def render_surface_map(project_name: str, profile: str) -> dict[str, str]:
+    return {
+        "vibe.toml": render_vibe_toml(project_name, profile),
+        "docs/vibe/governance.toml": render_governance_toml(),
+        "docs/vibe/macros.toml": render_macros_toml(),
+        "docs/requirements.xml": render_requirements_xml(project_name, profile),
+        "docs/development-plan.xml": render_development_plan_xml(project_name),
+        "docs/verification-plan.xml": render_verification_plan_xml(project_name),
+        "docs/knowledge-graph.xml": render_knowledge_graph_xml(project_name),
+        "docs/decisions.xml": render_decisions_xml(project_name),
+        ".vibestart/state/.gitkeep": "",
+    }
+
+
+def write_surfaces(target: Path, rendered: dict[str, str]) -> None:
+    for relative_path, content in rendered.items():
+        path = target / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+
+
+def first_run_contract(profile: str) -> str:
+    optional = [
+        "external integrations",
+        "richer memory backends",
+        "multi-agent runtime surfaces",
+        "experimental surfaces: auto, multi, calibrate-apply",
+    ]
+    if profile == "deep":
+        optional.insert(2, "deeper deployment and integration scaffolding")
+
+    installed_lines = "\n".join(f"- {surface}" for surface in SHARED_SURFACES)
+    optional_lines = "\n".join(f"- {item}" for item in optional)
+
+    return f"""vibestart profile: {profile}
+
+Installed:
+{installed_lines}
+
+Active defaults:
+- implicit_vibe = true
+- autonomy = guided
+- agents = single
+
+Optional:
+{optional_lines}
+
+Interaction model:
+- plain engineering requests enter VIBE implicitly
+- guided mode explains recommended paths
+- type v or м to accept the current recommendation bundle
+
+Next step:
+- replace the placeholder intent in docs/knowledge-graph.xml and define the first real project modules
+"""
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+    profile = resolve_profile(args)
+
+    target = Path(args.target).resolve()
+    project_name = target.name or "project"
+    ensure_safe_target(target, force=args.force)
+
+    rendered = render_surface_map(project_name=project_name, profile=profile)
+
+    print(f"Selected profile: {profile}")
+    print(f"Target: {target}")
+    print("Shared install surface:")
+    for surface in SHARED_SURFACES:
+        print(f"- {surface}")
+
+    if args.dry_run:
+        print("\nDry run only. No files were written.\n")
+    else:
+        write_surfaces(target, rendered)
+        print("\nInstalled shared VIBE surface.\n")
+
+    print(first_run_contract(profile))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

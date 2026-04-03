@@ -652,6 +652,49 @@
         <notes>Also keeps the compatibility shim and quarantined legacy package from being mistaken for active product surfaces.</notes>
       </review>
     </D-015>
+
+    <D-016 DATE="2026-04-03" STATUS="approved">
+      <summary>Ship a working root vibestart entrypoint around the shared surface and core behavior before implementing richer deep-specific adapters.</summary>
+      <context>
+        <problem>After the clean root workspace was established, the repository still lacked an active bootstrap command. Waiting for a fully differentiated deep implementation would delay the first real product path and keep the contract purely documentary.</problem>
+        <constraints>The working entrypoint must preserve one VIBE methodology, keep profile choice explicit, and avoid copying repository-specific framework XML truth into target projects.</constraints>
+      </context>
+      <options>
+        <option-1 name="Wait for full deep implementation first">
+          <description>Do not ship an active product entrypoint until deep-specific adapters and richer integration behavior are also implemented.</description>
+          <pros>More feature-complete first release.</pros>
+          <cons>Leaves the product contract unproven for longer and delays feedback on the shared install surface.</cons>
+          <score>4/10</score>
+        </option-1>
+        <option-2 name="Implement core-first active bootstrap">
+          <description>Ship a working root vibestart command for the shared install surface and deterministic first-run contract, while keeping deep explicit and safe even if its richer adapters remain future work.</description>
+          <pros>Creates a usable product path immediately and validates the contract with real execution.</pros>
+          <cons>deep initially differs more by declared product depth than by concrete runtime adapters.</cons>
+          <score>9/10</score>
+        </option-2>
+      </options>
+      <decision>
+        <chosen>Implement core-first active bootstrap</chosen>
+        <rationale>A working deterministic bootstrap path is more valuable now than waiting for a heavier deep implementation. It proves the shared install surface and first-run contract on real code without compromising the one-methodology rule.</rationale>
+      </decision>
+      <impacts>
+        <module>M-006</module>
+        <module>M-008</module>
+      </impacts>
+      <consequences>
+        <positive>The repository gets a real active product entrypoint and a safer path for future deep specialization.</positive>
+        <negative>Maintainers still need to implement richer deep adapters later if they want deeper runtime differentiation.</negative>
+      </consequences>
+      <links>
+        <ref doc="development-plan.xml" id="M-006" />
+        <ref doc="development-plan.xml" id="M-008" />
+      </links>
+      <review>
+        <date>2026-04-03</date>
+        <outcome>still-valid</outcome>
+        <notes>Also constrains the generated project surfaces to remain generic project scaffolding instead of copies of framework-repository truth.</notes>
+      </review>
+    </D-016>
   </Decisions>
 
   <Categories>
@@ -663,10 +706,10 @@
   </Categories>
 
   <Statistics>
-    <total>15</total>
+    <total>16</total>
     <by-status>
       <proposed>0</proposed>
-      <approved>15</approved>
+      <approved>16</approved>
       <rejected>0</rejected>
       <superseded>0</superseded>
     </by-status>

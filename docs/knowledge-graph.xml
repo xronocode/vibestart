@@ -151,6 +151,14 @@
       <summary>Lock the clean public root workspace so future VIBE and vibestart work does not drift back into compatibility, internal, or legacy surfaces.</summary>
     </W-005>
 
+    <W-006>
+      <name>ImplementCoreBootstrapEntry</name>
+      <kind>work</kind>
+      <stage>done</stage>
+      <status>done</status>
+      <summary>Ship the first active root vibestart entrypoint with explicit profile selection, generic shared-surface installation, dry-run behavior, and first-run output.</summary>
+    </W-006>
+
     <M-001>
       <name>FrameworkIdentity</name>
       <kind>module</kind>
@@ -243,6 +251,18 @@
         <export-workspaceBoundary PURPOSE="Explain the clean public root surface and the boundaries around compatibility, internal, and legacy materials." />
       </exports>
     </M-007>
+
+    <M-008>
+      <name>CoreBootstrapEntry</name>
+      <kind>module</kind>
+      <type>ENTRY_POINT</type>
+      <layer>2</layer>
+      <description>Active root vibestart entrypoint for explicit core or deep selection, generic shared-surface installation, overwrite safety, and deterministic first-run output.</description>
+      <source>vibestart</source>
+      <exports>
+        <export-bootstrapEntry PURPOSE="Expose the working vibestart command for bootstrap installation." />
+      </exports>
+    </M-008>
 
     <V-001>
       <name>VerificationSurface</name>
@@ -430,6 +450,17 @@
         <export-workspaceDecision PURPOSE="Preserve the post-quarantine repository boundary and keep new work on the clean root surface." />
       </exports>
     </D-015>
+
+    <D-016>
+      <name>CoreFirstBootstrapImplementation</name>
+      <kind>decision</kind>
+      <stage>done</stage>
+      <description>Implement a working active bootstrap entrypoint for the shared surface and core behavior first, while keeping deep explicit and safe even before richer adapters exist.</description>
+      <source>docs/decisions.xml</source>
+      <exports>
+        <export-bootstrapRuntimeDecision PURPOSE="Preserve a working core-first product path without silently changing methodology semantics." />
+      </exports>
+    </D-016>
   </Nodes>
 
   <Edges>
@@ -442,11 +473,13 @@
     <edge from="F-002" to="W-003" type="requires" />
     <edge from="F-003" to="W-004" type="requires" />
     <edge from="F-003" to="W-005" type="requires" />
+    <edge from="F-003" to="W-006" type="requires" />
     <edge from="W-001" to="M-003" type="implemented-by" />
     <edge from="W-002" to="M-004" type="implemented-by" />
     <edge from="W-003" to="M-005" type="implemented-by" />
     <edge from="W-004" to="M-006" type="implemented-by" />
     <edge from="W-005" to="M-007" type="implemented-by" />
+    <edge from="W-006" to="M-008" type="implemented-by" />
     <edge from="M-002" to="M-001" type="depends" />
     <edge from="M-003" to="M-001" type="depends" />
     <edge from="M-003" to="M-002" type="depends" />
@@ -461,6 +494,9 @@
     <edge from="M-007" to="M-001" type="depends" />
     <edge from="M-007" to="M-005" type="depends" />
     <edge from="M-007" to="M-006" type="depends" />
+    <edge from="M-008" to="M-005" type="depends" />
+    <edge from="M-008" to="M-006" type="depends" />
+    <edge from="M-008" to="M-007" type="depends" />
     <edge from="M-001" to="V-001" type="verified-by" />
     <edge from="M-002" to="V-001" type="verified-by" />
     <edge from="M-003" to="V-001" type="verified-by" />
@@ -468,6 +504,7 @@
     <edge from="M-005" to="V-001" type="verified-by" />
     <edge from="M-006" to="V-001" type="verified-by" />
     <edge from="M-007" to="V-001" type="verified-by" />
+    <edge from="M-008" to="V-001" type="verified-by" />
     <edge from="F-003" to="DEP-001" type="connects" />
     <edge from="M-001" to="D-001" type="governed-by" />
     <edge from="M-002" to="D-002" type="governed-by" />
@@ -490,6 +527,12 @@
     <edge from="M-005" to="D-014" type="governed-by" />
     <edge from="M-007" to="D-014" type="governed-by" />
     <edge from="M-007" to="D-015" type="governed-by" />
+    <edge from="M-008" to="D-010" type="governed-by" />
+    <edge from="M-008" to="D-011" type="governed-by" />
+    <edge from="M-008" to="D-012" type="governed-by" />
+    <edge from="M-008" to="D-013" type="governed-by" />
+    <edge from="M-008" to="D-015" type="governed-by" />
+    <edge from="M-008" to="D-016" type="governed-by" />
   </Edges>
 
   <CrossLinks>
@@ -506,6 +549,7 @@
     <CrossLink from="M-005" to="V-M-005" doc="verification-plan.xml" />
     <CrossLink from="M-006" to="V-M-006" doc="verification-plan.xml" />
     <CrossLink from="M-007" to="V-M-007" doc="verification-plan.xml" />
+    <CrossLink from="M-008" to="V-M-008" doc="verification-plan.xml" />
     <CrossLink from="M-001" to="D-001" doc="decisions.xml" />
     <CrossLink from="M-002" to="D-002" doc="decisions.xml" />
     <CrossLink from="M-005" to="D-003" doc="decisions.xml" />
@@ -527,12 +571,18 @@
     <CrossLink from="M-005" to="D-014" doc="decisions.xml" />
     <CrossLink from="M-007" to="D-014" doc="decisions.xml" />
     <CrossLink from="M-007" to="D-015" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-010" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-011" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-012" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-013" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-015" doc="decisions.xml" />
+    <CrossLink from="M-008" to="D-016" doc="decisions.xml" />
   </CrossLinks>
 
   <Layers>
     <layer-0 count="2" modules="M-001, M-002" />
     <layer-1 count="3" modules="M-003, M-004, M-005" />
-    <layer-2 count="2" modules="M-006, M-007" />
+    <layer-2 count="3" modules="M-006, M-007, M-008" />
   </Layers>
 
   <Health>

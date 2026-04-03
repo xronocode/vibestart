@@ -162,12 +162,14 @@ The onboarding flow is deterministic.
 1. Resolve profile choice:
    - explicit flag, or
    - explicit interactive prompt
-2. Install the shared VIBE surfaces
-3. Apply the selected product profile
-4. Explain what was installed
-5. Explain active defaults
-6. Explain what remains optional
-7. Explain the next interaction model
+2. Check whether the target already contains conflicting VIBE surfaces
+3. Allow a dry-run path that explains the shared install surface without writing files
+4. Install the shared VIBE surfaces only when the operator has selected a real write path
+5. Apply the selected product profile
+6. Explain what was installed
+7. Explain active defaults
+8. Explain what remains optional
+9. Explain the next interaction model
 
 ### Profile switch
 
@@ -205,6 +207,9 @@ It must state:
 - guided mode explains the selected path
 - `v` accepts the current recommendation bundle
 - `м` is accepted as a layout-safe alias of `v`
+- non-interactive runs must fail safely if no explicit profile is given
+- dry-run must not write files
+- existing VIBE surfaces must not be overwritten without an explicit force path
 
 ## 9. Example First-Run Contract
 

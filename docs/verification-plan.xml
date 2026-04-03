@@ -237,6 +237,42 @@
         <block>BLOCK_DEFINE_WORKSPACE_BOUNDARY</block>
       </critical-blocks>
     </V-M-007>
+
+    <V-M-008 MODULE="M-008">
+      <contract>
+        <purpose>Verify that the active vibestart entrypoint installs a deterministic shared surface with explicit profile selection and safe write behavior.</purpose>
+      </contract>
+      <strategy>
+        <approach>integration</approach>
+        <mocking>none</mocking>
+      </strategy>
+      <test-files>
+        <file>vibestart</file>
+        <file>tests/test_vibestart.py</file>
+        <file>vibe.toml</file>
+        <file>docs/vibe/governance.toml</file>
+        <file>docs/vibe/macros.toml</file>
+      </test-files>
+      <scenarios>
+        <scenario-1>Profile choice is explicit and non-interactive runs fail safely without --core or --deep.</scenario-1>
+        <scenario-2>core installs the full shared surface and preserves guided/single defaults.</scenario-2>
+        <scenario-3>deep is explicit, installs the same shared surface, and preserves one methodology with the same normative defaults.</scenario-3>
+        <scenario-4>Dry-run mode does not write files.</scenario-4>
+        <scenario-5>Existing target surfaces are not overwritten without an explicit force flag.</scenario-5>
+        <scenario-6>The first-run output contains the required contract sections and recommendation confirmation behavior.</scenario-6>
+        <scenario-7>Generated XML and TOML surfaces parse cleanly as a bootstrap starting point.</scenario-7>
+      </scenarios>
+      <traces>
+        <trace-1>The active entrypoint, the product contract, and the development plan module M-008 describe the same shared install surface and first-run behavior.</trace-1>
+      </traces>
+      <commands>
+        <test-command>python3 -m unittest tests/test_vibestart.py</test-command>
+        <smoke-command>./vibestart --core --dry-run --target /tmp/vibestart-smoke</smoke-command>
+      </commands>
+      <critical-blocks>
+        <block>BLOCK_RUN_BOOTSTRAP</block>
+      </critical-blocks>
+    </V-M-008>
   </ModuleChecks>
 
   <VerificationMatrix>
@@ -303,16 +339,18 @@
       </verification-levels>
     </VMX-003>
 
-    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006">
+    <VMX-004 FLOW="DF-004" MODULES="M-005, M-006, M-008">
       <name>BootstrapToAdoption</name>
       <success-scenarios>
         <scenario-1>Profile choice is explicit and never silently defaulted during install.</scenario-1>
         <scenario-2>core and deep install the same canonical VIBE surfaces while differing only in product depth and optionals.</scenario-2>
         <scenario-3>The first-run contract states installed surfaces, active defaults, optional surfaces, next step, and recommendation confirmation behavior.</scenario-3>
+        <scenario-4>The active vibestart entrypoint can realize the shared install surface without copying framework-specific XML truth into the target project.</scenario-4>
       </success-scenarios>
       <failure-scenarios>
         <scenario-1>deep changes methodology semantics instead of only product depth.</scenario-1>
         <scenario-2>Experimental runtime surfaces are silently activated as defaults.</scenario-2>
+        <scenario-3>The bootstrap command overwrites an existing project surface without an explicit force path.</scenario-3>
       </failure-scenarios>
       <evidence-types>
         <deterministic>Contract document assertions, manifest assertions, and config boundary checks.</deterministic>
@@ -380,6 +418,9 @@
     </module>
     <module module="M-007" autonomous-safe="guided-single" multi-agent-safe="no">
       <reason>Workspace boundary and release-surface policy are shared repo-level contracts and should change only through deliberate sequential edits.</reason>
+    </module>
+    <module module="M-008" autonomous-safe="guided-single" multi-agent-safe="no">
+      <reason>The active bootstrap entrypoint writes shared root surfaces and must remain deterministic and sequential until richer product adapters exist.</reason>
     </module>
     <repo-level>
       <sequential-execution>recommended</sequential-execution>
@@ -449,6 +490,22 @@
       </commands>
       <sign-off required="true" />
     </Phase-Gate-4>
+
+    <Phase-Gate-5>
+      <name>Core Bootstrap Implementation</name>
+      <criteria>
+        <criterion-1>An active root vibestart command exists.</criterion-1>
+        <criterion-2>core and deep profile selection remain explicit and deterministic.</criterion-2>
+        <criterion-3>The entrypoint installs the shared surface and prints the first-run contract.</criterion-3>
+        <criterion-4>Dry-run and overwrite protections are enforced.</criterion-4>
+        <criterion-5>Generated bootstrap surfaces parse cleanly.</criterion-5>
+      </criteria>
+      <commands>
+        <verify-command>python3 -m unittest tests/test_vibestart.py</verify-command>
+        <lint-command>python3 -c "from pathlib import Path; assert Path('vibestart').exists(); assert Path('tests/test_vibestart.py').exists()"</lint-command>
+      </commands>
+      <sign-off required="true" />
+    </Phase-Gate-5>
   </PhaseGates>
 
   <TraceRequirements>
@@ -487,13 +544,18 @@
       <required-fields>public_root_surface, compatibility_surface, internal_surface, legacy_surface, archive_exclusions, working_rule</required-fields>
       <assertion>The repository boundary between clean root, compatibility, internal, and legacy surfaces must remain explicit and reviewable.</assertion>
     </trace-req>
+    <trace-req module="M-008">
+      <marker>[VIBE][CoreBootstrapEntry][BLOCK_RUN_BOOTSTRAP]</marker>
+      <required-fields>profile, target, installed_surfaces, active_defaults, optional_surfaces, dry_run, overwrite_policy</required-fields>
+      <assertion>The active bootstrap entrypoint must keep profile selection, shared install surface, and first-run behavior explicit and reviewable.</assertion>
+    </trace-req>
   </TraceRequirements>
 
   <Health>
     <last-updated>2026-04-02</last-updated>
     <coverage>
-      <modules-covered>7/7</modules-covered>
-      <phase-gates-defined>4/4</phase-gates-defined>
+      <modules-covered>8/8</modules-covered>
+      <phase-gates-defined>5/5</phase-gates-defined>
     </coverage>
   </Health>
   
