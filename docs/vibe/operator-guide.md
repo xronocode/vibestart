@@ -21,7 +21,7 @@ The intended beta UX is:
 
 Practical shape:
 
-`bootstrap-from-git.sh --repo <git-url> --ref v0.1.0-beta.2 --core --target .`
+`bootstrap-from-git.sh --repo <git-url> --ref v4.0.0-beta.2 --core --target .`
 
 This keeps the target repository as the active working context instead of requiring a separate long-lived framework checkout first.
 

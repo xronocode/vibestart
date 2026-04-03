@@ -52,14 +52,14 @@ Current active entrypoints:
 - `./vibestart --core --target /path/to/project`
 - `./vibestart --deep --target /path/to/project`
 - from inside a target repository:
-  `bash <(curl -fsSL <bootstrap-from-git.sh-url>) --repo <git-url> --ref v0.1.0-beta.2 --core --target .`
+  `bash <(curl -fsSL <bootstrap-from-git.sh-url>) --repo <git-url> --ref v4.0.0-beta.2 --core --target .`
 
 Current beta posture:
 
 - `core` is the recommended beta path for one-project adoption
 - `deep` remains explicit and supported, but its richer adapters are still draft-level
 - `docs/vibe/operator-guide.md` describes the normal first project loop after bootstrap
-- current prerelease git path is `v0.1.0-beta.2`
+- current prerelease git path is `v4.0.0-beta.2`
 - intended adoption UX is target-repo-first: fetch vibestart from git into the current repository context, then write the VIBE surface into that repository
 
 ## Repository structure

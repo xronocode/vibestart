@@ -4,7 +4,7 @@ This changelog tracks the clean VIBE / vibestart root surface.
 
 Legacy vibestart v3 history remains preserved in `legacy/vibestart-v3/CHANGELOG.v3.md`.
 
-## 0.1.0-beta.2 - 2026-04-03
+## 4.0.0-beta.2 - 2026-04-03
 
 Target-repo-first bootstrap increment.
 
@@ -18,7 +18,7 @@ Target-repo-first bootstrap increment.
 
 - the intended prerelease adoption path is now target-repo-first instead of requiring a separate long-lived local framework checkout as the main workflow
 
-## 0.1.0-beta.1 - 2026-04-03
+## 4.0.0-beta.1 - 2026-04-03
 
 First public core-first beta candidate for the new VIBE / vibestart root surface.
 

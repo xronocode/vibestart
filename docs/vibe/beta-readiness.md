@@ -2,7 +2,7 @@
 
 ## Status
 
-Current prerelease target: `0.1.0-beta.2`.
+Current prerelease target: `4.0.0-beta.2`.
 
 `core`: beta-candidate for one-project adoption.  
 `deep`: draft product profile, explicit and safe but not yet richly differentiated.

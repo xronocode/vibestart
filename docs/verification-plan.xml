@@ -302,7 +302,7 @@
         <trace-1>The beta-readiness note, operator guide, development plan module M-009, and bootstrap behavior describe the same core-first adoption boundary.</trace-1>
       </traces>
       <commands>
-        <test-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta and 'draft' in beta; assert 'GRACE' in beta and 'not yet' in beta; assert 'First Day After `vibestart --core`' in guide; assert 'discover' in guide and 'refine' in guide and 'deliver' in guide and 'sync' in guide; assert '`v`' in guide and '`м`' in guide; assert 'core-first' in beta; assert 'v0.1.0-beta.2' in rel; assert '0.1.0-beta.2' in cl"</test-command>
+        <test-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta and 'draft' in beta; assert 'GRACE' in beta and 'not yet' in beta; assert 'First Day After `vibestart --core`' in guide; assert 'discover' in guide and 'refine' in guide and 'deliver' in guide and 'sync' in guide; assert '`v`' in guide and '`м`' in guide; assert 'core-first' in beta; assert 'v4.0.0-beta.2' in rel; assert '4.0.0-beta.2' in cl"</test-command>
         <smoke-command>python3 -m unittest tests/test_vibestart.py</smoke-command>
       </commands>
       <critical-blocks>
@@ -593,7 +593,7 @@
         <criterion-6>The prerelease git path and changelog describe the same beta line and scope.</criterion-6>
       </criteria>
       <commands>
-        <verify-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta; assert 'GRACE' in beta; assert 'Normal Operating Loop' in guide; assert 'v0.1.0-beta.2' in rel; assert '0.1.0-beta.2' in cl"</verify-command>
+        <verify-command>python3 -c "from pathlib import Path; beta=Path('docs/vibe/beta-readiness.md').read_text(); guide=Path('docs/vibe/operator-guide.md').read_text(); rel=Path('docs/vibe/release-path.md').read_text(); cl=Path('CHANGELOG.md').read_text(); assert 'core' in beta and 'beta' in beta; assert 'deep' in beta; assert 'GRACE' in beta; assert 'Normal Operating Loop' in guide; assert 'v4.0.0-beta.2' in rel; assert '4.0.0-beta.2' in cl"</verify-command>
         <lint-command>python3 -m unittest tests/test_vibestart.py</lint-command>
       </commands>
       <sign-off required="true" />

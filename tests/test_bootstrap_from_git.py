@@ -45,7 +45,7 @@ class BootstrapFromGitTests(unittest.TestCase):
         subprocess.run(["git", "add", "."], cwd=source, check=True, capture_output=True, text=True)
         subprocess.run(["git", "commit", "-m", "test source"], cwd=source, check=True, capture_output=True, text=True)
         subprocess.run(
-            ["git", "tag", "-a", "v0.1.0-beta.1-test", "-m", "test prerelease"],
+            ["git", "tag", "-a", "v4.0.0-beta.1-test", "-m", "test prerelease"],
             cwd=source,
             check=True,
             capture_output=True,
@@ -65,7 +65,7 @@ class BootstrapFromGitTests(unittest.TestCase):
                 "--repo",
                 str(source),
                 "--ref",
-                "v0.1.0-beta.1-test",
+                "v4.0.0-beta.1-test",
                 "--core",
                 "--target",
                 str(target),

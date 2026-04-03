@@ -10,7 +10,7 @@ Usage:
 
 Options:
   --repo    Git URL or local git repository path containing vibestart.
-  --ref     Git tag or branch to fetch. Defaults to v0.1.0-beta.1.
+  --ref     Git tag or branch to fetch. Defaults to v4.0.0-beta.1.
   --core    Bootstrap the core profile.
   --deep    Bootstrap the deep profile.
   --target  Target repository path. Defaults to the current directory.
@@ -30,7 +30,7 @@ die() {
 }
 
 repo_url="${VIBESTART_REPO_URL:-}"
-ref="v0.1.0-beta.1"
+ref="v4.0.0-beta.1"
 target="."
 profile=""
 force=0

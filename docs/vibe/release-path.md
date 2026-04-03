@@ -8,8 +8,8 @@ Define the git-visible prerelease path for the clean VIBE / vibestart root surfa
 
 The current clean-root line starts at:
 
-- `0.1.0-beta.1`
-- `0.1.0-beta.2`
+- `4.0.0-beta.1`
+- `4.0.0-beta.2`
 
 This line is separate from the quarantined legacy vibestart v3 tags.
 
@@ -19,11 +19,11 @@ Use annotated git tags.
 
 Recommended tag sequence:
 
-- `v0.1.0-beta.1`
-- `v0.1.0-beta.2`
-- `v0.1.0-beta.N`
-- `v0.1.0-rc.1`
-- `v0.1.0`
+- `v4.0.0-beta.1`
+- `v4.0.0-beta.2`
+- `v4.0.0-beta.N`
+- `v4.0.0-rc.1`
+- `v4.0.0`
 
 ## Meaning Of Each Stage
 
